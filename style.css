@@ -1,0 +1,48 @@
+.terminal {
+    background: black;
+    color: white;
+    font: courier;
+    padding: 10px;
+    overflow: hidden;
+    max-height: 100px;
+    min-height: 100px;
+    overflow-y: scroll;
+    resize: none
+}
+
+.line {
+    display: table;
+    width: 100%;
+}
+
+.terminal span {
+    display: table-cell;
+    width: 1px;
+}
+
+.terminal input {
+    display: table-cell;
+    width: 100%;
+    border: none;
+    background: black;
+    color: white;
+    outline: none;
+}
+
+.footer {
+    position: fixed;
+    bottom: 5;
+    right: 5;
+}
+
+input::-webkit-calendar-picker-indicator {
+    opacity: 100;
+}
+
+.select_input {
+    position: fixed;
+    -webkit-appearance: none;
+    text-align: right;
+    width: 80px;
+    right: 100px;
+}

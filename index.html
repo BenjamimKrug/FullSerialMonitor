@@ -1,0 +1,35 @@
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="terminal" id="terminal">
+        <div id="history"></div>
+        <div class="line">
+            <span id="path">c:/&nbsp;>&nbsp;</span>
+            <input type="text" id="input">
+        </div>
+    </div>
+    <div id="footer" class="footer">
+        <input type="text" list="baudrate" class="select_input" />
+        <datalist id="baudrate" class="select_input">
+            <option>4800</option>
+            <option>9600</option>
+            <option>19200</option>
+            <option>38400</option>
+            <option>57600</option>
+            <option>115200</option>
+            <option>230400</option>
+            <option>460800</option>
+            <option>500000</option>
+            <option>921600</option>
+            <option>1000000</option>
+        </datalist>
+        <label for="baudrate">bps</label>
+        <button id="cleanTerminal" onclick="cleanTerminal()">Clean</button>
+    </div>
+    <script src="./script.js"></script>
+</body>
+
+</html>

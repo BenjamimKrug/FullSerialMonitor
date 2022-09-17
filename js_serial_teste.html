@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Web Serial</title>
+</head>
+<body>
+
+    <div class="serial-scale-div">
+		<button class="btn" id="connect-to-serial" onclick="init()">Connect with Serial Device</button>
+	</div>
+	<select id="baudrate">
+	  <option>9600</option>
+	  <option>19200</option>
+	  <option>38400</option>
+	  <option>57600</option>
+	  <option>115200</option>
+	  <option>230400</option>
+	  <option>460800</option>
+	  <option>500000</option>
+	  <option>921600</option>
+	  <option>1000000</option>
+	</select>
+    <button id="get-serial-messages">Get serial messages</button>
+  
+    <div id="serial-messages-container">
+		<div class="message"></div>
+    </div>
+
+    <script>
+    "use strict";
+    const connect = document.getElementById('connect-to-serial');
+    const getSerialMessages = document.getElementById('get-serial-messages');
+	var port=null;
+	var reader=null;
+
+    getSerialMessages.addEventListener('pointerdown', async () => {
+      getSerialMessage();
+    });
+	
+
+    async function getSerialMessage() {
+		document.querySelector("#serial-messages-container .message").innerText += await serialScaleController.read();		  
+    }
+
+	async function init() {
+		console.log("iniciando");
+		if ('serial' in navigator) {
+			try {
+				if (port){
+					port.close();
+					reader.releaseLock();
+				}
+				port = await navigator.serial.requestPort();
+				console.log(document.getElementById("baudrate").value);
+				await port.open({ baudRate: parseInt(document.getElementById("baudrate").value)});
+				let decoder = new TextDecoderStream();
+				port.readable.pipeTo(decoder.writable);
+				const inputStream = decoder.readable;
+				reader = inputStream.getReader();
+				let signals = await port.getSignals();
+				console.log(signals);
+				readLoop();
+			}
+			catch (err) {
+				console.error('There was an error opening the serial port:', err);
+			}
+		}
+		else {
+			console.error('Web serial doesn\'t seem to be enabled in your browser. Try enabling it by visiting:');
+			console.error('chrome://flags/#enable-experimental-web-platform-features');
+			console.error('opera://flags/#enable-experimental-web-platform-features');
+			console.error('edge://flags/#enable-experimental-web-platform-features');
+		}
+	}
+	
+	async function readLoop(){
+		while (port.readable) {
+			const { value, done } = await reader.read();
+			document.getElementById("serial-messages-container").innerHTML += value;
+			// Do something with |value|...
+	    }
+	}
+    </script>
+</body>
+</html>
