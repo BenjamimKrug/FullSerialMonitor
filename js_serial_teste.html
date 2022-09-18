@@ -52,6 +52,7 @@
 					port.close();
 					reader.releaseLock();
 				}
+				console.log(navigator.serial);
 				port = await navigator.serial.requestPort();
 				console.log(document.getElementById("baudrate").value);
 				await port.open({ baudRate: parseInt(document.getElementById("baudrate").value)});

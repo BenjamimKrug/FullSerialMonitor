@@ -20,6 +20,8 @@
     "electron": "^20.1.4"
   },
   "dependencies": {
-    "serialport": "^10.4.0"
+    "serialport": "^10.4.0",
+    "websocket": "^1.0.34",
+    "ws": "^8.8.1"
   }
 }

@@ -4,8 +4,8 @@
     font: courier;
     padding: 10px;
     overflow: hidden;
-    max-height: 100px;
-    min-height: 100px;
+    max-height: 80%;
+    min-height: 80%;
     overflow-y: scroll;
     resize: none
 }
@@ -40,9 +40,8 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .select_input {
-    position: fixed;
+    position: relative;
     -webkit-appearance: none;
     text-align: right;
     width: 80px;
-    right: 100px;
 }

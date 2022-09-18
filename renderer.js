@@ -1,36 +1,58 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
+const { ipcRenderer } = require('electron');
 
-const { SerialPort } = require('serialport')
-const tableify = require('tableify')
+const ipc = require('electron').ipcRenderer;
+const input_text = document.getElementById("input");
+const history = document.getElementById("history");
+const comPorts = document.getElementById("comPorts");
+const comPorts_input = document.getElementById("comPorts_input");
+const baudrate = document.getElementById("baudrate");
+const baudrate_input = document.getElementById("baudrate_input");
 
-async function listSerialPorts() {
-  await SerialPort.list().then((ports, err) => {
-    if(err) {
-      document.getElementById('error').textContent = err.message
-      return
-    } else {
-      document.getElementById('error').textContent = ''
-    }
-    console.log('ports', ports);
+document.getElementById("terminal").addEventListener('click', function () {
+    input_text.focus();
+});
 
-    if (ports.length === 0) {
-      document.getElementById('error').textContent = 'No ports discovered'
-    }
+ipc.on('recvPorts', function (evt, message) {
+    console.log(message); // Returns: {'SAVED': 'File Saved'}
+    comPorts.innerHTML = message.data;
+});
 
-    tableHTML = tableify(ports)
-    document.getElementById('ports').innerHTML = tableHTML
-  })
+ipc.on('recvData', function (evt, message) {
+    if (message.indexOf("\n") > 0)
+        message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    console.log("dado ", message);
+    history.innerHTML += message;
+    input_text.focus();
+});
+
+
+function connect() {
+    ipcRenderer.send("connect", { "comPort": comPorts_input.value, "baudrate": baudrate_input.value });
 }
 
-function listPorts() {
-  listSerialPorts();
-  setTimeout(listPorts, 2000);
+function getPorts() {
+    ipcRenderer.send("getPorts", "test");
 }
 
-// Set a timeout that will check for new serialPorts every 2 seconds.
-// This timeout reschedules itself.
-setTimeout(listPorts, 2000);
+input_text.addEventListener('keydown', function search(e) {
+    if (e.keyCode == 13) {
+        // append your output to the history,
+        // here I just append the input
+        history.innerHTML += input_text.value + '<br>';
+        console.log(history.innerHTML);
+        // you can change the path if you want
+        // crappy implementation here, but you get the idea
+        if (input_text.value.substring(0, 3) === 'cd ') {
+            document.getElementById('path').innerHTML = input_text.value.substring(3) + '&nbsp;>&nbsp;';
+        }
 
-listSerialPorts()
+        // clear the input
+        input_text.value = "";
+
+    }
+});
+
+function cleanTerminal() {
+    history.innerHTML = "";
+    console.log("apagou");
+}

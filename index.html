@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,7 +13,12 @@
         </div>
     </div>
     <div id="footer" class="footer">
-        <input type="text" list="baudrate" class="select_input" />
+        <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="right: 50px;"/>
+        <datalist id="comPorts" class="select_input">
+        </datalist>
+        <button id="auth-button" onclick="getPorts()">List</button>
+
+        <input type="text" id="baudrate_input" list="baudrate" class="select_input" style="right: 5px;"/>
         <datalist id="baudrate" class="select_input">
             <option>4800</option>
             <option>9600</option>
@@ -26,10 +32,11 @@
             <option>921600</option>
             <option>1000000</option>
         </datalist>
-        <label for="baudrate">bps</label>
+        <label for="baudrate" class="select_input" style="right:5px">bps</label>
+        <button class="btn" id="connect-to-serial" onclick="connect()">Connect</button>
         <button id="cleanTerminal" onclick="cleanTerminal()">Clean</button>
     </div>
-    <script src="./script.js"></script>
+    <script src="./renderer.js"></script>
 </body>
 
 </html>
