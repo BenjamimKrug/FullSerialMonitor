@@ -15,7 +15,6 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true, // to allow require
             contextIsolation: false, // allow use with Electron 12+
-            preload: path.join(__dirname, 'preload.js')
         }
     })
 
@@ -73,13 +72,20 @@ var serialport = null;
 ipcMain.on('connect', function (event, data) {
     console.log(data);
     if (data.comPort != undefined && data.baudrate != undefined) {
-        if (serialport)
-            serialport.close();
-        serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate) })
-        console.log(serialport);
-        serialport.on('data', function (data) {
-            mainWindow.webContents.send('recvData', data.toString());
-        })
+        if (serialport!=null && serialport.isOpen) {
+            serialport.port.close().then((err) => {
+                serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate) })
+                serialport.on('data', function (data) {
+                    mainWindow.webContents.send('recvData', data.toString());
+                });
+            });
+        }
+        else {
+            serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate) })
+            serialport.on('data', function (data) {
+                mainWindow.webContents.send('recvData', data.toString());
+            });
+        }
     }
     else
         console.log("error: undefined value");
@@ -93,7 +99,6 @@ function getPorts() {
     var returnList = "";
     SerialPort.list().then(function (ports) {
         ports.forEach(function (port) {
-            console.log("Port: ", port.path);
             returnList += "<option>" + port.path + "</option>";
         });
         mainWindow.webContents.send('recvPorts', { 'data': returnList });

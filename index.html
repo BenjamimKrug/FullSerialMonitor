@@ -13,12 +13,15 @@
         </div>
     </div>
     <div id="footer" class="footer">
-        <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="right: 50px;"/>
+        <input type="checkbox" id="autoScroll" style="position:fixed;left:5px" onClick="updatePreferences()">
+        <label for="autoScroll" style="position:fixed;left:25px">autoScroll</label>
+
+        <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="right: 50px;" />
         <datalist id="comPorts" class="select_input">
         </datalist>
-        <button id="auth-button" onclick="getPorts()">List</button>
+        <button id="listPorts" onclick="getPorts()">List</button>
 
-        <input type="text" id="baudrate_input" list="baudrate" class="select_input" style="right: 5px;"/>
+        <input type="text" id="baudrate_input" list="baudrate" class="select_input" style="right: 5px;" />
         <datalist id="baudrate" class="select_input">
             <option>4800</option>
             <option>9600</option>

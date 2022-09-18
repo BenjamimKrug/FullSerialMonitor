@@ -1,12 +1,29 @@
+const fs = require('fs');
 const { ipcRenderer } = require('electron');
-
 const ipc = require('electron').ipcRenderer;
+const terminal = document.getElementById("terminal");
 const input_text = document.getElementById("input");
 const history = document.getElementById("history");
+const autoScroll = document.getElementById("autoScroll");
 const comPorts = document.getElementById("comPorts");
 const comPorts_input = document.getElementById("comPorts_input");
 const baudrate = document.getElementById("baudrate");
 const baudrate_input = document.getElementById("baudrate_input");
+var preferences = null;
+
+fs.readFile("./preferences.json", 'utf8', (err, data) => {
+    if (err) {
+        console.log(err);
+        return;
+    }
+    preferences = JSON.parse(data);
+    if (preferences != null) {
+        comPorts_input.value = preferences.comPort;
+        baudrate_input.value = preferences.baudrate;
+        autoScroll.checked = preferences.autoScroll;
+        console.log(autoScroll);
+    }
+});
 
 document.getElementById("terminal").addEventListener('click', function () {
     input_text.focus();
@@ -20,10 +37,26 @@ ipc.on('recvPorts', function (evt, message) {
 ipc.on('recvData', function (evt, message) {
     if (message.indexOf("\n") > 0)
         message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
-    console.log("dado ", message);
     history.innerHTML += message;
-    input_text.focus();
+    if (preferences.autoScroll == true)
+        terminal.scrollTop = terminal.scrollHeight;
 });
+
+function updatePreferences() {
+    preferences.autoScroll = autoScroll.checked;
+    if (preferences.autoScroll == true)
+        terminal.scrollTop = terminal.scrollHeight;
+    preferences.comPort = comPorts_input.value;
+    preferences.baudrate = baudrate_input.value;
+    fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
+        if (err)
+            console.log(err);
+        else {
+            console.log("File written successfully\n");
+            console.log("The written has the following contents:");
+        }
+    });
+}
 
 
 function connect() {

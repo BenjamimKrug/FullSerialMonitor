@@ -1,0 +1,5 @@
+{
+    "comPort":"COM5",
+    "baudrate":115200,
+    "autoscroll":true
+}
