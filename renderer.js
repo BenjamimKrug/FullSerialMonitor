@@ -1,6 +1,4 @@
 const fs = require('fs');
-const { ipcRenderer } = require('electron');
-const ipc = require('electron').ipcRenderer;
 const terminal = document.getElementById("terminal");
 const input_text = document.getElementById("input");
 const history = document.getElementById("history");
@@ -9,7 +7,13 @@ const comPorts = document.getElementById("comPorts");
 const comPorts_input = document.getElementById("comPorts_input");
 const baudrate = document.getElementById("baudrate");
 const baudrate_input = document.getElementById("baudrate_input");
+const { SerialPort } = require("serialport");
+const { exec } = require("child_process");
+var createInterface = require('readline').createInterface;
+var serialport = null;
 var preferences = null;
+var lineStart = true;
+var addTimestamp = true;
 
 fs.readFile("./preferences.json", 'utf8', (err, data) => {
     if (err) {
@@ -29,18 +33,64 @@ document.getElementById("terminal").addEventListener('click', function () {
     input_text.focus();
 });
 
-ipc.on('recvPorts', function (evt, message) {
-    console.log(message); // Returns: {'SAVED': 'File Saved'}
-    comPorts.innerHTML = message.data;
-});
 
-ipc.on('recvData', function (evt, message) {
-    if (message.indexOf("\n") > 0)
-        message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+function getPorts() {
+    var returnList = "";
+    SerialPort.list().then(function (ports) {
+        ports.forEach(function (port) {
+            returnList += "<option>" + port.path + "</option>";
+        });
+        comPorts.innerHTML = returnList;
+    });
+}
+
+function connect() {
+    var data = { "comPort": comPorts_input.value, "baudrate": baudrate_input.value }
+    if (data.comPort != undefined && data.baudrate != undefined) {
+        if (serialport != null && serialport.isOpen) {
+            serialport.port.close().then((err) => {
+                connectSerialPort(data);
+            });
+        }
+        else
+            connectSerialPort(data);
+    }
+    else
+        console.log("error: undefined value");
+}
+
+function connectSerialPort(data) {
+    serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
+    serialport.on('error', function (err) {
+        console.log("erro", err);
+    });
+    var lineReader = createInterface({
+        input: serialport
+    });
+
+    lineReader.on('line', function (line) {
+        handleData(line.toString() + "\n");
+    });
+}
+
+function handleData(message) {
+    if (lineStart == true) {
+        if (addTimestamp) {
+            let date = new Date();
+            message = "<a>" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds() + "-> </a>" + message;
+        }
+        console.log("inicio linha");
+        lineStart = false;
+    }
+    if (message.indexOf("\n") > 0) {
+        message = message.replace(/(?:\r\n|\n)/g, '<br>');
+        lineStart = true;
+    }
     history.innerHTML += message;
     if (preferences.autoScroll == true)
         terminal.scrollTop = terminal.scrollHeight;
-});
+}
+
 
 function updatePreferences() {
     preferences.autoScroll = autoScroll.checked;
@@ -56,15 +106,6 @@ function updatePreferences() {
             console.log("The written has the following contents:");
         }
     });
-}
-
-
-function connect() {
-    ipcRenderer.send("connect", { "comPort": comPorts_input.value, "baudrate": baudrate_input.value });
-}
-
-function getPorts() {
-    ipcRenderer.send("getPorts", "test");
 }
 
 input_text.addEventListener('keydown', function search(e) {
@@ -89,3 +130,24 @@ function cleanTerminal() {
     history.innerHTML = "";
     console.log("apagou");
 }
+
+//"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
+var addr2line_path = "C:\\Users\\benja\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
+var elf_path = "C:\\Users\\benja\\Documents\\Arduino\\teste_serial_cam\\build\\esp32.esp32.esp32\\teste_serial_cam.ino.bin";
+var memory_address = "0x400d27c8:0x3ffe2240";
+var command = addr2line_path + " -pFiac -e" + elf_path + " " + memory_address;
+//xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
+
+/*
+exec(command, (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+});
+*/
