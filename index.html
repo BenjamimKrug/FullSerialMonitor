@@ -5,11 +5,20 @@
 </head>
 
 <body>
+    <div id="header">
+        <input type="text" id="sendInput">
+        <button id="send" onclick="sendData()">Send</button>
+        <select id="line_ending">
+            <option value="">No line ending</option>
+            <option value='\n'>New line(LF)</option>
+            <option value='\r'>Carriage return(CR)</option>
+            <option value="\r\n">Carriage return + New line(CR+LF)</option>
+        </select>
+    </div>
     <div class="terminal" id="terminal">
         <div id="history"></div>
         <div class="line">
             <span id="path">c:/&nbsp;>&nbsp;</span>
-            <input type="text" id="input">
         </div>
     </div>
     <div id="footer" class="footer">

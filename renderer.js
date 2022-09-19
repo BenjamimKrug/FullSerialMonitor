@@ -1,12 +1,13 @@
 const fs = require('fs');
 const terminal = document.getElementById("terminal");
-const input_text = document.getElementById("input");
+const sendInput = document.getElementById("sendInput");
 const history = document.getElementById("history");
 const autoScroll = document.getElementById("autoScroll");
 const comPorts = document.getElementById("comPorts");
 const comPorts_input = document.getElementById("comPorts_input");
 const baudrate = document.getElementById("baudrate");
 const baudrate_input = document.getElementById("baudrate_input");
+const line_ending = document.getElementById("line_ending");
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
 var createInterface = require('readline').createInterface;
@@ -25,14 +26,8 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
         comPorts_input.value = preferences.comPort;
         baudrate_input.value = preferences.baudrate;
         autoScroll.checked = preferences.autoScroll;
-        console.log(autoScroll);
     }
 });
-
-document.getElementById("terminal").addEventListener('click', function () {
-    input_text.focus();
-});
-
 
 function getPorts() {
     var returnList = "";
@@ -63,17 +58,18 @@ function connectSerialPort(data) {
     serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
     serialport.on('error', function (err) {
         console.log("erro", err);
+        window.alert("Error trying to open Port: " + err);
     });
     var lineReader = createInterface({
         input: serialport
     });
 
     lineReader.on('line', function (line) {
-        handleData(line.toString() + "\n");
+        recvData(line.toString() + "\n");
     });
 }
 
-function handleData(message) {
+function recvData(message) {
     if (lineStart == true) {
         if (addTimestamp) {
             let date = new Date();
@@ -89,6 +85,24 @@ function handleData(message) {
     history.innerHTML += message;
     if (preferences.autoScroll == true)
         terminal.scrollTop = terminal.scrollHeight;
+}
+
+function sendData() {
+    var line_end = "";
+    if (line_ending.value == "\\n")
+        line_end = "\n";
+    if (line_ending.value == "\\r")
+        line_end = "\r";
+    if (line_ending.value == "\\r\\n")
+        line_end = "\r\n";
+    var data = Buffer.from(sendInput.value + line_end, "utf-8");
+    console.log(sendInput.value + line_end);
+    serialport.write(data, function (err) {
+        if (err) {
+            return console.log('Error on write: ', err.message);
+        }
+        console.log('message written');
+    });
 }
 
 
@@ -108,23 +122,6 @@ function updatePreferences() {
     });
 }
 
-input_text.addEventListener('keydown', function search(e) {
-    if (e.keyCode == 13) {
-        // append your output to the history,
-        // here I just append the input
-        history.innerHTML += input_text.value + '<br>';
-        console.log(history.innerHTML);
-        // you can change the path if you want
-        // crappy implementation here, but you get the idea
-        if (input_text.value.substring(0, 3) === 'cd ') {
-            document.getElementById('path').innerHTML = input_text.value.substring(3) + '&nbsp;>&nbsp;';
-        }
-
-        // clear the input
-        input_text.value = "";
-
-    }
-});
 
 function cleanTerminal() {
     history.innerHTML = "";
