@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -56,64 +56,3 @@ app.on('activate', function () {
         createWindow();
     }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
-const { SerialPort } = require("serialport");
-const { exec } = require("child_process");
-//"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
-var addr2line_path = "C:\\Users\\benja\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
-var elf_path = "C:\\Users\\benja\\Documents\\Arduino\\teste_serial_cam\\build\\esp32.esp32.esp32\\teste_serial_cam.ino.bin";
-var memory_address = "0x400d27c8:0x3ffe2240";
-var command = addr2line_path + " -pFiac -e" + elf_path + " " + memory_address;
-//xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
-var serialport = null;
-ipcMain.on('connect', function (event, data) {
-    console.log(data);
-    if (data.comPort != undefined && data.baudrate != undefined) {
-        if (serialport!=null && serialport.isOpen) {
-            serialport.port.close().then((err) => {
-                serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate) })
-                serialport.on('data', function (data) {
-                    mainWindow.webContents.send('recvData', data.toString());
-                });
-            });
-        }
-        else {
-            serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate) })
-            serialport.on('data', function (data) {
-                mainWindow.webContents.send('recvData', data.toString());
-            });
-        }
-    }
-    else
-        console.log("error: undefined value");
-});
-
-ipcMain.on('getPorts', function (event, data) {
-    getPorts();
-});
-
-function getPorts() {
-    var returnList = "";
-    SerialPort.list().then(function (ports) {
-        ports.forEach(function (port) {
-            returnList += "<option>" + port.path + "</option>";
-        });
-        mainWindow.webContents.send('recvPorts', { 'data': returnList });
-    });
-}
-/*
-exec(command, (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
-*/
