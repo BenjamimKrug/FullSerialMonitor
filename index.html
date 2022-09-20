@@ -6,9 +6,9 @@
 
 <body>
     <div id="header">
-        <input type="text" id="sendInput">
-        <button id="send" onclick="sendData()">Send</button>
-        <select id="line_ending">
+        <input type="text" id="sendInput" style="width:70%" disabled>
+        <button id="sendButton" onclick="sendData()" disabled>Send</button>
+        <select id="line_ending"  style="width:120px" disabled>
             <option value="">No line ending</option>
             <option value='\n'>New line(LF)</option>
             <option value='\r'>Carriage return(CR)</option>
@@ -24,6 +24,9 @@
     <div id="footer" class="footer">
         <input type="checkbox" id="autoScroll" style="position:fixed;left:5px" onClick="updatePreferences()">
         <label for="autoScroll" style="position:fixed;left:25px">autoScroll</label>
+
+        <input type="checkbox" id="addTimestamp" style="position:fixed;left:100px" onClick="updatePreferences()">
+        <label for="addTimestamp" style="position:fixed;left:120px">Add Timestamp</label>
 
         <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="right: 50px;" />
         <datalist id="comPorts" class="select_input">
@@ -45,7 +48,8 @@
             <option>1000000</option>
         </datalist>
         <label for="baudrate" class="select_input" style="right:5px">bps</label>
-        <button class="btn" id="connect-to-serial" onclick="connect()">Connect</button>
+        <button class="btn" id="connectSerial" onclick="connect()">Connect</button>
+        <button class="btn" id="disconnectSerial" onclick="disconnect()">Disconnect</button>
         <button id="cleanTerminal" onclick="cleanTerminal()">Clean</button>
     </div>
     <script src="./renderer.js"></script>

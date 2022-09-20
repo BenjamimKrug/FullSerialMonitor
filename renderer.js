@@ -7,14 +7,15 @@ const comPorts = document.getElementById("comPorts");
 const comPorts_input = document.getElementById("comPorts_input");
 const baudrate = document.getElementById("baudrate");
 const baudrate_input = document.getElementById("baudrate_input");
-const line_ending = document.getElementById("line_ending");
+const lineEnding = document.getElementById("line_ending");
+const addTimestamp = document.getElementById("addTimestamp");
+const sendButton = document.getElementById("sendButton");
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
 var createInterface = require('readline').createInterface;
 var serialport = null;
 var preferences = null;
 var lineStart = true;
-var addTimestamp = true;
 
 fs.readFile("./preferences.json", 'utf8', (err, data) => {
     if (err) {
@@ -26,6 +27,7 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
         comPorts_input.value = preferences.comPort;
         baudrate_input.value = preferences.baudrate;
         autoScroll.checked = preferences.autoScroll;
+        addTimestamp.checked = preferences.addTimestamp;
     }
 });
 
@@ -54,12 +56,37 @@ function connect() {
         console.log("error: undefined value");
 }
 
+
+function disconnect() {
+    if (serialport != null && serialport.isOpen) {
+        serialport.port.close().then((err) => {
+            console.log("disconnected");
+            sendButton.disabled = true;
+            sendInput.disabled = true;
+            lineEnding.disabled = true;
+        });
+    }
+}
+
 function connectSerialPort(data) {
     serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
     serialport.on('error', function (err) {
         console.log("erro", err);
         window.alert("Error trying to open Port: " + err);
     });
+    serialport.on("open", function (err) {
+        if (err) {
+            console.log("erro", err);
+            return;
+        }
+        sendButton.disabled = false;
+        sendInput.disabled = false;
+        lineEnding.disabled = false;
+    });
+    serialport.on("readable", function () {
+        recvData(serialport.read().toString());
+    });
+    /*
     var lineReader = createInterface({
         input: serialport
     });
@@ -67,20 +94,33 @@ function connectSerialPort(data) {
     lineReader.on('line', function (line) {
         recvData(line.toString() + "\n");
     });
+    */
 }
 
 function recvData(message) {
     if (lineStart == true) {
-        if (addTimestamp) {
+        if (addTimestamp.checked) {
             let date = new Date();
             message = "<a>" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds() + "-> </a>" + message;
         }
         console.log("inicio linha");
         lineStart = false;
     }
-    if (message.indexOf("\n") > 0) {
-        message = message.replace(/(?:\r\n|\n)/g, '<br>');
-        lineStart = true;
+    var index = message.indexOf("\n");
+    var m_length = message.length;
+    while (index > -1) {
+        var new_line = "<br>";
+        if (index < m_length) {
+            if (addTimestamp.checked) {
+                let date = new Date();
+                new_line = "<br>" + "<a>" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds() + "-> </a>";
+            }
+        }
+        else
+            lineStart = true;
+
+        message = message.replace(/(?:\r\n|\n)/g, new_line);
+        index = message.indexOf("\n");
     }
     history.innerHTML += message;
     if (preferences.autoScroll == true)
@@ -89,20 +129,20 @@ function recvData(message) {
 
 function sendData() {
     var line_end = "";
-    if (line_ending.value == "\\n")
+    if (lineEnding.value == "\\n")
         line_end = "\n";
-    if (line_ending.value == "\\r")
+    if (lineEnding.value == "\\r")
         line_end = "\r";
-    if (line_ending.value == "\\r\\n")
+    if (lineEnding.value == "\\r\\n")
         line_end = "\r\n";
     var data = Buffer.from(sendInput.value + line_end, "utf-8");
-    console.log(sendInput.value + line_end);
     serialport.write(data, function (err) {
         if (err) {
             return console.log('Error on write: ', err.message);
         }
         console.log('message written');
     });
+    sendInput.value = "";
 }
 
 
@@ -110,6 +150,7 @@ function updatePreferences() {
     preferences.autoScroll = autoScroll.checked;
     if (preferences.autoScroll == true)
         terminal.scrollTop = terminal.scrollHeight;
+    preferences.addTimestamp = addTimestamp.checked;
     preferences.comPort = comPorts_input.value;
     preferences.baudrate = baudrate_input.value;
     fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
@@ -121,7 +162,6 @@ function updatePreferences() {
         }
     });
 }
-
 
 function cleanTerminal() {
     history.innerHTML = "";
