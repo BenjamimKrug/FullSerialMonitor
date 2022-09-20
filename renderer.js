@@ -69,6 +69,7 @@ function disconnect() {
 }
 
 function connectSerialPort(data) {
+    updatePreferences();
     serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
     serialport.on('error', function (err) {
         console.log("erro", err);
@@ -82,6 +83,16 @@ function connectSerialPort(data) {
         sendButton.disabled = false;
         sendInput.disabled = false;
         lineEnding.disabled = false;
+    });
+    serialport.on("close", function (err) {
+        sendButton.disabled = true;
+        sendInput.disabled = true;
+        lineEnding.disabled = true;
+        if (err) {
+            window.alert("Port disconnected: " + err);
+            return;
+        }
+        console.log("desconectado");
     });
     serialport.on("readable", function () {
         recvData(serialport.read().toString());
@@ -167,6 +178,7 @@ function cleanTerminal() {
     history.innerHTML = "";
     console.log("apagou");
 }
+getPorts();
 
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
 var addr2line_path = "C:\\Users\\benja\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";

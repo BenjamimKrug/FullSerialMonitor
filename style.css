@@ -6,6 +6,7 @@
     overflow: hidden;
     max-height: 80%;
     min-height: 80%;
+    overflow-x: scroll;
     overflow-y: scroll;
     resize: none
 }
