@@ -42,7 +42,7 @@ input::-webkit-calendar-picker-indicator {
 
 .select_input {
     position: relative;
-    -webkit-appearance: none;
     text-align: right;
-    width: 80px;
+    width: 100px;
+    height: 20px;
 }

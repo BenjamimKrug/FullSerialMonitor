@@ -32,7 +32,7 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
 });
 
 function getPorts() {
-    var returnList = "";
+    var returnList = "<option value='customOption'>[custom value]</option>";
     SerialPort.list().then(function (ports) {
         ports.forEach(function (port) {
             returnList += "<option>" + port.path + "</option>";
@@ -156,6 +156,15 @@ function sendData() {
     sendInput.value = "";
 }
 
+function toggleField(hideObj, showObj) {
+    hideObj.disabled = true;
+    hideObj.style.display = 'none';
+    showObj.disabled = false;
+    showObj.style.display = 'inline';
+    showObj.focus();
+    console.log("hide:", hideObj);
+    console.log("show:", showObj);
+}
 
 function updatePreferences() {
     preferences.autoScroll = autoScroll.checked;

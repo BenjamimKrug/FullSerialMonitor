@@ -8,7 +8,7 @@
     <div id="header">
         <input type="text" id="sendInput" style="width:70%" disabled>
         <button id="sendButton" onclick="sendData()" disabled>Send</button>
-        <select id="line_ending"  style="width:120px" disabled>
+        <select id="line_ending" style="width:120px" disabled>
             <option value="">No line ending</option>
             <option value='\n'>New line(LF)</option>
             <option value='\r'>Carriage return(CR)</option>
@@ -28,9 +28,13 @@
         <input type="checkbox" id="addTimestamp" style="position:fixed;left:100px" onClick="updatePreferences()">
         <label for="addTimestamp" style="position:fixed;left:120px">Add Timestamp</label>
 
-        <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="right: 50px;" />
-        <datalist id="comPorts" class="select_input">
-        </datalist>
+        <select id="comPorts" class="select_input" onchange="if(this.options[this.selectedIndex].value=='customOption'){
+            toggleField(comPorts_input,comPorts);
+            this.selectedIndex='0';
+            }">
+        </select>
+        <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="display:none;"
+            disabled="disabled" onblur="if(this.value==''){toggleField(comPorts,comPorts_input}" />
         <button id="listPorts" onclick="getPorts()">List</button>
 
         <input type="text" id="baudrate_input" list="baudrate" class="select_input" style="right: 5px;" />
