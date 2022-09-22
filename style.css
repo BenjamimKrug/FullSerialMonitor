@@ -1,7 +1,8 @@
 .terminal {
-    background: black;
+    background: rgb(45, 45, 45);
     color: white;
-    font: courier;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
     padding: 10px;
     overflow: hidden;
     max-height: 80%;
@@ -9,6 +10,19 @@
     overflow-x: scroll;
     overflow-y: scroll;
     resize: none
+}
+
+body {
+    background: rgb(70, 70, 70);
+    color: white;
+}
+
+button {
+    background: rgb(70, 113, 150);
+    color: white;
+    border-radius:4px;
+    border: none;
+
 }
 
 .line {
@@ -29,6 +43,27 @@
     color: white;
     outline: none;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #888;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 
 .footer {
     position: fixed;

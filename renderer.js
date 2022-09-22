@@ -42,7 +42,7 @@ function getPorts() {
 }
 
 function connect() {
-    var data = { "comPort": comPorts_input.value, "baudrate": baudrate_input.value }
+    var data = { "comPort": comPorts.value, "baudrate": baudrate_input.value }
     if (data.comPort != undefined && data.baudrate != undefined) {
         if (serialport != null && serialport.isOpen) {
             serialport.port.close().then((err) => {
