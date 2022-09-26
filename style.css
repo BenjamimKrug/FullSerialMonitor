@@ -64,11 +64,22 @@ button {
     background: #555;
 }
 
+.checkbox_options{
+    right:50px
+}
 
-.footer {
+.label_right{
+    display: inline-block;
+    width: 150px;
+}
+
+.options_menu {
     position: fixed;
-    bottom: 5;
+    top: 5;
     right: 5;
+    background-color: #f1f1f1;
+    width:200px;
+    height: 100%;
 }
 
 input::-webkit-calendar-picker-indicator {
