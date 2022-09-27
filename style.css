@@ -17,12 +17,18 @@ body {
     color: white;
 }
 
-button {
+.options_button {
     background: rgb(70, 113, 150);
     color: white;
-    border-radius:4px;
-    border: none;
-
+    border-radius: 4px;
+    border-style:solid;
+    border-color: rgb(70, 113, 150);
+    padding: 10px;
+    right: 10px;
+    margin: 20px;
+}
+button:hover{
+    background: rgb(50, 93, 130);
 }
 
 .line {
@@ -64,21 +70,27 @@ button {
     background: #555;
 }
 
-.checkbox_options{
-    right:50px
+.checkbox_options {
+    right: 50px
 }
 
-.label_right{
+.label_right {
     display: inline-block;
     width: 150px;
 }
 
+.label_left {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+}
+
 .options_menu {
     position: fixed;
-    top: 5;
-    right: 5;
-    background-color: #f1f1f1;
-    width:200px;
+    top: 5px;
+    right: 0;
+    background-color: #484848;
+    width: 20%;
     height: 100%;
 }
 

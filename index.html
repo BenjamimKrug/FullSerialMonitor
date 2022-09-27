@@ -5,7 +5,7 @@
 </head>
 
 <body>
-    <div id="header">
+    <div id="header" style="width:80%">
         <input type="text" id="sendInput" style="width:70%" disabled>
         <button id="sendButton" onclick="sendData()" disabled>Send</button>
         <select id="line_ending" style="width:120px" disabled>
@@ -22,12 +22,12 @@
         </div>
     </div>
     <div id="options_menu" class="options_menu">
+        <label for="autoScroll" class="label_left">autoScroll</label>
         <input type="checkbox" id="autoScroll" class="checkbox_options" onClick="updatePreferences()">
-        <label for="autoScroll" class="label_right">autoScroll</label>
         <br>
 
+        <label for="addTimestamp" class="label_left">Add Timestamp</label>
         <input type="checkbox" id="addTimestamp" class="checkbox_options" onClick="updatePreferences()">
-        <label for="addTimestamp" class="label_right">Add Timestamp</label>
         <br>
 
         <select id="comPorts" class="select_input" onchange="if(this.options[this.selectedIndex].value=='customOption'){
@@ -37,7 +37,7 @@
         </select>
         <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="display:none;"
             disabled="disabled" onblur="if(this.value==''){toggleField(comPorts,comPorts_input)}" />
-        <button id="listPorts" onclick="getPorts()">List</button>
+        <button id="listPorts" class="options_button" onclick="getPorts()">LIST</button>
         <br>
 
         <input type="text" id="baudrate_input" list="baudrate" class="select_input" style="right: 5px;" />
@@ -56,9 +56,9 @@
         </datalist>
         <label for="baudrate" class="select_input" style="right:5px">bps</label>
         <br>
-        <button class="btn" id="connectSerial" onclick="connect()">CONNECT</button><br>
-        <button class="btn" id="disconnectSerial" onclick="disconnect()">DISCONNECT</button><br>
-        <button id="cleanTerminal" onclick="cleanTerminal()">CLEAN</button><br>
+        <button id="connectSerial" class="options_button" onclick="connect()">CONNECT</button><br>
+        <button id="disconnectSerial" class="options_button" onclick="disconnect()">DISCONNECT</button><br>
+        <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">CLEAN</button><br>
     </div>
     <script src="./renderer.js"></script>
 </body>
