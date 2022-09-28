@@ -17,17 +17,30 @@ body {
     color: white;
 }
 
+#listPorts {
+    background: rgb(70, 113, 150);
+    color: white;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: rgb(70, 113, 150);
+    position: absolute;
+    right: 5%;
+}
+
 .options_button {
     background: rgb(70, 113, 150);
     color: white;
     border-radius: 4px;
-    border-style:solid;
+    border-style: solid;
     border-color: rgb(70, 113, 150);
-    padding: 10px;
-    right: 10px;
-    margin: 20px;
+    left: 50%;
+    width: 90%;
+    position: absolute;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
-button:hover{
+
+button:hover {
     background: rgb(50, 93, 130);
 }
 
@@ -71,7 +84,7 @@ button:hover{
 }
 
 .checkbox_options {
-    right: 50px
+    right: 5%
 }
 
 .label_right {
@@ -99,8 +112,9 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .select_input {
-    position: relative;
+    position: absolute;
+    right:25%;
     text-align: right;
-    width: 100px;
+    width: 70%;
     height: 20px;
 }

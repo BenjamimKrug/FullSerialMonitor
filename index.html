@@ -30,17 +30,17 @@
         <input type="checkbox" id="addTimestamp" class="checkbox_options" onClick="updatePreferences()">
         <br>
 
-        <select id="comPorts" class="select_input" onchange="if(this.options[this.selectedIndex].value=='customOption'){
+        <select id="comPorts" class="select_input" onchange="if(this.options[this.selectedIndex].value == 'customOption'){
             toggleField(comPorts_input,comPorts);
             this.selectedIndex='0';
-            }">
+        }">
         </select>
         <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="display:none;"
             disabled="disabled" onblur="if(this.value==''){toggleField(comPorts,comPorts_input)}" />
-        <button id="listPorts" class="options_button" onclick="getPorts()">LIST</button>
+        <button id="listPorts" onclick="getPorts()">LIST</button>
         <br>
 
-        <input type="text" id="baudrate_input" list="baudrate" class="select_input" style="right: 5px;" />
+        <input type="text" id="baudrate_input" list="baudrate" class="select_input" />
         <datalist id="baudrate" class="select_input">
             <option>4800</option>
             <option>9600</option>
@@ -55,10 +55,10 @@
             <option>1000000</option>
         </datalist>
         <label for="baudrate" class="select_input" style="right:5px">bps</label>
-        <br>
-        <button id="connectSerial" class="options_button" onclick="connect()">CONNECT</button><br>
-        <button id="disconnectSerial" class="options_button" onclick="disconnect()">DISCONNECT</button><br>
-        <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">CLEAN</button><br>
+        <br><br>
+        <button id="connectSerial" class="options_button" onclick="connect()">CONNECT</button><br><br>
+        <button id="disconnectSerial" class="options_button" onclick="disconnect()">DISCONNECT</button><br><br>
+        <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">CLEAN</button><br><br>
     </div>
     <script src="./renderer.js"></script>
 </body>
