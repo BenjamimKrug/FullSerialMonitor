@@ -12,6 +12,7 @@ const addTimestamp = document.getElementById("addTimestamp");
 const sendButton = document.getElementById("sendButton");
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
+const {ipcRenderer} = require("electron");
 var createInterface = require('readline').createInterface;
 var serialport = null;
 var preferences = null;
@@ -209,3 +210,13 @@ exec(command, (error, stdout, stderr) => {
     console.log(`stdout: ${stdout}`);
 });
 */
+
+window.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+    ipcRenderer.send('show-context-menu')
+  })
+  
+  ipcRenderer.on('context-menu-command', (e, command) => {
+    // ...
+  })
+  

@@ -103,7 +103,7 @@ button:hover {
     top: 5px;
     right: 0;
     background-color: #484848;
-    width: 20%;
+    width: 200px;
     height: 100%;
 }
 
@@ -113,8 +113,8 @@ input::-webkit-calendar-picker-indicator {
 
 .select_input {
     position: absolute;
-    right:25%;
+    right:60px;
     text-align: right;
-    width: 70%;
+    width: 130px;
     height: 20px;
 }
