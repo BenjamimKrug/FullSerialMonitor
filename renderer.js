@@ -1,18 +1,17 @@
 const fs = require('fs');
+const { BrowserWindow } = require('electron');
 const terminal = document.getElementById("terminal");
 const sendInput = document.getElementById("sendInput");
 const history = document.getElementById("history");
 const autoScroll = document.getElementById("autoScroll");
 const comPorts = document.getElementById("comPorts");
 const comPorts_input = document.getElementById("comPorts_input");
-const baudrate = document.getElementById("baudrate");
 const baudrate_input = document.getElementById("baudrate_input");
 const lineEnding = document.getElementById("line_ending");
 const addTimestamp = document.getElementById("addTimestamp");
 const sendButton = document.getElementById("sendButton");
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
-const {ipcRenderer} = require("electron");
 var createInterface = require('readline').createInterface;
 var serialport = null;
 var preferences = null;
@@ -211,12 +210,39 @@ exec(command, (error, stdout, stderr) => {
 });
 */
 
-window.addEventListener('contextmenu', (e) => {
-    e.preventDefault()
-    ipcRenderer.send('show-context-menu')
-  })
-  
-  ipcRenderer.on('context-menu-command', (e, command) => {
-    // ...
-  })
-  
+
+const button = document.getElementById('open_config_menu');
+button.addEventListener('click', () => {
+    createBrowserWindow();
+});
+
+function createBrowserWindow() {
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+        width: 1000,
+        height: 800,
+        backgroundColor: "#ccc",
+        webPreferences: {
+            nodeIntegration: true, // to allow require
+            contextIsolation: false, // allow use with Electron 12+
+        }
+    })
+
+    // and load the index.html of the app.
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
+
+    // Open the DevTools.
+    // mainWindow.webContents.openDevTools()
+
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function () {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
+}
