@@ -213,36 +213,7 @@ exec(command, (error, stdout, stderr) => {
 
 const button = document.getElementById('open_config_menu');
 button.addEventListener('click', () => {
-    createBrowserWindow();
+    console.log(window);
+    const childWindow = window.open('config_menu.html', 'modal');
+    console.log(childWindow);
 });
-
-function createBrowserWindow() {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 800,
-        backgroundColor: "#ccc",
-        webPreferences: {
-            nodeIntegration: true, // to allow require
-            contextIsolation: false, // allow use with Electron 12+
-        }
-    })
-
-    // and load the index.html of the app.
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file:',
-        slashes: true
-    }))
-
-    // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
-
-    // Emitted when the window is closed.
-    mainWindow.on('closed', function () {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
-}

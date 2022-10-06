@@ -1,0 +1,21 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <select>
+        <option value="0">nenhum</option>
+        <option value="1">sobrescrever</option>
+        <option value="2">adicionar</option>
+    </select>
+    <div id="log_config" disabled>
+        <button id="pickFolder" onclick="getDir()">Choose the Folder path<button>
+        <input type="file" id="log_file" webkitdirectory/>
+
+    </div>
+    <script src="./config_renderer.js"></script>
+</body>
+
+</html>

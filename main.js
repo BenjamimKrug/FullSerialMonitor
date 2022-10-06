@@ -35,6 +35,28 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null;
     })
+
+    // In this example, only windows with the `about:blank` url will be created.
+    // All other urls will be blocked.
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        return {
+            pathname: path.join(__dirname, url),
+            protocol: 'file:',
+            slashes: true,
+            action: 'allow',
+            overrideBrowserWindowOptions: {
+                frame: true,
+                fullscreenable: true,
+                backgroundColor: 'black',
+                webPreferences: {
+                    nodeIntegration: true, // to allow require
+                    contextIsolation: false, // allow use with Electron 12+
+                }
+            }
+        }
+    })
+
+
 }
 
 // This method will be called when Electron has finished
@@ -56,3 +78,5 @@ app.on('activate', function () {
         createWindow();
     }
 });
+
+
