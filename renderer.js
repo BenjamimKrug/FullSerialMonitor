@@ -12,7 +12,6 @@ const addTimestamp = document.getElementById("addTimestamp");
 const sendButton = document.getElementById("sendButton");
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
-var createInterface = require('readline').createInterface;
 var serialport = null;
 var preferences = null;
 var lineStart = true;
@@ -30,6 +29,22 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
         addTimestamp.checked = preferences.addTimestamp;
     }
 });
+
+function updatePreferences() {
+    preferences.autoScroll = autoScroll.checked;
+    if (preferences.autoScroll == true)
+        terminal.scrollTop = terminal.scrollHeight;
+    preferences.addTimestamp = addTimestamp.checked;
+    preferences.comPort = comPorts_input.value;
+    preferences.baudrate = baudrate_input.value;
+    fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
+        if (err)
+            console.log(err);
+        else {
+            console.log("File written successfully\n");
+        }
+    });
+}
 
 function getPorts() {
     var returnList = "<option value='customOption'>[custom value]</option>";
@@ -164,23 +179,6 @@ function toggleField(hideObj, showObj) {
     showObj.focus();
     console.log("hide:", hideObj);
     console.log("show:", showObj);
-}
-
-function updatePreferences() {
-    preferences.autoScroll = autoScroll.checked;
-    if (preferences.autoScroll == true)
-        terminal.scrollTop = terminal.scrollHeight;
-    preferences.addTimestamp = addTimestamp.checked;
-    preferences.comPort = comPorts_input.value;
-    preferences.baudrate = baudrate_input.value;
-    fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
-        if (err)
-            console.log(err);
-        else {
-            console.log("File written successfully\n");
-            console.log("The written has the following contents:");
-        }
-    });
 }
 
 function cleanTerminal() {

@@ -10,10 +10,14 @@
         <option value="1">sobrescrever</option>
         <option value="2">adicionar</option>
     </select>
+    <select id="log_type" class="select_input">
+        <option value="0">No Log File</option>
+        <option value="1">Raw text file</option>            
+        <option value="2">Raw text file</option>
+    </select>
     <div id="log_config" disabled>
-        <button id="pickFolder" onclick="getDir()">Choose the Folder path<button>
         <input type="file" id="log_file" webkitdirectory/>
-
+        <ul id="listing"></ul>
     </div>
     <script src="./config_renderer.js"></script>
 </body>
