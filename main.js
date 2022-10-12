@@ -16,17 +16,17 @@ function createWindow() {
             nodeIntegration: true, // to allow require
             contextIsolation: false, // allow use with Electron 12+
         }
-    })
+    });
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
-    }))
+    }));
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+     mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -34,29 +34,7 @@ function createWindow() {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null;
-    })
-
-    // In this example, only windows with the `about:blank` url will be created.
-    // All other urls will be blocked.
-    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        return {
-            pathname: path.join(__dirname, url),
-            protocol: 'file:',
-            slashes: true,
-            action: 'allow',
-            overrideBrowserWindowOptions: {
-                frame: true,
-                fullscreenable: true,
-                backgroundColor: 'black',
-                webPreferences: {
-                    nodeIntegration: true, // to allow require
-                    contextIsolation: false, // allow use with Electron 12+
-                }
-            }
-        }
-    })
-
-
+    });
 }
 
 // This method will be called when Electron has finished

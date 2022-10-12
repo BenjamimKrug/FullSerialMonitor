@@ -21,6 +21,21 @@
             <span id="path">c:/&nbsp;>&nbsp;</span>
         </div>
     </div>
+
+    <div id="config_menu" class="config_menu" style="display:none">
+        <select id="log_type" class="select_input">
+            <option value="0">None</option>
+            <option value="1">Overwrite</option>
+            <option value="2">Append</option>
+        </select>
+        <input type="checkbox" id="logAutoScroll" onClick="updatePreferences()"/>
+        <label for="logAutoScroll">autoScroll</label>
+        <div id="log_config" disabled>
+            <input type="file" id="log_file" webkitdirectory />
+            <ul id="listing"></ul>
+        </div>
+    </div>
+
     <div id="options_menu" class="options_menu">
         <button id="open_config_menu">Config</button>
         <label for="autoScroll" class="label_left">autoScroll</label>
@@ -56,7 +71,8 @@
         </select>
         <label for="baudrate" class="select_input" style="right:25px; transform: translate(0, 20%)">bps</label>
         <br><br>
-        <button id="connectSerial" class="options_button" onclick="connect()"><i class="fa fa-trash"></i>CONNECT</button><br><br>
+        <button id="connectSerial" class="options_button" onclick="connect()"><i
+                class="fa fa-trash"></i>CONNECT</button><br><br>
         <button id="disconnectSerial" class="options_button" onclick="disconnect()">DISCONNECT</button><br><br>
         <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">CLEAN</button><br><br>
     </div>

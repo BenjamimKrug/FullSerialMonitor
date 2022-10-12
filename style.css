@@ -113,8 +113,22 @@ input::-webkit-calendar-picker-indicator {
 
 .select_input {
     position: absolute;
-    right:60px;
+    right: 60px;
     text-align: right;
     width: 130px;
     height: 20px;
+}
+
+.config_menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    border: 3px solid black;
+    background-color: darkgrey;
+    padding: 10px;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 999;
 }

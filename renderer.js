@@ -1,5 +1,7 @@
 const fs = require('fs');
 const { BrowserWindow } = require('electron');
+const { SerialPort } = require("serialport");
+const { exec } = require("child_process");
 const terminal = document.getElementById("terminal");
 const sendInput = document.getElementById("sendInput");
 const history = document.getElementById("history");
@@ -10,8 +12,8 @@ const baudrate_input = document.getElementById("baudrate_input");
 const lineEnding = document.getElementById("line_ending");
 const addTimestamp = document.getElementById("addTimestamp");
 const sendButton = document.getElementById("sendButton");
-const { SerialPort } = require("serialport");
-const { exec } = require("child_process");
+var log_file = document.getElementById("log_file");
+var config_menu = document.getElementById("config_menu");
 var serialport = null;
 var preferences = null;
 var lineStart = true;
@@ -45,6 +47,21 @@ function updatePreferences() {
         }
     });
 }
+
+document.getElementById("log_file").addEventListener("change", (event) => {
+    let output = document.getElementById("listing");
+    var folderPath = event.target.files[0].path;
+    console.log(folderPath.substring(0, folderPath.lastIndexOf('\\') + 1));
+}, false);
+
+document.getElementById("open_config_menu").onclick = function () {
+    console.log(config_menu.style.display);
+    if (config_menu.style.display != "none") {
+        config_menu.style.display = "none";
+    } else {
+        config_menu.style.display = "block";
+    }
+};
 
 function getPorts() {
     var returnList = "<option value='customOption'>[custom value]</option>";
@@ -207,11 +224,3 @@ exec(command, (error, stdout, stderr) => {
     console.log(`stdout: ${stdout}`);
 });
 */
-
-
-const button = document.getElementById('open_config_menu');
-button.addEventListener('click', () => {
-    console.log(window);
-    const childWindow = window.open('config_menu.html', 'modal');
-    console.log(childWindow);
-});
