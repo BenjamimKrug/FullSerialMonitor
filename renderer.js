@@ -48,14 +48,13 @@ function updatePreferences() {
     });
 }
 
-document.getElementById("log_file").addEventListener("change", (event) => {
-    let output = document.getElementById("listing");
+function handleDir(event) {
     var folderPath = event.target.files[0].path;
     console.log(folderPath.substring(0, folderPath.lastIndexOf('\\') + 1));
-}, false);
+}
+
 
 document.getElementById("open_config_menu").onclick = function () {
-    console.log(config_menu.style.display);
     if (config_menu.style.display != "none") {
         config_menu.style.display = "none";
     } else {

@@ -23,17 +23,21 @@
     </div>
 
     <div id="config_menu" class="config_menu" style="display:none">
-        <select id="log_type" class="select_input">
+        <button onclick="updatePreferences();config_menu.style.display = 'none'" class="close_btn">Close</button>
+        LOG FILE<br>
+        <select id="log_type">
             <option value="0">None</option>
             <option value="1">Overwrite</option>
             <option value="2">Append</option>
         </select>
-        <input type="checkbox" id="logAutoScroll" onClick="updatePreferences()"/>
-        <label for="logAutoScroll">autoScroll</label>
-        <div id="log_config" disabled>
-            <input type="file" id="log_file" webkitdirectory />
-            <ul id="listing"></ul>
-        </div>
+        <input type="checkbox" id="logAutoScroll" />
+        <label for="logAutoScroll">Add autoScroll</label>
+        <input type="file" id="log_file" onchange="handleDir(event)" webkitdirectory/>
+        <br><br>
+        EXCEPTION DECODER
+        <input type="file" id="log_file" webkitdirectory/>
+        <label for="logAutoScroll">Add autoScroll</label>
+
     </div>
 
     <div id="options_menu" class="options_menu">
