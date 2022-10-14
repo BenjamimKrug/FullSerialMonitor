@@ -137,6 +137,9 @@ input::-webkit-calendar-picker-indicator {
 
 .close_btn {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    bottom: 10px;
+}
+
+.file_path{
+    width:82%;
 }

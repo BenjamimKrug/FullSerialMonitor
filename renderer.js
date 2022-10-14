@@ -21,7 +21,9 @@ var decoder_folder_input = document.getElementById("decoder_folder_input");
 var config_menu = document.getElementById("config_menu");
 var serialport = null;
 var preferences = null;
+var prev_preferences = null;
 var lineStart = true;
+let log_file_writer = null;
 
 fs.readFile("./preferences.json", 'utf8', (err, data) => {
     if (err) {
@@ -47,22 +49,48 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
         if (typeof (preferences.logAutoScroll) !== 'undefined')
             log_autoScroll.checked = preferences.logAutoScroll;
     }
+    prev_preferences = preferences;
 });
 
-function updatePreferences() {
+function backupPreferences() {
+    if (typeof (prev_preferences.comPort) !== 'undefined')
+        comPorts_input.value = prev_preferences.comPort;
+    if (typeof (prev_preferences.baudrate) !== 'undefined')
+        baudrate_input.value = prev_preferences.baudrate;
+    if (typeof (prev_preferences.autoScroll) !== 'undefined')
+        autoScroll.checked = prev_preferences.autoScroll;
+    if (typeof (prev_preferences.addTimestamp) !== 'undefined')
+        addTimestamp.checked = prev_preferences.addTimestamp;
+    if (typeof (prev_preferences.logFolder) !== 'undefined')
+        log_folder_input.value = prev_preferences.logFolder;
+    if (typeof (prev_preferences.decoderFolder) !== 'undefined')
+        decoder_folder_input.value = prev_preferences.decoderFolder;
+    if (typeof (prev_preferences.logType) !== 'undefined')
+        log_type.value = prev_preferences.logType;
+    if (typeof (prev_preferences.logAutoScroll) !== 'undefined')
+        log_autoScroll.checked = prev_preferences.logAutoScroll;
+}
+
+function readDirPaths() {
     if (typeof (log_folder.files[0]) !== 'undefined') {
         var logFolderPath = log_folder.files[0].path;
         log_folder_input.value = logFolderPath.substring(0, logFolderPath.lastIndexOf('\\') + 1);
         console.log(log_folder_input.value);
-        preferences.logFolder = log_folder_input.value;
     }
+    else
+        window.alert("Folder completly empty, must have at least one file");
     if (typeof (decoder_folder.files[0]) !== 'undefined') {
         var decoderFolderPath = decoder_folder.files[0].path;
         decoder_folder_input.value = decoderFolderPath.substring(0, decoderFolderPath.lastIndexOf('\\') + 1);
         console.log(decoder_folder_input.value);
-        preferences.decoderFolder = decoder_folder_input.value;
     }
+    else
+        window.alert("Folder completly empty, must have at least one file");
+}
 
+function updatePreferences() {
+    preferences.logFolder = log_folder_input.value;
+    preferences.decoderFolder = decoder_folder_input.value;
     preferences.logType = log_type.value;
     preferences.logAutoScroll = log_autoScroll.checked;
     preferences.autoScroll = autoScroll.checked;
@@ -78,9 +106,11 @@ function updatePreferences() {
             console.log("File written successfully\n");
         }
     });
+    prev_preferences = preferences;
 }
 
 document.getElementById("open_config_menu").onclick = function () {
+    prev_preferences = preferences;
     if (config_menu.style.display != "none") {
         config_menu.style.display = "none";
     } else {
@@ -140,6 +170,9 @@ function connectSerialPort(data) {
         sendButton.disabled = false;
         sendInput.disabled = false;
         lineEnding.disabled = false;
+        log_file_writer = fs.createWriteStream(log_folder_input.value + "log.txt", {
+            flags: 'w'
+        });
     });
     serialport.on("close", function (err) {
         sendButton.disabled = true;
@@ -181,6 +214,7 @@ function recvData(message) {
         message = message.replace(/(?:\r\n|\n)/g, new_line);
         index = message.indexOf("\n");
     }
+    log_file_writer.write(message);
     history.innerHTML += message;
     if (preferences.autoScroll == true)
         terminal.scrollTop = terminal.scrollHeight;

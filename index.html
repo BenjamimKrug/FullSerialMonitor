@@ -23,7 +23,6 @@
     </div>
 
     <div id="config_menu" class="config_menu" style="display:none">
-        <button onclick="updatePreferences();config_menu.style.display = 'none'" class="close_btn">Close</button>
         LOG FILE<br>
         <select id="log_type">
             <option value="0">None</option>
@@ -33,18 +32,23 @@
         <input type="checkbox" id="log_autoScroll" />
         <label for="logAutoScroll">Add autoScroll</label>
         <br>
-        <input type="text" id="log_folder_input" />
-        <input type="file" id="log_folder" style="display:none" onchange="updatePreferences()" webkitdirectory />
+        <input type="text" id="log_folder_input" class="file_path"/>
+        <input type="file" id="log_folder" style="display:none" onchange="readDirPaths()" webkitdirectory />
         <input type="button" value="Browse..." onclick="log_folder.click();"/>
         <br><br>
         EXCEPTION DECODER
         <br>
         <label>
             Arduino packages folder<br>
-            <input type="text" id="decoder_folder_input"/>
-            <input type="file" id="decoder_folder" style="display:none" onchange="updatePreferences()" webkitdirectory />
+            <input type="text" id="decoder_folder_input" class="file_path"/>
+            <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths()" webkitdirectory />
             <input type="button" value="Browse..." onclick="decoder_folder.click();"/>
         </label>
+
+        <button onclick="backupPreferences();config_menu.style.display = 'none'" style="right: 150px" class="close_btn">Cancel</button>
+        <button onclick="updatePreferences();config_menu.style.display = 'none'" style="right: 10px" class="close_btn">
+            Save and Close
+        </button>
     </div>
 
     <div id="options_menu" class="options_menu">
