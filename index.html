@@ -30,14 +30,21 @@
             <option value="1">Overwrite</option>
             <option value="2">Append</option>
         </select>
-        <input type="checkbox" id="logAutoScroll" />
+        <input type="checkbox" id="log_autoScroll" />
         <label for="logAutoScroll">Add autoScroll</label>
-        <input type="file" id="log_file" onchange="handleDir(event)" webkitdirectory/>
+        <br>
+        <input type="text" id="log_folder_input" />
+        <input type="file" id="log_folder" style="display:none" onchange="updatePreferences()" webkitdirectory />
+        <input type="button" value="Browse..." onclick="log_folder.click();"/>
         <br><br>
         EXCEPTION DECODER
-        <input type="file" id="log_file" webkitdirectory/>
-        <label for="logAutoScroll">Add autoScroll</label>
-
+        <br>
+        <label>
+            Arduino packages folder<br>
+            <input type="text" id="decoder_folder_input"/>
+            <input type="file" id="decoder_folder" style="display:none" onchange="updatePreferences()" webkitdirectory />
+            <input type="button" value="Browse..." onclick="decoder_folder.click();"/>
+        </label>
     </div>
 
     <div id="options_menu" class="options_menu">

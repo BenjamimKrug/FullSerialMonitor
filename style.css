@@ -99,12 +99,14 @@ button:hover {
 }
 
 .options_menu {
+    resize: horizontal;
     position: fixed;
-    top: 5px;
+    top: 0;
     right: 0;
     background-color: #484848;
     width: 200px;
     height: 100%;
+    resize: horizontal;
 }
 
 input::-webkit-calendar-picker-indicator {
@@ -134,7 +136,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .close_btn {
-    position:absolute;
+    position: absolute;
     right: 10px;
     top: 10px;
 }
