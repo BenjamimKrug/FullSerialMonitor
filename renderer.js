@@ -2,6 +2,9 @@ const fs = require('fs');
 const { ipcRenderer } = require('electron')
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
+const remote = require('@electron/remote');
+const { FindInPage } = require('electron-find');
+const { Console } = require('console');
 const terminal = document.getElementById("terminal");
 const sendInput = document.getElementById("sendInput");
 const history = document.getElementById("history");
@@ -22,15 +25,16 @@ var config_menu = document.getElementById("config_menu");
 var serialport = null;
 var preferences = null;
 var prev_preferences = null;
-var lineStart = true;
+var lineStart = false;
+var first_line = true;
 let log_file_writer = null;
 var pos = 0;
 var input_history = [];
 var prev_sendInput = "";
-const remote = require('@electron/remote');
-const { FindInPage } = require('electron-find');
+var current_line_index = 0;
+var start_line_index = 0;
 
-// config UI of find interface 
+// config UI of find interface
 let findInPage = new FindInPage(remote.getCurrentWebContents(), {
     boxBgColor: '#333',
     boxShadowColor: '#467196',
@@ -42,10 +46,16 @@ let findInPage = new FindInPage(remote.getCurrentWebContents(), {
     caseSelectedColor: '#555',
     offsetRight: 202,
     offsetTop: 32,
-    borderColor:'#467196',
+    borderColor: '#467196',
     parent: terminal
 });
 
+function changeTimestamp() {
+    for (var i = start_line_index; i < current_line_index; i++) {
+        if (document.getElementById(i) != null)
+            document.getElementById(i).style.display = addTimestamp.checked ? "inline" : "none";
+    }
+}
 
 ipcRenderer.on('find_request', () => {
     findInPage.openFindWindow();
@@ -53,7 +63,6 @@ ipcRenderer.on('find_request', () => {
 
 fs.readFile("./preferences.json", 'utf8', (err, data) => {
     if (err) {
-        console.log(err);
         return;
     }
     preferences = JSON.parse(data);
@@ -102,7 +111,6 @@ function readDirPaths(log, decoder) {
         if (typeof (log_folder.files[0]) !== 'undefined') {
             var logFolderPath = log_folder.files[0].path;
             log_folder_input.value = logFolderPath.substring(0, logFolderPath.lastIndexOf('\\') + 1);
-            console.log(log_folder_input.value);
         }
         else
             window.alert("Folder completly empty, must have at least one file");
@@ -111,7 +119,6 @@ function readDirPaths(log, decoder) {
         if (typeof (decoder_folder.files[0]) !== 'undefined') {
             var decoderFolderPath = decoder_folder.files[0].path;
             decoder_folder_input.value = decoderFolderPath.substring(0, decoderFolderPath.lastIndexOf('\\') + 1);
-            console.log(decoder_folder_input.value);
         }
         else
             window.alert("Folder completly empty, must have at least one file");
@@ -131,21 +138,17 @@ function updatePreferences() {
     preferences.baudrate = baudrate_input.value;
     fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
         if (err)
-            console.log(err);
-        else {
-            console.log("File written successfully\n");
-        }
+            window.alert("Error on writing preferences file:", err);
     });
     prev_preferences = preferences;
 }
 
 document.getElementById("open_config_menu").onclick = function () {
     prev_preferences = preferences;
-    if (config_menu.style.display != "none") {
+    if (config_menu.style.display != "none")
         config_menu.style.display = "none";
-    } else {
+    else
         config_menu.style.display = "block";
-    }
 };
 
 function getPorts() {
@@ -170,14 +173,13 @@ function connect() {
             connectSerialPort(data);
     }
     else
-        console.log("error: undefined value");
+        window.alert("error: undefined value");
 }
 
 
 function disconnect() {
     if (serialport != null && serialport.isOpen) {
         serialport.port.close().then((err) => {
-            console.log("disconnected");
             sendButton.disabled = true;
             sendInput.disabled = true;
             lineEnding.disabled = true;
@@ -189,14 +191,13 @@ function disconnect() {
 
 function connectSerialPort(data) {
     updatePreferences();
-    console.log(data.comPort);
     serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
     serialport.on('error', function (err) {
         window.alert("Error trying to open Port: " + err);
     });
     serialport.on("open", function (err) {
         if (err) {
-            console.log("erro", err);
+            window.alert("Error on opening port:", err);
             return;
         }
         sendButton.disabled = false;
@@ -218,7 +219,6 @@ function connectSerialPort(data) {
             window.alert("Port disconnected: " + err);
             return;
         }
-        console.log("desconectado");
     });
     serialport.on("readable", function () {
         recvData(serialport.read().toString());
@@ -231,12 +231,27 @@ function recvData(payload) {
     var tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
     var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
-    if (lineStart == true) {
-        if (addTimestamp.checked)
-            message = "<a>" + current_datetime + "-> </a>" + message;
+    if (first_line == true) {
+        var message_start = "<a id='" + current_line_index;
+        current_line_index++;
+        if (addTimestamp.checked == false)
+            message_start += "' style='display:none";
+        message_start += "'>" + current_datetime + "-> </a>" + message;
+        message = message_start;
         if (log_addTimestamp.checked)
             payload = current_datetime + "->" + payload;
-        console.log("inicio linha");
+        first_line = false;
+    }
+    if (lineStart == true) {
+        var message_new_line = "<br><a id='";
+        message_new_line += current_line_index;
+        current_line_index++;
+        if (addTimestamp.checked == false)
+            message_new_line += "' style='display:none";
+        message_new_line += "'>" + current_datetime + "-> </a>" + message;
+
+        if (log_addTimestamp.checked)
+            payload = current_datetime + "->" + payload;
         lineStart = false;
     }
     var index = message.indexOf("\n");
@@ -244,20 +259,24 @@ function recvData(payload) {
     while (index > -1) {
         var message_new_line = "<br>";
         var payload_new_line = "";
-        if (index < m_length) {
-            let date = new Date();
-            if (addTimestamp.checked)
-                message_new_line = "<br>" + "<a>" + current_datetime + "-> </a>";
-            if (log_addTimestamp.checked)
-                payload_new_line = "\r\n" + current_datetime + "->";
-        }
-        else
+        let date = new Date();
+        message_new_line = "<br><a id='";
+        message_new_line += current_line_index;
+        if (addTimestamp.checked == false)
+            message_new_line += "' style='display:none";
+        message_new_line += "'>" + current_datetime + "-> </a>";
+
+        if (log_addTimestamp.checked)
+            payload_new_line = "\r\n" + current_datetime + "->";
+        if (index == m_length)
             lineStart = true;
 
-        message = message.replace(/(?:\r\n|\n)/g, message_new_line);
+        current_line_index++;
+        message = message.replace('\n', message_new_line);
         payload = payload.replace(/(?:\r\n|\n)/g, payload_new_line);
         index = message.indexOf("\n");
     }
+
     if (log_file_writer != null)
         log_file_writer.write(payload);
     history.innerHTML += message;
@@ -313,6 +332,8 @@ function sendData() {
 
 function cleanTerminal() {
     history.innerHTML = "";
+    first_line = true;
+    start_line_index = current_line_index + 1;
 }
 getPorts();
 

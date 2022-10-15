@@ -26,7 +26,7 @@
             <option value="w">Overwrite</option>
             <option value="a">Append</option>
         </select>
-        <input type="checkbox" id="log_addTimestamp" />
+        <input type="checkbox" id="log_addTimestamp"/>
         <label for="log_addTimestamp">Add Timestamp</label>
         <br>
         <input type="text" id="log_folder_input" class="file_path" />
@@ -53,17 +53,17 @@
     <div id="options_menu" class="options_menu">
         <button id="open_config_menu">Config</button>
         <label for="autoScroll" class="label_left">autoScroll</label>
-        <input type="checkbox" id="autoScroll" class="checkbox_options" onClick="updatePreferences()">
+        <input type="checkbox" id="autoScroll" class="checkbox_options">
         <br>
 
         <label for="addTimestamp" class="label_left">Add Timestamp</label>
-        <input type="checkbox" id="addTimestamp" class="checkbox_options" onClick="updatePreferences()">
+        <input type="checkbox" id="addTimestamp" class="checkbox_options"  onchange="changeTimestamp()">
         <br>
 
         <select id="comPorts" class="select_input">
         </select>
         <button id="listPorts" onclick="getPorts()">LIST</button>
-        <br><br>
+        <br>
 
         <select id="baudrate_input" class="select_input">
             <option>4800</option>
@@ -78,16 +78,15 @@
             <option>921600</option>
             <option>1000000</option>
         </select>
-        <label for="baudrate" style="position:absolute;right:25px;">bps</label>
+        <label for="baudrate" style="position:absolute;right:25px;transform: translate(0, 10%);">bps</label>
         <br><br>
-        <button id="connectSerial" class="options_button" onclick="connect()"><i
-                class="fa fa-trash"></i>CONNECT</button><br><br>
+        <button id="connectSerial" class="options_button" onclick="connect()">
+            <i class="fa fa-trash"></i>
+            CONNECT
+        </button>
+        <br><br>
         <button id="disconnectSerial" class="options_button" onclick="disconnect()">DISCONNECT</button><br><br>
         <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">CLEAN</button><br><br>
-
-        <div id="modalbox" style="display: 'none'; position:'fixed'; z-Index: 1">
-            <input type="text" onChange="searchPage(event)" />
-        </div>
     </div>
     <script src="./renderer.js"></script>
 </body>
