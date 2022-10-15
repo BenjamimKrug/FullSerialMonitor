@@ -12,7 +12,7 @@ const baudrate_input = document.getElementById("baudrate_input");
 const lineEnding = document.getElementById("line_ending");
 const addTimestamp = document.getElementById("addTimestamp");
 const sendButton = document.getElementById("sendButton");
-var log_autoScroll = document.getElementById("log_autoScroll");
+var log_addTimestamp = document.getElementById("log_addTimestamp");
 var log_type = document.getElementById("log_type");
 var log_folder = document.getElementById("log_folder");
 var log_folder_input = document.getElementById("log_folder_input");
@@ -33,7 +33,7 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
     preferences = JSON.parse(data);
     if (preferences != null) {
         if (typeof (preferences.comPort) !== 'undefined')
-            comPorts_input.value = preferences.comPort;
+            comPorts.value = preferences.comPort;
         if (typeof (preferences.baudrate) !== 'undefined')
             baudrate_input.value = preferences.baudrate;
         if (typeof (preferences.autoScroll) !== 'undefined')
@@ -46,15 +46,15 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
             decoder_folder_input.value = preferences.decoderFolder;
         if (typeof (preferences.logType) !== 'undefined')
             log_type.value = preferences.logType;
-        if (typeof (preferences.logAutoScroll) !== 'undefined')
-            log_autoScroll.checked = preferences.logAutoScroll;
+        if (typeof (preferences.logAddTimestamp) !== 'undefined')
+            log_addTimestamp.checked = preferences.logAddTimestamp;
     }
     prev_preferences = preferences;
 });
 
 function backupPreferences() {
     if (typeof (prev_preferences.comPort) !== 'undefined')
-        comPorts_input.value = prev_preferences.comPort;
+        comPorts.value = prev_preferences.comPort;
     if (typeof (prev_preferences.baudrate) !== 'undefined')
         baudrate_input.value = prev_preferences.baudrate;
     if (typeof (prev_preferences.autoScroll) !== 'undefined')
@@ -67,37 +67,41 @@ function backupPreferences() {
         decoder_folder_input.value = prev_preferences.decoderFolder;
     if (typeof (prev_preferences.logType) !== 'undefined')
         log_type.value = prev_preferences.logType;
-    if (typeof (prev_preferences.logAutoScroll) !== 'undefined')
-        log_autoScroll.checked = prev_preferences.logAutoScroll;
+    if (typeof (prev_preferences.logAddTimestamp) !== 'undefined')
+        log_addTimestamp.checked = prev_preferences.logAddTimestamp;
 }
 
-function readDirPaths() {
-    if (typeof (log_folder.files[0]) !== 'undefined') {
-        var logFolderPath = log_folder.files[0].path;
-        log_folder_input.value = logFolderPath.substring(0, logFolderPath.lastIndexOf('\\') + 1);
-        console.log(log_folder_input.value);
+function readDirPaths(log, decoder) {
+    if (log) {
+        if (typeof (log_folder.files[0]) !== 'undefined') {
+            var logFolderPath = log_folder.files[0].path;
+            log_folder_input.value = logFolderPath.substring(0, logFolderPath.lastIndexOf('\\') + 1);
+            console.log(log_folder_input.value);
+        }
+        else
+            window.alert("Folder completly empty, must have at least one file");
     }
-    else
-        window.alert("Folder completly empty, must have at least one file");
-    if (typeof (decoder_folder.files[0]) !== 'undefined') {
-        var decoderFolderPath = decoder_folder.files[0].path;
-        decoder_folder_input.value = decoderFolderPath.substring(0, decoderFolderPath.lastIndexOf('\\') + 1);
-        console.log(decoder_folder_input.value);
+    if (decoder) {
+        if (typeof (decoder_folder.files[0]) !== 'undefined') {
+            var decoderFolderPath = decoder_folder.files[0].path;
+            decoder_folder_input.value = decoderFolderPath.substring(0, decoderFolderPath.lastIndexOf('\\') + 1);
+            console.log(decoder_folder_input.value);
+        }
+        else
+            window.alert("Folder completly empty, must have at least one file");
     }
-    else
-        window.alert("Folder completly empty, must have at least one file");
 }
 
 function updatePreferences() {
     preferences.logFolder = log_folder_input.value;
     preferences.decoderFolder = decoder_folder_input.value;
     preferences.logType = log_type.value;
-    preferences.logAutoScroll = log_autoScroll.checked;
+    preferences.logAddTimestamp = log_addTimestamp.checked;
     preferences.autoScroll = autoScroll.checked;
     if (preferences.autoScroll == true)
         terminal.scrollTop = terminal.scrollHeight;
     preferences.addTimestamp = addTimestamp.checked;
-    preferences.comPort = comPorts_input.value;
+    preferences.comPort = comPorts.value;
     preferences.baudrate = baudrate_input.value;
     fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
         if (err)
@@ -119,7 +123,7 @@ document.getElementById("open_config_menu").onclick = function () {
 };
 
 function getPorts() {
-    var returnList = "<option value='customOption'>[custom value]</option>";
+    var returnList = "";
     SerialPort.list().then(function (ports) {
         ports.forEach(function (port) {
             returnList += "<option>" + port.path + "</option>";
@@ -151,15 +155,17 @@ function disconnect() {
             sendButton.disabled = true;
             sendInput.disabled = true;
             lineEnding.disabled = true;
+            if (log_file_writer != null)
+                log_file_writer.close();
         });
     }
 }
 
 function connectSerialPort(data) {
     updatePreferences();
+    console.log(data.comPort);
     serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
     serialport.on('error', function (err) {
-        console.log("erro", err);
         window.alert("Error trying to open Port: " + err);
     });
     serialport.on("open", function (err) {
@@ -170,9 +176,13 @@ function connectSerialPort(data) {
         sendButton.disabled = false;
         sendInput.disabled = false;
         lineEnding.disabled = false;
-        log_file_writer = fs.createWriteStream(log_folder_input.value + "log.txt", {
-            flags: 'w'
-        });
+        if (log_type.value != 'none' && fs.existsSync(log_folder_input.value)) {
+            log_file_writer = fs.createWriteStream(log_folder_input.value + "log.txt", {
+                flags: log_type.value
+            });
+        }
+        else
+            window.alert("Folder for the Log file does not exist");
     });
     serialport.on("close", function (err) {
         sendButton.disabled = true;
@@ -189,36 +199,61 @@ function connectSerialPort(data) {
     });
 }
 
-function recvData(message) {
+function recvData(payload) {
+    var message = payload;
+    let date = new Date();
+    var tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
+    var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+    var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (lineStart == true) {
-        if (addTimestamp.checked) {
-            let date = new Date();
-            message = "<a>" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds() + "-> </a>" + message;
-        }
+        if (addTimestamp.checked)
+            message = "<a>" + current_datetime + "-> </a>" + message;
+        if (log_addTimestamp.checked)
+            payload = current_datetime + "->" + payload;
         console.log("inicio linha");
         lineStart = false;
     }
     var index = message.indexOf("\n");
     var m_length = message.length;
     while (index > -1) {
-        var new_line = "<br>";
+        var message_new_line = "<br>";
+        var payload_new_line = "";
         if (index < m_length) {
-            if (addTimestamp.checked) {
-                let date = new Date();
-                new_line = "<br>" + "<a>" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds() + "-> </a>";
-            }
+            let date = new Date();
+            if (addTimestamp.checked)
+                message_new_line = "<br>" + "<a>" + current_datetime + "-> </a>";
+            if (log_addTimestamp.checked)
+                payload_new_line = "\r\n" + current_datetime + "->";
         }
         else
             lineStart = true;
 
-        message = message.replace(/(?:\r\n|\n)/g, new_line);
+        message = message.replace(/(?:\r\n|\n)/g, message_new_line);
+        payload = payload.replace(/(?:\r\n|\n)/g, payload_new_line);
         index = message.indexOf("\n");
     }
-    log_file_writer.write(message);
+    if (log_file_writer != null)
+        log_file_writer.write(payload);
     history.innerHTML += message;
     if (preferences.autoScroll == true)
         terminal.scrollTop = terminal.scrollHeight;
 }
+
+sendInput.addEventListener("keydown", (event) => {
+    switch (event.code) {
+        case 'ArrowUp':
+            console.log("upkey");
+            break;
+        case 'ArrowDown':
+            console.log("downkey");
+            break;
+        case "Enter":
+            if (event.ctrlKey == true)
+                sendData();
+            break;
+    }
+    // do something
+});
 
 function sendData() {
     var line_end = "";
@@ -231,31 +266,20 @@ function sendData() {
     var data = Buffer.from(sendInput.value + line_end, "utf-8");
     serialport.write(data, function (err) {
         if (err) {
-            return console.log('Error on write: ', err.message);
+            window.alert('Error on write: ', err.message);
+            return;
         }
-        console.log('message written');
     });
     sendInput.value = "";
 }
 
-function toggleField(hideObj, showObj) {
-    hideObj.disabled = true;
-    hideObj.style.display = 'none';
-    showObj.disabled = false;
-    showObj.style.display = 'inline';
-    showObj.focus();
-    console.log("hide:", hideObj);
-    console.log("show:", showObj);
-}
-
 function cleanTerminal() {
     history.innerHTML = "";
-    console.log("apagou");
 }
 getPorts();
 
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
-var addr2line_path = "C:\\Users\\benja\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
+var addr2line_path = "\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
 var elf_path = "C:\\Users\\benja\\Documents\\Arduino\\teste_serial_cam\\build\\esp32.esp32.esp32\\teste_serial_cam.ino.bin";
 var memory_address = "0x400d27c8:0x3ffe2240";
 var command = addr2line_path + " -pFiac -e" + elf_path + " " + memory_address;

@@ -27,6 +27,10 @@ body {
     right: 5%;
 }
 
+#listPorts:hover {
+    background: rgb(50, 93, 130);
+}
+
 .options_button {
     background: rgb(70, 113, 150);
     color: white;

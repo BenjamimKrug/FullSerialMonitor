@@ -17,23 +17,20 @@
     </div>
     <div class="terminal" id="terminal">
         <div id="history"></div>
-        <div class="line">
-            <span id="path">c:/&nbsp;>&nbsp;</span>
-        </div>
     </div>
 
     <div id="config_menu" class="config_menu" style="display:none">
         LOG FILE<br>
         <select id="log_type">
-            <option value="0">None</option>
-            <option value="1">Overwrite</option>
-            <option value="2">Append</option>
+            <option value="none">None</option>
+            <option value="w">Overwrite</option>
+            <option value="a">Append</option>
         </select>
-        <input type="checkbox" id="log_autoScroll" />
-        <label for="logAutoScroll">Add autoScroll</label>
+        <input type="checkbox" id="log_addTimestamp" />
+        <label for="log_addTimestamp">Add Timestamp</label>
         <br>
         <input type="text" id="log_folder_input" class="file_path"/>
-        <input type="file" id="log_folder" style="display:none" onchange="readDirPaths()" webkitdirectory />
+        <input type="file" id="log_folder" style="display:none" onchange="readDirPaths(true, false)" webkitdirectory />
         <input type="button" value="Browse..." onclick="log_folder.click();"/>
         <br><br>
         EXCEPTION DECODER
@@ -41,7 +38,7 @@
         <label>
             Arduino packages folder<br>
             <input type="text" id="decoder_folder_input" class="file_path"/>
-            <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths()" webkitdirectory />
+            <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths(false,true)" webkitdirectory />
             <input type="button" value="Browse..." onclick="decoder_folder.click();"/>
         </label>
 
@@ -61,15 +58,10 @@
         <input type="checkbox" id="addTimestamp" class="checkbox_options" onClick="updatePreferences()">
         <br>
 
-        <select id="comPorts" class="select_input" onchange="if(this.options[this.selectedIndex].value == 'customOption'){
-            toggleField(comPorts_input,comPorts);
-            this.selectedIndex='0';
-        }">
+        <select id="comPorts" class="select_input">
         </select>
-        <input type="text" id="comPorts_input" list="comPorts" class="select_input" style="display:none;"
-            disabled="disabled" onblur="if(this.value==''){toggleField(comPorts,comPorts_input)}" />
         <button id="listPorts" onclick="getPorts()">LIST</button>
-        <br>
+        <br><br>
 
         <select id="baudrate_input" class="select_input">
             <option>4800</option>
@@ -84,7 +76,7 @@
             <option>921600</option>
             <option>1000000</option>
         </select>
-        <label for="baudrate" class="select_input" style="right:25px; transform: translate(0, 20%)">bps</label>
+        <label for="baudrate" style="position:absolute;right:25px;">bps</label>
         <br><br>
         <button id="connectSerial" class="options_button" onclick="connect()"><i
                 class="fa fa-trash"></i>CONNECT</button><br><br>

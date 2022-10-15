@@ -1,1 +1,1 @@
-{"comPort":"COM6","baudrate":"115200","autoScroll":true,"addTimestamp":true,"logFolder":"C:\\Projetos\\testes_gerais\\","decoderFolder":"C:\\Users\\benja\\AppData\\Local\\Arduino15\\","logType":"1","logAutoScroll":false}
+{"comPort":"COM5","baudrate":"115200","autoScroll":true,"addTimestamp":true,"logFolder":"C:\\Users\\benja\\Documents\\","decoderFolder":"C:\\Users\\benja\\AppData\\Local\\Arduino15\\","logType":"a","logAddTimestamp":true}
