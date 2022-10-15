@@ -20,6 +20,9 @@
     "electron": "^20.1.4"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "electron-find": "^1.0.7",
+    "remote": "^0.2.6",
     "serialport": "^10.4.0",
     "websocket": "^1.0.34",
     "ws": "^8.8.1"

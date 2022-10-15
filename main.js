@@ -1,11 +1,18 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const url = require('url');
+require('@electron/remote/main').initialize();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-
+var options = {
+    forward: true,
+    findNext: false,
+    matchCase: false,
+    wordStart: false,
+    medialCapitalAsWordStart: false
+}
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
@@ -35,6 +42,26 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null;
     });
+    require("@electron/remote/main").enable(mainWindow.webContents);
+
+
+
+    mainWindow.on('focus', () => {
+        globalShortcut.register('CmdorCtrl+F', () => {
+            mainWindow.webContents.send('find_request', options);
+        });
+    });
+    /*
+        mainWindow.webContents.on('found-in-page', (event, result) => {
+            console.log(result);
+        });
+        ipcMain.on('search-text', (event, arg) => {
+            console.log(mainWindow.webContents.findInPage(arg));
+        });
+    
+        mainWindow.on('blur', () => {
+            globalShortcut.unregister('CmdorCtrl+F');
+        });*/
 }
 
 // This method will be called when Electron has finished

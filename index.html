@@ -29,20 +29,22 @@
         <input type="checkbox" id="log_addTimestamp" />
         <label for="log_addTimestamp">Add Timestamp</label>
         <br>
-        <input type="text" id="log_folder_input" class="file_path"/>
+        <input type="text" id="log_folder_input" class="file_path" />
         <input type="file" id="log_folder" style="display:none" onchange="readDirPaths(true, false)" webkitdirectory />
-        <input type="button" value="Browse..." onclick="log_folder.click();"/>
+        <input type="button" value="Browse..." onclick="log_folder.click();" />
         <br><br>
         EXCEPTION DECODER
         <br>
         <label>
             Arduino packages folder<br>
-            <input type="text" id="decoder_folder_input" class="file_path"/>
-            <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths(false,true)" webkitdirectory />
-            <input type="button" value="Browse..." onclick="decoder_folder.click();"/>
+            <input type="text" id="decoder_folder_input" class="file_path" />
+            <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths(false,true)"
+                webkitdirectory />
+            <input type="button" value="Browse..." onclick="decoder_folder.click();" />
         </label>
 
-        <button onclick="backupPreferences();config_menu.style.display = 'none'" style="right: 150px" class="close_btn">Cancel</button>
+        <button onclick="backupPreferences();config_menu.style.display = 'none'" style="right: 150px"
+            class="close_btn">Cancel</button>
         <button onclick="updatePreferences();config_menu.style.display = 'none'" style="right: 10px" class="close_btn">
             Save and Close
         </button>
@@ -82,6 +84,10 @@
                 class="fa fa-trash"></i>CONNECT</button><br><br>
         <button id="disconnectSerial" class="options_button" onclick="disconnect()">DISCONNECT</button><br><br>
         <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">CLEAN</button><br><br>
+
+        <div id="modalbox" style="display: 'none'; position:'fixed'; z-Index: 1">
+            <input type="text" onChange="searchPage(event)" />
+        </div>
     </div>
     <script src="./renderer.js"></script>
 </body>

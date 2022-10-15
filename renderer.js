@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { BrowserWindow } = require('electron');
+const { ipcRenderer } = require('electron')
 const { SerialPort } = require("serialport");
 const { exec } = require("child_process");
 const terminal = document.getElementById("terminal");
@@ -24,6 +24,32 @@ var preferences = null;
 var prev_preferences = null;
 var lineStart = true;
 let log_file_writer = null;
+var pos = 0;
+var input_history = [];
+var prev_sendInput = "";
+const remote = require('@electron/remote');
+const { FindInPage } = require('electron-find');
+
+// config UI of find interface 
+let findInPage = new FindInPage(remote.getCurrentWebContents(), {
+    boxBgColor: '#333',
+    boxShadowColor: '#467196',
+    inputColor: '#aaa',
+    inputBgColor: '#222',
+    inputFocusColor: '#555',
+    textColor: '#aaa',
+    textHoverBgColor: '#555',
+    caseSelectedColor: '#555',
+    offsetRight: 202,
+    offsetTop: 32,
+    borderColor:'#467196',
+    parent: terminal
+});
+
+
+ipcRenderer.on('find_request', () => {
+    findInPage.openFindWindow();
+});
 
 fs.readFile("./preferences.json", 'utf8', (err, data) => {
     if (err) {
@@ -242,10 +268,20 @@ function recvData(payload) {
 sendInput.addEventListener("keydown", (event) => {
     switch (event.code) {
         case 'ArrowUp':
-            console.log("upkey");
+            if (pos == input_history.length)
+                prev_sendInput = sendInput.value;
+            if (pos > 0)
+                pos--;
+            if (input_history[pos] != undefined)
+                sendInput.value = input_history[pos];
             break;
         case 'ArrowDown':
-            console.log("downkey");
+            if (pos <= input_history.length)
+                pos++;
+            if (input_history[pos] != undefined)
+                sendInput.value = input_history[pos];
+            else
+                sendInput.value = prev_sendInput;
             break;
         case "Enter":
             if (event.ctrlKey == true)
@@ -270,6 +306,8 @@ function sendData() {
             return;
         }
     });
+    input_history.push(sendInput.value);
+    pos++;
     sendInput.value = "";
 }
 
