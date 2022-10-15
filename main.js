@@ -33,7 +33,7 @@ function createWindow() {
     }));
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -51,6 +51,9 @@ function createWindow() {
             mainWindow.webContents.send('find_request', options);
         });
     });
+    mainWindow.on('blur', () => {
+        globalShortcut.unregister('CmdorCtrl+F')
+    })
     /*
         mainWindow.webContents.on('found-in-page', (event, result) => {
             console.log(result);
@@ -73,7 +76,8 @@ app.on('ready', createWindow);
 app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    app.quit()
+    app.quit();
+    globalShortcut.unregister('CmdorCtrl+F')
 });
 
 app.on('activate', function () {

@@ -9,48 +9,8 @@
     min-height: 80%;
     overflow-x: scroll;
     overflow-y: scroll;
-    resize: none
-}
-
-body {
-    background: rgb(70, 70, 70);
-    color: white;
-}
-
-#listPorts {
-    background: rgb(70, 113, 150);
-    color: white;
-    border-radius: 4px;
-    border-style: solid;
-    border-color: rgb(70, 113, 150);
-    position: absolute;
-    right: 5%;
-}
-
-#listPorts:hover {
-    background: rgb(50, 93, 130);
-}
-
-.options_button {
-    background: rgb(70, 113, 150);
-    color: white;
-    border-radius: 4px;
-    border-style: solid;
-    border-color: rgb(70, 113, 150);
-    left: 50%;
-    width: 90%;
-    position: absolute;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-button:hover {
-    background: rgb(50, 93, 130);
-}
-
-.line {
-    display: table;
-    width: 100%;
+    resize: none;
+    width: calc(100% - 215px);
 }
 
 .terminal span {
@@ -60,7 +20,6 @@ button:hover {
 
 .terminal input {
     display: table-cell;
-    width: 100%;
     border: none;
     background: black;
     color: white;
@@ -87,6 +46,47 @@ button:hover {
     background: #555;
 }
 
+body {
+    background: rgb(70, 70, 70);
+    color: white;
+}
+
+.general_btn {
+    background: rgb(70, 113, 150);
+    color: white;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: rgb(70, 113, 150);
+    position: absolute;
+    right: 5px;
+}
+
+.general_btn:hover {
+    background: rgb(50, 93, 130);
+}
+
+.options_button {
+    background: rgb(70, 113, 150);
+    color: white;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: rgb(70, 113, 150);
+    left: 50%;
+    width: 90%;
+    position: absolute;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+button:hover {
+    background: rgb(50, 93, 130);
+}
+
+.line {
+    display: table;
+    width: 100%;
+}
+
 .checkbox_options {
     right: 5%
 }
@@ -107,7 +107,7 @@ button:hover {
     position: fixed;
     top: 0;
     right: 0;
-    background-color: #484848;
+    background-color: #303030;
     width: 200px;
     height: 100%;
     resize: horizontal;
@@ -132,7 +132,7 @@ input::-webkit-calendar-picker-indicator {
     width: 50%;
     height: 50%;
     border: 3px solid black;
-    background-color: darkgrey;
+    background-color: #555;
     padding: 10px;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
@@ -146,4 +146,8 @@ input::-webkit-calendar-picker-indicator {
 
 .file_path {
     width: 82%;
+}
+
+img {
+    transform: translate(0, 20%);
 }

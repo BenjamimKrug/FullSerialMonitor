@@ -280,7 +280,7 @@ function recvData(payload) {
     if (log_file_writer != null)
         log_file_writer.write(payload);
     history.innerHTML += message;
-    if (preferences.autoScroll == true)
+    if (autoScroll.checked == true)
         terminal.scrollTop = terminal.scrollHeight;
 }
 
@@ -333,7 +333,7 @@ function sendData() {
 function cleanTerminal() {
     history.innerHTML = "";
     first_line = true;
-    start_line_index = current_line_index + 1;
+    start_line_index = current_line_index;
 }
 getPorts();
 
