@@ -5,6 +5,7 @@ const remote = require('@electron/remote');
 const { FindInPage } = require('electron-find');
 
 const terminal = document.getElementById("terminal");
+const output = document.getElementById("output");
 
 //options menu elements
 const autoScroll = document.getElementById("autoScroll");
@@ -149,14 +150,7 @@ function recvData(payload) {
     var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (first_line == true) {
-        first_line = false;/*
-        var message_start = "<a id='l" + current_line_index + "'><a id='" + current_line_index;
-        current_line_index++;
-        if (addTimestamp.checked == false)
-            message_start += "' style='display:none";
-        message_start += "'>" + current_datetime + "-> </a>" + message + "</a>";
-        message = message_start;
-        */
+        first_line = false;
         if (log_addTimestamp.checked)
             payload = current_datetime + "->" + payload;
 
@@ -179,15 +173,6 @@ function recvData(payload) {
         var m_length = message.length;
         if (index > -1) {
             while (index > -1) {
-                /*
-                var message_new_line = "</a><br><a id='l" + current_line_index + "'><a id='" + current_line_index;
-                var payload_new_line = "";
-                current_line_index++;
-                if (addTimestamp.checked == false)
-                    message_new_line += "' style='display:none";
-                message_new_line += "'>" + current_datetime + "-> </a>";           
-                message = message.replace('\n', message_new_line);
-                */
                 var chunk = message.substring(lastIndex, index);
                 current_line.innerHTML += chunk;
                 terminal.appendChild(document.createElement("br"));
@@ -214,6 +199,7 @@ function recvData(payload) {
                 prev_line = current_line;
                 current_line = message_new_line;
                 current_line_index++;
+                line_parsed = false;
             }
             if (index < m_length) {
                 var chunk = message.substring(lastIndex, m_length);
@@ -224,13 +210,7 @@ function recvData(payload) {
             current_line.innerHTML += message;
         }
     }
-    if (prev_line != null)
-        if (prev_line.innerHTML.indexOf("Backtrace") > -1 && backtraceDecoder_input_line != prev_line.id) {
-            console.log(prev_line.innerHTML);
-            backtraceDecoder_input = prev_line.innerHTML;
-            backtraceDecoder_input_line = prev_line.id;
-            decodeResult();
-        }
+    runParsers();
 
     if (log_file_writer != null)
         log_file_writer.write(payload);
@@ -286,7 +266,5 @@ function sendData() {
     sendInput.value = "";
 }
 //Data send handles end
-
-
 getPorts();
 

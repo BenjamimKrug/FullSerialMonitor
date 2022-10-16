@@ -5,12 +5,67 @@
     font-weight: bold;
     padding: 10px;
     overflow: hidden;
-    max-height: 80%;
-    min-height: 80%;
+    max-height: 79%;
+    min-height: 79%;
     overflow-x: scroll;
     overflow-y: scroll;
     resize: none;
     width: calc(100% - 215px);
+}
+
+.output {
+    background: rgb(45, 45, 45);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    overflow: hidden;
+    max-height: 10%;
+    min-height: 10%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    resize: none;
+    width: calc(100% - 215px);
+}
+
+.output_history {
+    background: rgb(45, 45, 45);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    overflow: hidden;
+    max-height: 50%;
+    min-height: 50%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    resize: none;
+    width: calc(100% - 215px);
+}
+
+.output_entry {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.string {
+    color: green;
+}
+
+.number {
+    color: darkorange;
+}
+
+.boolean {
+    color: blue;
+}
+
+.null {
+    color: magenta;
+}
+
+.key {
+    color: red;
 }
 
 .terminal span {

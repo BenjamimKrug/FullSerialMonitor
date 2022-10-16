@@ -13,9 +13,10 @@ var addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp
 var memory_address = null;
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
-
-function decodeResult() {
+function decodeBacktrace() {
     if (elf_path_input.value != "") {
+        var backtraceResult = document.createElement("a");
+        backtraceResult.setAttribute("id", "p" + backtraceDecoder_input_line);
         var index = backtraceDecoder_input.indexOf(" ");
         var lastIndex = 0;
         var m_length = backtraceDecoder_input.length;
@@ -24,34 +25,32 @@ function decodeResult() {
             lastIndex = index + 1;
             index = backtraceDecoder_input.indexOf(" ", lastIndex);
             if (!memory_address.startsWith("Backtrace")) {
-                var command = decoder_folder_input.value + addr2line_path + " -pFiac -e " + elf_path_input.value.trim() + " " + memory_address;
-                console.log(command);
+                var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
                 exec(command, (error, stdout, stderr) => {
                     if (error) {
-                        console.log(`error: ${error.message}`);
+                        backtraceResult.innerHTML += syntaxHighlightDecoder(error.message + "<br>");
                         return;
                     }
                     if (stderr) {
-                        console.log(`stderr: ${stderr}`);
+                        backtraceResult.innerHTML += syntaxHighlightDecoder(stderr + "<br>");
                         return;
                     }
-                    console.log(`stdout: ${stdout}`);
+                    backtraceResult.innerHTML += syntaxHighlightDecoder(stdout + "<br>");
                 });
             }
         }
         memory_address = backtraceDecoder_input.substring(lastIndex, m_length - 1);
         if (!memory_address.startsWith("Backtrace")) {
-            var command = addr2line_path + " -pFiac -e " + elf_path_input.value + " " + memory_address;
+            var command = addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
             exec(command, (error, stdout, stderr) => {
-                if (error) {
-                    console.log(`error: ${error.message}`);
-                    return;
-                }
-                if (stderr) {
-                    console.log(`stderr: ${stderr}`);
-                    return;
-                }
-                console.log(`stdout: ${stdout}`);
+                if (error)
+                    backtraceResult.innerHTML += syntaxHighlightDecoder(error.message + "<br>");
+                if (stderr)
+                    backtraceResult.innerHTML += syntaxHighlightDecoder(stderr + "<br>");
+                if (stdout)
+                    backtraceResult.innerHTML += syntaxHighlightDecoder(stdout + "<br>");
+                addParserResult(backtraceResult, backtraceDecoder_input);
+                return;
             });
         }
     }
@@ -60,5 +59,25 @@ function decodeResult() {
             elf_error_warning = true;
             window.alert("Backtrace could not be parsed, choose .elf file please");
         }
+        return "No ELF file given";
     }
+}
+
+function syntaxHighlightDecoder(decoded) {
+    decoded = decoded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return decoded.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
 }
