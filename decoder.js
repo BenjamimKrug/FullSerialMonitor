@@ -28,14 +28,14 @@ function decodeBacktrace() {
                 var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
                 exec(command, (error, stdout, stderr) => {
                     if (error) {
-                        backtraceResult.innerHTML += syntaxHighlightDecoder(error.message + "<br>");
+                        backtraceResult.innerHTML += error.message + "<br>";
                         return;
                     }
                     if (stderr) {
-                        backtraceResult.innerHTML += syntaxHighlightDecoder(stderr + "<br>");
+                        backtraceResult.innerHTML += stderr + "<br>";
                         return;
                     }
-                    backtraceResult.innerHTML += syntaxHighlightDecoder(stdout + "<br>");
+                    backtraceResult.innerHTML += stdout + "<br>";
                 });
             }
         }
@@ -44,11 +44,11 @@ function decodeBacktrace() {
             var command = addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
             exec(command, (error, stdout, stderr) => {
                 if (error)
-                    backtraceResult.innerHTML += syntaxHighlightDecoder(error.message + "<br>");
+                    backtraceResult.innerHTML += error.message + "<br>";
                 if (stderr)
-                    backtraceResult.innerHTML += syntaxHighlightDecoder(stderr + "<br>");
+                    backtraceResult.innerHTML += stderr + "<br>";
                 if (stdout)
-                    backtraceResult.innerHTML += syntaxHighlightDecoder(stdout + "<br>");
+                    backtraceResult.innerHTML += stdout + "<br>";
                 addParserResult(backtraceResult, backtraceDecoder_input);
                 return;
             });

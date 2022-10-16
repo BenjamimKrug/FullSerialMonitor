@@ -47,9 +47,12 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
         if (typeof (preferences.decoderArch) !== 'undefined')
             decoderArch.value = preferences.decoderArch;
 
+        if (typeof (preferences.elfPath) !== 'undefined')
+            elf_path_input.value = preferences.elfPath;
+
         if (typeof (preferences.customParsers) !== 'undefined') {
             customParsers = preferences.customParsers;
-            customParsersCount = customParsers.length;
+            updateParsers();
         }
     }
     prev_preferences = preferences;
@@ -89,8 +92,13 @@ function backupPreferences() {
     if (typeof (prev_preferences.decoderArch) !== 'undefined')
         decoderArch.value = prev_preferences.decoderArch;
 
-    if (typeof (prev_preferences.customParsers) !== 'undefined')
+    if (typeof (prev_preferences.elfPath) !== 'undefined')
+        elf_path_input.value = prev_preferences.elfPath;
+
+    if (typeof (prev_preferences.customParsers) !== 'undefined') {
         customParsers = prev_preferences.customParsers;
+        updateParsers();
+    }
 }
 
 function readDirPaths(log, decoder) {
@@ -135,6 +143,8 @@ function updatePreferences() {
     preferences.comPort = comPorts.value.trim();
     preferences.baudrate = baudrate_input.value.trim();
     preferences.ctrlEnter = ctrlEnter.checked;
+    preferences.elfPath = elf_path_input.value.trim();
+    saveCustomParsers();
     preferences.customParsers = customParsers;
     fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
         if (err)

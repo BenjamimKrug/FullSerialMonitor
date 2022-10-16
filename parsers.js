@@ -3,16 +3,29 @@ var results = [];
 var line_parsed = false;
 var customParsersCount = 0;
 var customParsers = [];
+var deletedCustomParsers = [];
 var customParsersDiv = document.getElementById("customParsersDiv");
 
 function runParsers() {
     if (prev_line != null) {
-        if (customParsers.length > 0) {
-            console.log(customParsers);
+        for (var i = 0; i < customParsers.length; i++) {
+            if (typeof (customParsers[i].trigger) !== 'undefined') {
+                if (prev_line.innerHTML.indexOf(customParsers[i].trigger) > -1) {
+                    try {
+                        var data_line = prev_line.innerHTML.trim();
+                        console.log("data_line: ", data_line);
+                        var func = `${customParsers[i].func}('${data_line}')`;
+                        console.log(func);
+                        addParserResult(eval(func), data_line);
+                    }
+                    catch (e) {
+                        console.log('error:', e);
+                    }
+                }
+            }
         }
         if (prev_line.innerHTML.indexOf("Backtrace") > -1 && line_parsed == false) {
             line_parsed = true;
-            console.log(prev_line.innerHTML);
             backtraceDecoder_input = prev_line.innerHTML;
             backtraceDecoder_input_line = prev_line.id;
             decodeBacktrace();
@@ -80,43 +93,114 @@ function getParserScript(id) {
         newParserScript_input.value = newParserScript.files[0].path;
 }
 
-function clickBrowse(id){
+function clickBrowse(id) {
     document.getElementById("cpScript" + id).click();
 }
 
-function createCustomParserField() {
+function updateParsers() {
+    customParsersCount = 0;
+    customParsersDiv.innerHTML = "";
+    for (var i = 0; i < customParsers.length; i++) {
+        createCustomParserField(customParsers[i].name, customParsers[i].script, customParsers[i].func, customParsers[i].trigger);
+        var customScript = document.createElement("script");
+        customScript.setAttribute("src", customParsers[i].script);
+        var body = document.getElementsByTagName('body').item(0);
+        body.appendChild(customScript);
+    }
+}
+
+function saveCustomParsers() {
+    customParsers = [];
+    for (var i = 0; i < customParsersCount; i++) {
+        if (!deletedCustomParsers.includes(i)) {
+            var newParserScript = document.getElementById("cpScriptInput" + i);
+            var newParserName = document.getElementById("cpName" + i);
+            var newParserFunc = document.getElementById("cpFunc" + i)
+            var newParserTrigger = document.getElementById("cpTrig" + i);
+            customParsers.push({
+                script: newParserScript.value.trim(),
+                name: newParserName.value.trim(),
+                func: newParserFunc.value.trim(),
+                trigger: newParserTrigger.value.trim()
+            });
+        }
+    }
+    updateParsers();
+}
+
+function deleteCustomParserField(id) {
+    targetParserField = document.getElementById(`cpDiv${id}`);
+    customParsersDiv.removeChild(targetParserField);
+    deletedCustomParsers.push(id);
+}
+
+function createCustomParserField(name, script, func, trigger) {
     var newParserField = document.createElement("div");
+    newParserField.setAttribute("id", "cpDiv" + customParsersCount);
+    newParserField.setAttribute("class", "custom_parser_entry");
     var newParserName = document.createElement("input");
     newParserName.setAttribute("type", "text");
+    newParserName.setAttribute("placeholder", "parser name");
     newParserName.setAttribute("id", "cpName" + customParsersCount);
+    newParserName.setAttribute("class", "custom_parser_input");
+    if (typeof (name) !== 'undefined')
+        newParserName.setAttribute("value", name);
+
+    var newParserFunc = document.createElement("input");
+    newParserFunc.setAttribute("type", "text");
+    newParserFunc.setAttribute("placeholder", "parser function");
+    newParserFunc.setAttribute("id", "cpFunc" + customParsersCount);
+    newParserFunc.setAttribute("class", "custom_parser_input");
+    if (typeof (func) !== 'undefined')
+        newParserFunc.setAttribute("value", func);
 
     var newParserScript_input = document.createElement("input");
     newParserScript_input.setAttribute("type", "text");
+    newParserScript_input.setAttribute("placeholder", "script file path");
     newParserScript_input.setAttribute("id", "cpScriptInput" + customParsersCount);
+    newParserScript_input.setAttribute("class", "custom_parser_input");
+    if (typeof (script) !== 'undefined')
+        newParserScript_input.setAttribute("value", script);
 
     var newParserScript = document.createElement("input");
     newParserScript.setAttribute("type", "file");
     newParserScript.setAttribute("id", "cpScript" + customParsersCount);
     newParserScript.setAttribute("style", "display:none");
+    newParserScript.setAttribute("accept", ".js");
     newParserScript.setAttribute("onchange", `getParserScript(${customParsersCount})`);
 
     var newParserScriptBrowse = document.createElement("button");
     newParserScriptBrowse.setAttribute("onclick", `clickBrowse(${customParsersCount})`);
+    newParserScriptBrowse.setAttribute("class", "general_btn");
+    newParserScriptBrowse.setAttribute("style", "position:relative;left:10px");
+    newParserScriptBrowse.innerHTML = "Browse...";
 
-    var newParserSubmit = document.createElement("button");
-    newParserSubmit.setAttribute("onclick", `addCustomParser(${customParsersCount})`);
+    var newParserTrigger = document.createElement("input");
+    newParserTrigger.setAttribute("type", "text");
+    newParserTrigger.setAttribute("placeholder", "parser trigger");
+    newParserTrigger.setAttribute("id", "cpTrig" + customParsersCount);
+    newParserTrigger.setAttribute("class", "custom_parser_input");
+    if (typeof (trigger) !== 'undefined')
+        newParserTrigger.setAttribute("value", trigger);
+
+    var newParserExclude = document.createElement("button");
+    newParserExclude.setAttribute("style", "position: absolute;right:5px");
+    newParserExclude.innerHTML = "Delete";
+    newParserExclude.setAttribute("onclick", `deleteCustomParserField(${customParsersCount})`);
+
+    newParserField.innerHTML = "Name ";
     newParserField.appendChild(newParserName);
+    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbspFunction ";
+    newParserField.appendChild(newParserFunc);
+    newParserField.appendChild(document.createElement("br"));
+    newParserField.innerHTML += "Script ";
     newParserField.appendChild(newParserScript_input);
     newParserField.appendChild(newParserScript);
     newParserField.appendChild(newParserScriptBrowse);
-    newParserField.appendChild(newParserSubmit);
+    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbspTrigger ";
+    newParserField.appendChild(newParserTrigger);
+    newParserField.appendChild(newParserExclude);
     customParsersDiv.appendChild(newParserField);
     customParsersCount++;
 }
 
-function addCustomParser(id) {
-    var newParserScript = document.getElementById("cpScriptInput" + id);
-    var newParserName = document.getElementById("cpName" + id);
-    customParsers.push({ script: newParserScript.value, name: newParserName.value });
-    console.log(customParsers);
-}

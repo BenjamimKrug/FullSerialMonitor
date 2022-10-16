@@ -1,51 +1,64 @@
 .terminal {
-    background: rgb(45, 45, 45);
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    padding: 10px;
-    overflow: hidden;
     max-height: 79%;
     min-height: 79%;
+    overflow: hidden;
     overflow-x: scroll;
     overflow-y: scroll;
-    resize: none;
     width: calc(100% - 215px);
 }
 
 .output {
-    background: rgb(45, 45, 45);
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    padding: 10px;
     overflow: hidden;
     max-height: 10%;
     min-height: 10%;
     overflow-x: scroll;
     overflow-y: scroll;
-    resize: none;
     width: calc(100% - 215px);
 }
 
-.output_history {
+.customParsersDiv {
+    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: 95%;
+    height:47%;
+}
+
+.box {
     background: rgb(45, 45, 45);
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     padding: 10px;
-    overflow: hidden;
+    resize: none;
+}
+
+.output_history {
     max-height: 50%;
     min-height: 50%;
     overflow-x: scroll;
     overflow-y: scroll;
-    resize: none;
-    width: calc(100% - 215px);
 }
 
 .output_entry {
     white-space: nowrap;
     overflow: hidden;
+}
+
+.custom_parser_entry {
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border: 3px solid black;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.custom_parser_input {
+    position: sticky;
+    left: 60px;
 }
 
 .string {
@@ -113,7 +126,6 @@ body {
     border-style: solid;
     border-color: rgb(70, 113, 150);
     position: absolute;
-    right: 5px;
 }
 
 .general_btn:hover {
@@ -181,11 +193,12 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .config_menu {
+    overflow: hidden;
     position: fixed;
     top: 50%;
     left: 50%;
     width: 50%;
-    height: 50%;
+    height: 70%;
     border: 3px solid black;
     background-color: #555;
     padding: 10px;

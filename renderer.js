@@ -204,6 +204,7 @@ function recvData(payload) {
             if (index < m_length) {
                 var chunk = message.substring(lastIndex, m_length);
                 current_line.innerHTML += chunk;
+                line_parsed = false;
             }
         }
         else {
