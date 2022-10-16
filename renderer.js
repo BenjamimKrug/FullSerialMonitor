@@ -1,37 +1,33 @@
 const fs = require('fs');
 const { ipcRenderer } = require('electron')
 const { SerialPort } = require("serialport");
-const { exec } = require("child_process");
 const remote = require('@electron/remote');
 const { FindInPage } = require('electron-find');
-const { Console } = require('console');
+
 const terminal = document.getElementById("terminal");
-const sendInput = document.getElementById("sendInput");
-const history = document.getElementById("history");
+
+//options menu elements
 const autoScroll = document.getElementById("autoScroll");
 const comPorts = document.getElementById("comPorts");
 const comPorts_input = document.getElementById("comPorts_input");
 const baudrate_input = document.getElementById("baudrate_input");
-const lineEnding = document.getElementById("line_ending");
 const addTimestamp = document.getElementById("addTimestamp");
+
+//send data elements and variables
+const sendInput = document.getElementById("sendInput");
 const sendButton = document.getElementById("sendButton");
-var log_addTimestamp = document.getElementById("log_addTimestamp");
-var log_type = document.getElementById("log_type");
-var log_folder = document.getElementById("log_folder");
-var log_folder_input = document.getElementById("log_folder_input");
-var decoder_folder = document.getElementById("decoder_folder");
-var decoder_folder_input = document.getElementById("decoder_folder_input");
-var config_menu = document.getElementById("config_menu");
-var serialport = null;
-var preferences = null;
-var prev_preferences = null;
-var lineStart = false;
-var first_line = true;
-let log_file_writer = null;
+const lineEnding = document.getElementById("line_ending");
+var ctrlEnter = document.getElementById("ctrlEnter");
 var pos = 0;
 var input_history = [];
 var prev_sendInput = "";
+
+var serialport = null;
+var lineStart = false;
+var first_line = true;
 var current_line_index = 0;
+var current_line = null;
+var prev_line = null;
 var start_line_index = 0;
 
 // config UI of find interface
@@ -50,106 +46,18 @@ let findInPage = new FindInPage(remote.getCurrentWebContents(), {
     parent: terminal
 });
 
+ipcRenderer.on('find_request', () => {
+    findInPage.openFindWindow();
+});
+
+
+//options menu handlers start
 function changeTimestamp() {
     for (var i = start_line_index; i < current_line_index; i++) {
         if (document.getElementById(i) != null)
             document.getElementById(i).style.display = addTimestamp.checked ? "inline" : "none";
     }
 }
-
-ipcRenderer.on('find_request', () => {
-    findInPage.openFindWindow();
-});
-
-fs.readFile("./preferences.json", 'utf8', (err, data) => {
-    if (err) {
-        return;
-    }
-    preferences = JSON.parse(data);
-    if (preferences != null) {
-        if (typeof (preferences.comPort) !== 'undefined')
-            comPorts.value = preferences.comPort;
-        if (typeof (preferences.baudrate) !== 'undefined')
-            baudrate_input.value = preferences.baudrate;
-        if (typeof (preferences.autoScroll) !== 'undefined')
-            autoScroll.checked = preferences.autoScroll;
-        if (typeof (preferences.addTimestamp) !== 'undefined')
-            addTimestamp.checked = preferences.addTimestamp;
-        if (typeof (preferences.logFolder) !== 'undefined')
-            log_folder_input.value = preferences.logFolder;
-        if (typeof (preferences.decoderFolder) !== 'undefined')
-            decoder_folder_input.value = preferences.decoderFolder;
-        if (typeof (preferences.logType) !== 'undefined')
-            log_type.value = preferences.logType;
-        if (typeof (preferences.logAddTimestamp) !== 'undefined')
-            log_addTimestamp.checked = preferences.logAddTimestamp;
-    }
-    prev_preferences = preferences;
-});
-
-function backupPreferences() {
-    if (typeof (prev_preferences.comPort) !== 'undefined')
-        comPorts.value = prev_preferences.comPort;
-    if (typeof (prev_preferences.baudrate) !== 'undefined')
-        baudrate_input.value = prev_preferences.baudrate;
-    if (typeof (prev_preferences.autoScroll) !== 'undefined')
-        autoScroll.checked = prev_preferences.autoScroll;
-    if (typeof (prev_preferences.addTimestamp) !== 'undefined')
-        addTimestamp.checked = prev_preferences.addTimestamp;
-    if (typeof (prev_preferences.logFolder) !== 'undefined')
-        log_folder_input.value = prev_preferences.logFolder;
-    if (typeof (prev_preferences.decoderFolder) !== 'undefined')
-        decoder_folder_input.value = prev_preferences.decoderFolder;
-    if (typeof (prev_preferences.logType) !== 'undefined')
-        log_type.value = prev_preferences.logType;
-    if (typeof (prev_preferences.logAddTimestamp) !== 'undefined')
-        log_addTimestamp.checked = prev_preferences.logAddTimestamp;
-}
-
-function readDirPaths(log, decoder) {
-    if (log) {
-        if (typeof (log_folder.files[0]) !== 'undefined') {
-            var logFolderPath = log_folder.files[0].path;
-            log_folder_input.value = logFolderPath.substring(0, logFolderPath.lastIndexOf('\\') + 1);
-        }
-        else
-            window.alert("Folder completly empty, must have at least one file");
-    }
-    if (decoder) {
-        if (typeof (decoder_folder.files[0]) !== 'undefined') {
-            var decoderFolderPath = decoder_folder.files[0].path;
-            decoder_folder_input.value = decoderFolderPath.substring(0, decoderFolderPath.lastIndexOf('\\') + 1);
-        }
-        else
-            window.alert("Folder completly empty, must have at least one file");
-    }
-}
-
-function updatePreferences() {
-    preferences.logFolder = log_folder_input.value;
-    preferences.decoderFolder = decoder_folder_input.value;
-    preferences.logType = log_type.value;
-    preferences.logAddTimestamp = log_addTimestamp.checked;
-    preferences.autoScroll = autoScroll.checked;
-    if (preferences.autoScroll == true)
-        terminal.scrollTop = terminal.scrollHeight;
-    preferences.addTimestamp = addTimestamp.checked;
-    preferences.comPort = comPorts.value;
-    preferences.baudrate = baudrate_input.value;
-    fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
-        if (err)
-            window.alert("Error on writing preferences file:", err);
-    });
-    prev_preferences = preferences;
-}
-
-document.getElementById("open_config_menu").onclick = function () {
-    prev_preferences = preferences;
-    if (config_menu.style.display != "none")
-        config_menu.style.display = "none";
-    else
-        config_menu.style.display = "block";
-};
 
 function getPorts() {
     var returnList = "";
@@ -189,6 +97,12 @@ function disconnect() {
     }
 }
 
+function cleanTerminal() {
+    terminal.innerHTML = "";
+    first_line = true;
+    start_line_index = current_line_index;
+}
+
 function connectSerialPort(data) {
     updatePreferences();
     serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
@@ -224,7 +138,10 @@ function connectSerialPort(data) {
         recvData(serialport.read().toString());
     });
 }
+//options menu handlers end
 
+
+//data receive handlers start
 function recvData(payload) {
     var message = payload;
     let date = new Date();
@@ -232,60 +149,100 @@ function recvData(payload) {
     var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (first_line == true) {
-        var message_start = "<a id='" + current_line_index;
+        first_line = false;/*
+        var message_start = "<a id='l" + current_line_index + "'><a id='" + current_line_index;
         current_line_index++;
         if (addTimestamp.checked == false)
             message_start += "' style='display:none";
-        message_start += "'>" + current_datetime + "-> </a>" + message;
+        message_start += "'>" + current_datetime + "-> </a>" + message + "</a>";
         message = message_start;
+        */
         if (log_addTimestamp.checked)
             payload = current_datetime + "->" + payload;
-        first_line = false;
-    }
-    if (lineStart == true) {
-        var message_new_line = "<br><a id='";
-        message_new_line += current_line_index;
-        current_line_index++;
+
+        var message_new_line = document.createElement("a");
+        message_new_line.setAttribute("id", 'l' + current_line_index);
+        var timestamp = document.createElement("a");
+        timestamp.innerHTML = current_datetime + "->";
         if (addTimestamp.checked == false)
-            message_new_line += "' style='display:none";
-        message_new_line += "'>" + current_datetime + "-> </a>" + message;
-
-        if (log_addTimestamp.checked)
-            payload = current_datetime + "->" + payload;
-        lineStart = false;
-    }
-    var index = message.indexOf("\n");
-    var m_length = message.length;
-    while (index > -1) {
-        var message_new_line = "<br>";
-        var payload_new_line = "";
-        let date = new Date();
-        message_new_line = "<br><a id='";
-        message_new_line += current_line_index;
-        if (addTimestamp.checked == false)
-            message_new_line += "' style='display:none";
-        message_new_line += "'>" + current_datetime + "-> </a>";
-
-        if (log_addTimestamp.checked)
-            payload_new_line = "\r\n" + current_datetime + "->";
-        if (index == m_length)
-            lineStart = true;
-
+            timestamp.setAttribute("style", "display:none");
+        timestamp.setAttribute("id", current_line_index);
+        message_new_line.innerHTML += message;
+        terminal.appendChild(timestamp);
+        terminal.appendChild(message_new_line);
         current_line_index++;
-        message = message.replace('\n', message_new_line);
-        payload = payload.replace(/(?:\r\n|\n)/g, payload_new_line);
-        index = message.indexOf("\n");
+        current_line = message_new_line;
     }
+    else {
+        var index = message.indexOf("\n");
+        var lastIndex = 0;
+        var m_length = message.length;
+        if (index > -1) {
+            while (index > -1) {
+                /*
+                var message_new_line = "</a><br><a id='l" + current_line_index + "'><a id='" + current_line_index;
+                var payload_new_line = "";
+                current_line_index++;
+                if (addTimestamp.checked == false)
+                    message_new_line += "' style='display:none";
+                message_new_line += "'>" + current_datetime + "-> </a>";           
+                message = message.replace('\n', message_new_line);
+                */
+                var chunk = message.substring(lastIndex, index);
+                current_line.innerHTML += chunk;
+                terminal.appendChild(document.createElement("br"));
+                var message_new_line = document.createElement("a");
+                message_new_line.setAttribute("id", 'l' + current_line_index);
+                var timestamp = document.createElement("a");
+                timestamp.innerHTML = current_datetime + "->";
+                if (addTimestamp.checked == false)
+                    timestamp.setAttribute("style", "display:none");
+                timestamp.setAttribute("id", current_line_index);
+                terminal.appendChild(timestamp);
+                terminal.appendChild(message_new_line);
+
+
+                if (log_addTimestamp.checked)
+                    payload_new_line = "\r\n" + current_datetime + "->";
+
+                if (index == m_length)
+                    lineStart = true;
+
+                payload = payload.replace(/(?:\r\n|\n)/g, payload_new_line);
+                lastIndex = index + 1;
+                index = message.indexOf("\n", lastIndex);
+                prev_line = current_line;
+                current_line = message_new_line;
+                current_line_index++;
+            }
+            if (index < m_length) {
+                var chunk = message.substring(lastIndex, m_length);
+                current_line.innerHTML += chunk;
+            }
+        }
+        else {
+            current_line.innerHTML += message;
+        }
+    }
+    if (prev_line != null)
+        if (prev_line.innerHTML.indexOf("Backtrace") > -1 && backtraceDecoder_input_line != prev_line.id) {
+            console.log(prev_line.innerHTML);
+            backtraceDecoder_input = prev_line.innerHTML;
+            backtraceDecoder_input_line = prev_line.id;
+            decodeResult();
+        }
 
     if (log_file_writer != null)
         log_file_writer.write(payload);
-    history.innerHTML += message;
+    //terminal.innerHTML += message;
     if (autoScroll.checked == true)
         terminal.scrollTop = terminal.scrollHeight;
 }
+//data receive handlers end
 
+//Data sending handles start
 sendInput.addEventListener("keydown", (event) => {
-    switch (event.code) {
+    switch (event.code) { //
         case 'ArrowUp':
             if (pos == input_history.length)
                 prev_sendInput = sendInput.value;
@@ -303,11 +260,10 @@ sendInput.addEventListener("keydown", (event) => {
                 sendInput.value = prev_sendInput;
             break;
         case "Enter":
-            if (event.ctrlKey == true)
+            if (event.ctrlKey == preferences.ctrlEnter)
                 sendData();
             break;
     }
-    // do something
 });
 
 function sendData() {
@@ -329,31 +285,8 @@ function sendData() {
     pos++;
     sendInput.value = "";
 }
+//Data send handles end
 
-function cleanTerminal() {
-    history.innerHTML = "";
-    first_line = true;
-    start_line_index = current_line_index;
-}
+
 getPorts();
 
-//"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
-var addr2line_path = "\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
-var elf_path = "C:\\Users\\benja\\Documents\\Arduino\\teste_serial_cam\\build\\esp32.esp32.esp32\\teste_serial_cam.ino.bin";
-var memory_address = "0x400d27c8:0x3ffe2240";
-var command = addr2line_path + " -pFiac -e" + elf_path + " " + memory_address;
-//xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
-
-/*
-exec(command, (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
-*/

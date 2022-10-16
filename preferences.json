@@ -1,1 +1,1 @@
-{"comPort":"COM5","baudrate":"115200","autoScroll":true,"addTimestamp":true,"logFolder":"C:\\Users\\benja\\Documents\\","decoderFolder":"C:\\Users\\benja\\AppData\\Local\\Arduino15\\","logType":"a","logAddTimestamp":true}
+{"comPort":"COM5","baudrate":"115200","autoScroll":true,"addTimestamp":true,"logFolder":"C:\\Users\\benja\\Documents\\","decoderFolder":"C:\\Users\\benja\\AppData\\Local\\Arduino15\\","logType":"a","logAddTimestamp":true,"ctrlEnter":true,"lineEnding":"\\r\\n"}

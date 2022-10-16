@@ -8,15 +8,14 @@
     <div id="header" style="width:80%">
         <input type="text" id="sendInput" style="width:70%" disabled>
         <button id="sendButton" onclick="sendData()" disabled>Send</button>
-        <select id="line_ending" style="width:120px" disabled>
+        <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
             <option value="">No line ending</option>
-            <option value='\n'>New line(LF)</option>
-            <option value='\r'>Carriage return(CR)</option>
-            <option value="\r\n">Carriage return + New line(CR+LF)</option>
+            <option value='\n'>LF(New line)</option>
+            <option value='\r'>CR(Carriage return)</option>
+            <option value="\r\n">CR+LF(Carriage return + New line)</option>
         </select>
     </div>
     <div class="terminal" id="terminal">
-        <div id="history"></div>
     </div>
 
     <div id="config_menu" class="config_menu" style="display:none">
@@ -70,7 +69,8 @@
         <br>
 
         <label for="addTimestamp" class="label_left">Add Timestamp</label>
-        <input type="checkbox" id="addTimestamp" class="checkbox_options" onchange="updatePreferences();changeTimestamp()">
+        <input type="checkbox" id="addTimestamp" class="checkbox_options"
+            onchange="updatePreferences();changeTimestamp()">
         <br>
 
         <select id="comPorts" class="select_input">
@@ -93,7 +93,7 @@
         </select>
         <label for="baudrate" style="position:absolute;right:25px;transform: translate(0, 10%);">bps</label>
         <br><br>
-        <button id="connectSerial" class="options_button" onclick="connect()">            
+        <button id="connectSerial" class="options_button" onclick="connect()">
             <img src="./images/usb-connected-16.png" width="16" height="16">
             CONNECT
         </button>
@@ -106,8 +106,22 @@
             <img src="./images/trash-2-16.png" width="16" height="16">
             CLEAN
         </button><br><br>
+
+        ESP EXCEPTION DECODER
+        <label for="decoderArch" style="position:relative;left:5%">Arch</label>
+        <select id="decoderAch" class="select_input" style="right:5%">
+            <option value="esp32">ESP32</option>
+            <option value="esp8266">ESP8266</option>
+        </select>
+        <br>
+        ELF File<br>
+        <input type="text" id="elf_path_input" class="file_path" style="width:60%"/>
+        <input type="file" id="elf_path" style="display:none" onchange="getELF();"/>
+        <input type="button" value="Browse..." class="general_btn" onclick="elf_path.click();" />
     </div>
     <script src="./renderer.js"></script>
+    <script src="./preferences_handle.js"></script>
+    <script src="./decoder.js"></script>
 </body>
 
 </html>
