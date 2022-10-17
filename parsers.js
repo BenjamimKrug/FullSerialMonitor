@@ -102,11 +102,14 @@ function updateParsers() {
     customParsersDiv.innerHTML = "";
     for (var i = 0; i < customParsers.length; i++) {
         createCustomParserField(customParsers[i].name, customParsers[i].script, customParsers[i].func, customParsers[i].trigger);
-        var customScript = document.createElement("script");
-        customScript.setAttribute("src", customParsers[i].script);
-        var body = document.getElementsByTagName('body').item(0);
-        body.appendChild(customScript);
+        if (fs.existsSync(customParsers[i].script)) {
+            var customScript = document.createElement("script");
+            customScript.setAttribute("src", customParsers[i].script);
+            var body = document.getElementsByTagName('body').item(0);
+            body.appendChild(customScript);
+        }
     }
+    getESPaddr2line();
 }
 
 function saveCustomParsers() {

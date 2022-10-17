@@ -31,6 +31,7 @@
     font-weight: bold;
     padding: 10px;
     resize: none;
+    white-space: nowrap;
 }
 
 .output_history {

@@ -11,6 +11,8 @@ var elf_error_warning = false;
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
 var addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
 var memory_address = null;
+var esp32_version = "";
+var esp32_gcc_version = "";
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
 function decodeBacktrace() {
@@ -79,5 +81,31 @@ function syntaxHighlightDecoder(decoded) {
             cls = 'null';
         }
         return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+function getESPaddr2line() {
+    var hardwareFolder = decoder_folder_input.value + "packages\\esp32\\hardware\\esp32\\";
+    fs.readdir(hardwareFolder, (err, files) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log(files);
+        files.forEach(file => {
+            esp32_version = file;
+            console.log(esp32_version);
+            fs.readFile(hardwareFolder + esp32_version + "\\installed.json", 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                var installed_json = JSON.parse(data);
+                console.log(installed_json);
+                console.log(installed_json.packages[0].platforms[0].toolsDependencies[0].version);
+                esp32_gcc_version = installed_json.packages[0].platforms[0].toolsDependencies[0].version;
+                addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\" + esp32_gcc_version + "\\bin\\xtensa-esp32-elf-addr2line.exe";
+            });
+        });
     });
 }
