@@ -1,20 +1,31 @@
 var current_parser_index = -1;
 var results = [];
-var line_parsed = false;
+var line_parsed = 0;
 var customParsersCount = 0;
 var customParsers = [];
 var deletedCustomParsers = [];
 var customParsersDiv = document.getElementById("customParsersDiv");
 
 function runParsers() {
-    if (prev_line != null) {
+    console.log(line_parsed, ' ', current_line_index - 1);
+    for (; line_parsed < current_line_index - 1;) {
+        var target_line_element = document.getElementById('l' + line_parsed);
+        console.log(target_line_element);
+        if (typeof (target_line_element) === 'undefined'){
+            continue;
+        }
+        if (target_line_element == null){
+            continue;
+        }
+        var target_line = target_line_element.innerHTML;
+        console.log(target_line);
         for (var i = 0; i < customParsers.length; i++) {
             if (typeof (customParsers[i].trigger) !== 'undefined') {
-                if (prev_line.innerHTML.indexOf(customParsers[i].trigger) > -1) {
+                if (target_line.indexOf(customParsers[i].trigger) > -1) {
                     try {
-                        var data_line = prev_line.innerHTML.trim();
+                        var data_line = target_line.trim();
                         console.log("data_line: ", data_line);
-                        var func = `${customParsers[i].func}('${data_line}')`;
+                        var func = `${customParsers[i].func}('${data_line}',${target_line.id})`;
                         console.log(func);
                         addParserResult(eval(func), data_line);
                     }
@@ -24,28 +35,24 @@ function runParsers() {
                 }
             }
         }
-        if (prev_line.innerHTML.indexOf("Backtrace") > -1 && line_parsed == false) {
-            line_parsed = true;
-            backtraceDecoder_input = prev_line.innerHTML;
-            backtraceDecoder_input_line = prev_line.id;
-            decodeBacktrace();
-            return;
+        if (target_line.indexOf("Backtrace") > -1) {
+            decodeBacktrace(target_line, target_line.id);
         }
-        if (prev_line.innerHTML.startsWith("{") && line_parsed == false) {
-            line_parsed = true;
+        if (target_line.startsWith("{")) {
             try {
-                var parsedJSON = JSON.parse(prev_line.innerHTML);
+                var parsedJSON = JSON.parse(target_line);
                 var jsonResult = document.createElement("pre");
                 jsonResult.setAttribute("id", "p" + backtraceDecoder_input_line);
                 jsonResult.innerHTML = syntaxHighlightJSON(JSON.stringify(parsedJSON, null, 2));
-                addParserResult(jsonResult, prev_line.innerHTML);
+                addParserResult(jsonResult, target_line);
             }
             catch (e) {
                 console.log('invalid json');
             }
-            return;
         }
+        line_parsed++;
     }
+    //line_parsed = current_line_index;
 }
 
 function addParserResult(new_result, new_result_source) {

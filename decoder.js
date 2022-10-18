@@ -4,8 +4,6 @@ var decoder_folder_input = document.getElementById("decoder_folder_input");
 var decoderArch = document.getElementById("decoderArch");
 var elf_path = document.getElementById("elf_path");
 var elf_path_input = document.getElementById("elf_path_input");
-var backtraceDecoder_input;
-var backtraceDecoder_input_line = null;
 var elf_error_warning = false;
 
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
@@ -15,7 +13,7 @@ var esp32_version = "";
 var esp32_gcc_version = "";
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
-function decodeBacktrace() {
+function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line) {
     if (elf_path_input.value != "") {
         var backtraceResult = document.createElement("a");
         backtraceResult.setAttribute("id", "p" + backtraceDecoder_input_line);

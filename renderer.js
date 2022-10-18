@@ -199,12 +199,10 @@ function recvData(payload) {
                 prev_line = current_line;
                 current_line = message_new_line;
                 current_line_index++;
-                line_parsed = false;
             }
             if (index < m_length) {
                 var chunk = message.substring(lastIndex, m_length);
                 current_line.innerHTML += chunk;
-                line_parsed = false;
             }
         }
         else {
