@@ -130,15 +130,21 @@ function addParserResult(newResult, newResultSource, color, parserName) {
     newOutputEntry.setAttribute("value", current_parser_index);
     newOutputEntry.setAttribute("data-parser", parserName);
     newOutputEntry.setAttribute("class", "output_entry");
-    newOutputEntry.setAttribute("style", `border-color:${color}`);
+
+    var target_filter = document.querySelector(`[data-parser="${parserName}"]`);
+    var display_type = 'block';
+    if (target_filter != null){
+        console.log(target_filter);
+        display_type = target_filter.checked ? 'block' : 'none';
+    }
+
+    newOutputEntry.setAttribute("style", `display:${display_type};border-color:${color}`);
     newOutputEntry.setAttribute("onclick", "showOutputResult(this.value)");
     newOutputEntry.innerHTML += newResultSource;
     results.push(newResult);
     parsed_ids.push(newResult.id);
-    console.log(newOutputEntry);
     showOutputResult(current_parser_index);
     output_history.appendChild(newOutputEntry);
-    output_history.appendChild(document.createElement("br"));
 }
 
 function showOutputResult(id) {
@@ -238,6 +244,6 @@ function updateParserHistory(target_filter) {
         console.log('cpl: ', current_parser_line.dataset.parser);
         console.log('tf: ', target_filter.dataset.parser);
         if (current_parser_line.dataset.parser === target_filter.dataset.parser)
-            current_parser_line.style.display = target_filter.checked ? 'inline' : 'none';
+            current_parser_line.style.display = target_filter.checked ? 'block' : 'none';
     });
 }

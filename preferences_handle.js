@@ -5,6 +5,8 @@ var log_type = document.getElementById("log_type");
 var log_folder = document.getElementById("log_folder");
 var log_folder_input = document.getElementById("log_folder_input");
 var json_color = document.getElementById("json_color");
+var json_filter = document.getElementById("json_filter");
+var decoder_filter = document.getElementById("decoder_filter");
 let log_file_writer = null;
 var preferences = null;
 var prev_preferences = null;
@@ -50,9 +52,15 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
 
         if (typeof (preferences.decoderColor) !== 'undefined')
             decoder_color.value = preferences.decoderColor;
+            
+        if (typeof (preferences.decoderFilter) !== 'undefined')
+        decoder_filter.checked = preferences.decoderFilter;
 
         if (typeof (preferences.jsonColor) !== 'undefined')
             json_color.value = preferences.jsonColor;
+
+        if (typeof (preferences.jsonFilter) !== 'undefined')
+            json_filter.checked = preferences.jsonFilter;
 
         if (typeof (preferences.elfPath) !== 'undefined')
             elf_path_input.value = preferences.elfPath;
@@ -105,6 +113,9 @@ function backupPreferences() {
     if (typeof (prev_preferences.jsonColor) !== 'undefined')
         json_color.value = prev_preferences.jsonColor;
 
+    if (typeof (prev_preferences.jsonFilter) !== 'undefined')
+        json_filter.checked = prev_preferences.jsonFilter;
+
     if (typeof (prev_preferences.elfPath) !== 'undefined')
         elf_path_input.value = prev_preferences.elfPath;
 
@@ -149,7 +160,9 @@ function updatePreferences() {
         logFolder: log_folder_input.value.trim(),
         decoderFolder: decoder_folder_input.value.trim(),
         decoderColor: decoder_color.value,
+        decoderFilter: decoder_filter.checked,
         jsonColor: json_color.value,
+        jsonFilter: json_filter.checked,
         logType: log_type.value,
         logAddTimestamp: log_addTimestamp.checked,
         autoScroll: auto_scroll.checked,
