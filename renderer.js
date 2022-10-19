@@ -8,20 +8,20 @@ const terminal = document.getElementById("terminal");
 const output = document.getElementById("output");
 
 //options menu elements
-const autoScroll = document.getElementById("autoScroll");
-const comPorts = document.getElementById("comPorts");
-const comPorts_input = document.getElementById("comPorts_input");
+const auto_scroll = document.getElementById("auto_scroll");
+const com_ports = document.getElementById("com_ports");
+const com_ports_input = document.getElementById("com_ports_input");
 const baudrate_input = document.getElementById("baudrate_input");
-const addTimestamp = document.getElementById("addTimestamp");
+const add_timestamp = document.getElementById("add_timestamp");
 
 //send data elements and variables
-const sendInput = document.getElementById("sendInput");
-const sendButton = document.getElementById("sendButton");
-const lineEnding = document.getElementById("line_ending");
-var ctrlEnter = document.getElementById("ctrlEnter");
+const send_input = document.getElementById("send_input");
+const send_button = document.getElementById("send_button");
+const line_ending = document.getElementById("line_ending");
+var ctrl_enter = document.getElementById("ctrl_enter");
 var pos = 0;
 var input_history = [];
-var prev_sendInput = "";
+var prev_send_input = "";
 
 var serialport = null;
 var lineStart = false;
@@ -56,7 +56,7 @@ ipcRenderer.on('find_request', () => {
 function changeTimestamp() {
     for (var i = start_line_index; i < current_line_index; i++) {
         if (document.getElementById(i) != null)
-            document.getElementById(i).style.display = addTimestamp.checked ? "inline" : "none";
+            document.getElementById(i).style.display = add_timestamp.checked ? "inline" : "none";
     }
 }
 
@@ -66,12 +66,12 @@ function getPorts() {
         ports.forEach(function (port) {
             returnList += "<option>" + port.path + "</option>";
         });
-        comPorts.innerHTML = returnList;
+        com_ports.innerHTML = returnList;
     });
 }
 
 function connect() {
-    var data = { "comPort": comPorts.value, "baudrate": baudrate_input.value }
+    var data = {comPort: com_ports.value, baudrate: baudrate_input.value }
     if (data.comPort != undefined && data.baudrate != undefined) {
         if (serialport != null && serialport.isOpen) {
             serialport.port.close().then((err) => {
@@ -115,9 +115,9 @@ function connectSerialPort(data) {
             window.alert("Error on opening port:", err);
             return;
         }
-        sendButton.disabled = false;
-        sendInput.disabled = false;
-        lineEnding.disabled = false;
+        send_button.disabled = false;
+        send_input.disabled = false;
+        line_ending.disabled = false;
         if (log_type.value != 'none' && fs.existsSync(log_folder_input.value)) {
             log_file_writer = fs.createWriteStream(log_folder_input.value + "log.txt", {
                 flags: log_type.value
@@ -127,9 +127,9 @@ function connectSerialPort(data) {
             window.alert("Folder for the Log file does not exist");
     });
     serialport.on("close", function (err) {
-        sendButton.disabled = true;
-        sendInput.disabled = true;
-        lineEnding.disabled = true;
+        send_button.disabled = true;
+        send_input.disabled = true;
+        line_ending.disabled = true;
         if (err) {
             window.alert("Port disconnected: " + err);
             return;
@@ -151,14 +151,14 @@ function recvData(payload) {
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (first_line == true) {
         first_line = false;
-        if (log_addTimestamp.checked)
+        if (log_add_timestamp.checked)
             payload = current_datetime + "->" + payload;
 
         var message_new_line = document.createElement("a");
         message_new_line.setAttribute("id", 'l' + current_line_index);
         var timestamp = document.createElement("a");
         timestamp.innerHTML = current_datetime + "->";
-        if (addTimestamp.checked == false)
+        if (add_timestamp.checked == false)
             timestamp.setAttribute("style", "display:none");
         timestamp.setAttribute("id", current_line_index);
         message_new_line.innerHTML += message;
@@ -174,20 +174,20 @@ function recvData(payload) {
         if (index > -1) {
             while (index > -1) {
                 var chunk = message.substring(lastIndex, index);
+                var payload_new_line = "";
                 current_line.innerHTML += chunk;
                 terminal.appendChild(document.createElement("br"));
                 var message_new_line = document.createElement("a");
                 message_new_line.setAttribute("id", 'l' + current_line_index);
                 var timestamp = document.createElement("a");
                 timestamp.innerHTML = current_datetime + "->";
-                if (addTimestamp.checked == false)
+                if (add_timestamp.checked == false)
                     timestamp.setAttribute("style", "display:none");
                 timestamp.setAttribute("id", current_line_index);
                 terminal.appendChild(timestamp);
                 terminal.appendChild(message_new_line);
 
-
-                if (log_addTimestamp.checked)
+                if (log_add_timestamp.checked)
                     payload_new_line = "\r\n" + current_datetime + "->";
 
                 if (index == m_length)
@@ -205,38 +205,37 @@ function recvData(payload) {
                 current_line.innerHTML += chunk;
             }
         }
-        else {
+        else 
             current_line.innerHTML += message;
-        }
     }
     runParsers();
 
     if (log_file_writer != null)
         log_file_writer.write(payload);
     //terminal.innerHTML += message;
-    if (autoScroll.checked == true)
+    if (auto_scroll.checked == true)
         terminal.scrollTop = terminal.scrollHeight;
 }
 //data receive handlers end
 
 //Data sending handles start
-sendInput.addEventListener("keydown", (event) => {
+send_input.addEventListener("keydown", (event) => {
     switch (event.code) { //
         case 'ArrowUp':
             if (pos == input_history.length)
-                prev_sendInput = sendInput.value;
+                prev_send_input = send_input.value;
             if (pos > 0)
                 pos--;
             if (input_history[pos] != undefined)
-                sendInput.value = input_history[pos];
+                send_input.value = input_history[pos];
             break;
         case 'ArrowDown':
             if (pos <= input_history.length)
                 pos++;
             if (input_history[pos] != undefined)
-                sendInput.value = input_history[pos];
+                send_input.value = input_history[pos];
             else
-                sendInput.value = prev_sendInput;
+                send_input.value = prev_send_input;
             break;
         case "Enter":
             if (event.ctrlKey == preferences.ctrlEnter)
@@ -247,22 +246,22 @@ sendInput.addEventListener("keydown", (event) => {
 
 function sendData() {
     var line_end = "";
-    if (lineEnding.value == "\\n")
+    if (line_ending.value == "\\n")
         line_end = "\n";
-    if (lineEnding.value == "\\r")
+    if (line_ending.value == "\\r")
         line_end = "\r";
-    if (lineEnding.value == "\\r\\n")
+    if (line_ending.value == "\\r\\n")
         line_end = "\r\n";
-    var data = Buffer.from(sendInput.value + line_end, "utf-8");
+    var data = Buffer.from(send_input.value + line_end, "utf-8");
     serialport.write(data, function (err) {
         if (err) {
             window.alert('Error on write: ', err.message);
             return;
         }
     });
-    input_history.push(sendInput.value);
+    input_history.push(send_input.value);
     pos++;
-    sendInput.value = "";
+    send_input.value = "";
 }
 //Data send handles end
 getPorts();

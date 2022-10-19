@@ -6,8 +6,8 @@
 
 <body>
     <div id="header" style="width:80%">
-        <input type="text" id="sendInput" style="width:70%" disabled>
-        <button id="sendButton" onclick="sendData()" disabled>Send</button>
+        <input type="text" id="send_input" style="width:70%" disabled>
+        <button id="send_button" onclick="sendData()" disabled>Send</button>
         <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
             <option value="">No line ending</option>
             <option value='\n'>LF(New line)</option>
@@ -30,8 +30,8 @@
             <option value="w">Overwrite</option>
             <option value="a">Append</option>
         </select>
-        <input type="checkbox" id="log_addTimestamp" />
-        <label for="log_addTimestamp">Add Timestamp</label>
+        <input type="checkbox" id="log_add_timestamp" />
+        <label for="log_add_timestamp">Add Timestamp</label>
         <br>
         <input type="text" id="log_folder_input" class="file_path" />
         <input type="file" id="log_folder" style="display:none" onchange="readDirPaths(true, false)" webkitdirectory />
@@ -45,20 +45,25 @@
             <input type="text" id="decoder_folder_input" class="file_path" />
             <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths(false,true)"
                 webkitdirectory />
-            <input type="button" value="Browse..." class="general_btn" style="right: 5px;"  onclick="decoder_folder.click();" />
+            <input type="button" value="Browse..." class="general_btn" style="right: 5px;"
+                onclick="decoder_folder.click();" />
+            <br>
+            <input type="color" id="decoder_color" />
         </label>
         <br><br>
 
         Miscellaneous
         <br>
-        <input type="checkbox" id="ctrlEnter" />
-        <label for="ctrlEnter">Use Ctrl key to send</label>
+        <input type="checkbox" id="ctrl_enter" />
+        <label for="ctrl_enter">Use Ctrl key to send</label>
         <br><br>
-
+        JSON parser color&nbsp&nbsp
+        <input type="color" id="json_color" />
+        <br><br>
         Custom parsers
-        <button id="addCustomParser" onclick="createCustomParserField()">+</button>
+        <button id="add_custom_parser" onclick="createCustomParserField()">+</button>
         <br>
-        <div id="customParsersDiv" class="box customParsersDiv">
+        <div id="custom_parsers_div" class="box customParsersDiv">
         </div>
         <button onclick="backupPreferences();config_menu.style.display = 'none'" class="general_btn close_btn"
             style="right: 150px;position: fixed;">
@@ -76,18 +81,18 @@
             Config
         </button>
         <br><br>
-        <label for="autoScroll" class="label_left">autoScroll</label>
-        <input type="checkbox" id="autoScroll" onchange="updatePreferences()" class="checkbox_options">
+        <label for="auto_scroll" class="label_left">autoScroll</label>
+        <input type="checkbox" id="auto_scroll" onchange="updatePreferences()" class="checkbox_options">
         <br>
 
-        <label for="addTimestamp" class="label_left">Add Timestamp</label>
-        <input type="checkbox" id="addTimestamp" class="checkbox_options"
+        <label for="add_timestamp" class="label_left">Add Timestamp</label>
+        <input type="checkbox" id="add_timestamp" class="checkbox_options"
             onchange="updatePreferences();changeTimestamp()">
         <br>
 
-        <select id="comPorts" class="select_input">
+        <select id="com_ports" class="select_input">
         </select>
-        <button id="listPorts" class="general_btn" style="right: 5px;" onclick="getPorts()">LIST</button>
+        <button id="list_ports" class="general_btn" style="right: 5px;" onclick="getPorts()">LIST</button>
         <br>
 
         <select id="baudrate_input" class="select_input">
@@ -105,23 +110,23 @@
         </select>
         <label for="baudrate" style="position:absolute;right:25px;transform: translate(0, 10%);">bps</label>
         <br><br>
-        <button id="connectSerial" class="options_button" onclick="connect()">
+        <button id="connect_serial" class="options_button" onclick="connect()">
             <img src="./images/usb-connected-16.png" width="16" height="16">
             CONNECT
         </button>
         <br><br>
-        <button id="disconnectSerial" class="options_button" onclick="disconnect()">
+        <button id="disconnect_serial" class="options_button" onclick="disconnect()">
             <img src="./images/usb-disconnected-16.png" width="16" height="16">
             DISCONNECT
         </button><br><br>
-        <button id="cleanTerminal" class="options_button" onclick="cleanTerminal()">
+        <button id="clean_terminal" class="options_button" onclick="cleanTerminal()">
             <img src="./images/trash-2-16.png" width="16" height="16">
             CLEAN
         </button><br><br>
 
         ESP EXCEPTION DECODER
-        <label for="decoderArch" style="position:relative;left:5%">Arch</label>
-        <select id="decoderAch" class="select_input" style="right:5%">
+        <label for="decoder_arch" style="position:relative;left:5%">Arch</label>
+        <select id="decoder_arch" class="select_input" style="right:5%">
             <option value="esp32">ESP32</option>
             <option value="esp8266">ESP8266</option>
         </select>
@@ -131,8 +136,17 @@
         <input type="file" id="elf_path" style="display:none" onchange="getELF();" />
         <input type="button" value="Browse..." class="general_btn" onclick="elf_path.click();" />
 
-
         OUTPUT HISTORY
+        <div class="dropdown">
+            <button class="dropbtn">Dropdown</button>
+            <div class="dropdown-content">
+                <label for="json_filter">JSON parser</label>
+                <input type="checkbox" id="json_filter" onchange="updateParserHistory(this)" data-parser="json" class="checkbox_options">
+                <br>
+                <label for="decoder_filter">Exception decoder</label>
+                <input type="checkbox" id="decoder_filter" onchange="updateParserHistory(this)" data-parser="expDecoder" class="checkbox_options">
+            </div>
+        </div>
         <br>
         <div class="box output_history" id="output_history" style="width:90%">
         </div>

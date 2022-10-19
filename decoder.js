@@ -1,7 +1,8 @@
-const { exec } = require("child_process");
+const { exec, execSync } = require("child_process");
 var decoder_folder = document.getElementById("decoder_folder");
 var decoder_folder_input = document.getElementById("decoder_folder_input");
-var decoderArch = document.getElementById("decoderArch");
+var decoder_arch = document.getElementById("decoder_arch");
+var decoder_color = document.getElementById("decoder_color");
 var elf_path = document.getElementById("elf_path");
 var elf_path_input = document.getElementById("elf_path_input");
 var elf_error_warning = false;
@@ -25,33 +26,28 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line) {
             lastIndex = index + 1;
             index = backtraceDecoder_input.indexOf(" ", lastIndex);
             if (!memory_address.startsWith("Backtrace")) {
-                var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
-                exec(command, (error, stdout, stderr) => {
-                    if (error) {
-                        backtraceResult.innerHTML += error.message + "<br>";
-                        return;
-                    }
-                    if (stderr) {
-                        backtraceResult.innerHTML += stderr + "<br>";
-                        return;
-                    }
+                var command = preferences.decoderFolder + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
+                try {
+                    var stdout = execSync(command).toString();
                     backtraceResult.innerHTML += stdout + "<br>";
-                });
+                }
+                catch (stderr) {
+                    backtraceResult.innerHTML += stderr + "<br>";
+                }
             }
         }
         memory_address = backtraceDecoder_input.substring(lastIndex, m_length - 1);
         if (!memory_address.startsWith("Backtrace")) {
-            var command = addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
-            exec(command, (error, stdout, stderr) => {
-                if (error)
-                    backtraceResult.innerHTML += error.message + "<br>";
-                if (stderr)
-                    backtraceResult.innerHTML += stderr + "<br>";
-                if (stdout)
-                    backtraceResult.innerHTML += stdout + "<br>";
-                addParserResult(backtraceResult, backtraceDecoder_input);
-                return;
-            });
+            var command = preferences.decoderFolder + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
+            try {
+                var stdout = execSync(command).toString();
+                backtraceResult.innerHTML += stdout + "<br>";
+            }
+            catch (stderr) {
+                backtraceResult.innerHTML += stderr + "<br>";
+            }
+            addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder");
+            return;
         }
     }
     else {
@@ -83,24 +79,20 @@ function syntaxHighlightDecoder(decoded) {
 }
 
 function getESPaddr2line() {
-    var hardwareFolder = decoder_folder_input.value + "packages\\esp32\\hardware\\esp32\\";
+    var hardwareFolder = preferences.decoderFolder + "packages\\esp32\\hardware\\esp32\\";
     fs.readdir(hardwareFolder, (err, files) => {
         if (err) {
             console.log(err);
             return;
         }
-        console.log(files);
         files.forEach(file => {
             esp32_version = file;
-            console.log(esp32_version);
             fs.readFile(hardwareFolder + esp32_version + "\\installed.json", 'utf8', (err, data) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
                 var installed_json = JSON.parse(data);
-                console.log(installed_json);
-                console.log(installed_json.packages[0].platforms[0].toolsDependencies[0].version);
                 esp32_gcc_version = installed_json.packages[0].platforms[0].toolsDependencies[0].version;
                 addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\" + esp32_gcc_version + "\\bin\\xtensa-esp32-elf-addr2line.exe";
             });

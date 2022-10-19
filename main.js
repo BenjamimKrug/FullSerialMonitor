@@ -24,6 +24,7 @@ function createWindow() {
             contextIsolation: false, // allow use with Electron 12+
         }
     });
+    mainWindow.maximize();
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
@@ -45,26 +46,15 @@ function createWindow() {
     require("@electron/remote/main").enable(mainWindow.webContents);
 
 
-
     mainWindow.on('focus', () => {
         globalShortcut.register('CmdorCtrl+F', () => {
             mainWindow.webContents.send('find_request', options);
         });
     });
+
     mainWindow.on('blur', () => {
         globalShortcut.unregister('CmdorCtrl+F')
     })
-    /*
-        mainWindow.webContents.on('found-in-page', (event, result) => {
-            console.log(result);
-        });
-        ipcMain.on('search-text', (event, arg) => {
-            console.log(mainWindow.webContents.findInPage(arg));
-        });
-    
-        mainWindow.on('blur', () => {
-            globalShortcut.unregister('CmdorCtrl+F');
-        });*/
 }
 
 // This method will be called when Electron has finished
