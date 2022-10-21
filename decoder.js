@@ -6,6 +6,7 @@ var decoder_color = document.getElementById("decoder_color");
 var elf_path = document.getElementById("elf_path");
 var elf_path_input = document.getElementById("elf_path_input");
 var elf_error_warning = false;
+var elf_file_auto_path = "";
 
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
 var addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
@@ -80,8 +81,6 @@ function syntaxHighlightDecoder(decoded) {
 
 function getESPaddr2line() {
     var hardwareFolder = preferences.decoderFolder + "packages\\esp32\\hardware\\esp32\\";
-    var localFolder = preferences.decoderFolder.split("Arduino15")[0] + 'Temp';
-    console.log(localFolder);
     fs.readdir(hardwareFolder, (err, files) => {
         if (err) {
             console.log(err);
@@ -100,14 +99,35 @@ function getESPaddr2line() {
             });
         });
     });
-    fs.readdir(localFolder, (err, files) => {
-        if (err) {
-            console.log(err);
-            return;
+    getSketchBuild();
+    elf_path_input.value = elf_file_auto_path;
+}
+
+function getSketchBuild() {
+    var localFolder = preferences.decoderFolder.split("Arduino15")[0] + 'Temp';
+    console.log(localFolder);
+    var mostRecentBuild = "";
+    var mostRecentTimestamp = 0;
+    var files = fs.readdirSync(localFolder);
+    files.forEach(file => {
+        var stats = fs.lstatSync(localFolder + '\\' + file);
+        if (stats.isDirectory() && file.startsWith("arduino-sketch")) {
+            if (stats.mtimeMs > mostRecentTimestamp) {
+                mostRecentTimestamp = stats.mtimeMs;
+                console.log(file, ': ', stats.mtimeMs);
+                mostRecentBuild = file;
+            }
         }
-        files.forEach(file => {
-            if (fs.lstatSync(localFolder + '\\'+ file).isDirectory())
-                console.log(file);
+    });
+    if (mostRecentBuild != "") {
+        console.log('Sketch build folder: ', mostRecentBuild);
+        var filesSketch = fs.readdirSync(localFolder + '\\' + mostRecentBuild);
+        filesSketch.forEach(file => {
+            console.log(file);
+            if (file.endsWith("ino.elf")) {
+                elf_file_auto_path = localFolder + '\\' + mostRecentBuild + '\\' + file;
+                console.log(elf_file_auto_path);
+            }
         });
-    })
+    }
 }
