@@ -89,9 +89,9 @@ function connect() {
 function disconnect() {
     if (serialport != null && serialport.isOpen) {
         serialport.port.close().then((err) => {
-            sendButton.disabled = true;
-            sendInput.disabled = true;
-            lineEnding.disabled = true;
+            send_button.disabled = true;
+            send_input.disabled = true;
+            line_ending.disabled = true;
             if (log_file_writer != null)
                 log_file_writer.close();
         });

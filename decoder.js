@@ -105,7 +105,6 @@ function getESPaddr2line() {
 
 function getSketchBuild() {
     var localFolder = preferences.decoderFolder.split("Arduino15")[0] + 'Temp';
-    console.log(localFolder);
     var mostRecentBuild = "";
     var mostRecentTimestamp = 0;
     var files = fs.readdirSync(localFolder);
@@ -114,19 +113,30 @@ function getSketchBuild() {
         if (stats.isDirectory() && file.startsWith("arduino-sketch")) {
             if (stats.mtimeMs > mostRecentTimestamp) {
                 mostRecentTimestamp = stats.mtimeMs;
-                console.log(file, ': ', stats.mtimeMs);
                 mostRecentBuild = file;
             }
         }
     });
     if (mostRecentBuild != "") {
-        console.log('Sketch build folder: ', mostRecentBuild);
         var filesSketch = fs.readdirSync(localFolder + '\\' + mostRecentBuild);
+        var fqbn = "";
         filesSketch.forEach(file => {
-            console.log(file);
-            if (file.endsWith("ino.elf")) {
+            if (file == "build.options.json") {
+                var buildOptionsFile = localFolder + '\\' + mostRecentBuild + '\\' + "build.options.json";
+                try {
+                    var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
+                    fqbn = buildOptions.fqbn.substring(0, buildOptions.fqbn.indexOf(":"));
+                    if (fqbn.startsWith("esp"))
+                        decoder_arch.value = fqbn;
+                    else
+                        window.alert("Core not supported by the exception decoder");
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+            if (fqbn.startsWith("esp") && file.endsWith("ino.elf")) {
                 elf_file_auto_path = localFolder + '\\' + mostRecentBuild + '\\' + file;
-                console.log(elf_file_auto_path);
             }
         });
     }

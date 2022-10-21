@@ -16,13 +16,10 @@ function runParsers() {
         var target_line_element = document.getElementById('l' + line_parsed);
         var target_timestamp_element = document.getElementById('t' + line_parsed);
         var timestamp = target_timestamp_element.innerHTML.split('-')[0] + ':';
-        console.log(timestamp);
-        if (typeof (target_line_element) === 'undefined') {
+        if (typeof (target_line_element) === 'undefined')
             continue;
-        }
-        if (target_line_element == null) {
+        if (target_line_element == null)
             continue;
-        }
         var target_line = target_line_element.innerHTML;
         for (var i = 0; i < custom_parsers.length; i++) {
             if (typeof (custom_parsers[i].trigger) !== 'undefined') {
@@ -267,5 +264,4 @@ function updateParserHistory(target_filter) {
         if (current_parser_line.dataset.parser === target_filter.dataset.filter)
             current_parser_line.style.display = target_filter.checked ? 'block' : 'none';
     });
-    updatePreferences();
 }
