@@ -14,6 +14,9 @@ var decoder_filter = document.getElementById("decoder_filter");
 function runParsers() {
     for (; line_parsed < current_line_index - 1;) {
         var target_line_element = document.getElementById('l' + line_parsed);
+        var target_timestamp_element = document.getElementById('t' + line_parsed);
+        var timestamp = target_timestamp_element.innerHTML.split('-')[0] + ':';
+        console.log(timestamp);
         if (typeof (target_line_element) === 'undefined') {
             continue;
         }
@@ -27,7 +30,7 @@ function runParsers() {
                     try {
                         var data_line = target_line.trim();
                         var func = `${custom_parsers[i].func}('${data_line}','${target_line_element.id}')`;
-                        addParserResult(eval(func), data_line, custom_parsers[i].color, custom_parsers[i].name);
+                        addParserResult(eval(func), data_line, custom_parsers[i].color, custom_parsers[i].name, timestamp);
                     }
                     catch (e) {
                         console.log('error:', e);
@@ -36,7 +39,7 @@ function runParsers() {
             }
         }
         if (target_line.indexOf("Backtrace") > -1) {
-            decodeBacktrace(target_line, target_line_element.id);
+            decodeBacktrace(target_line, target_line_element.id, timestamp);
         }
         if (target_line.startsWith("{")) {
             try {
@@ -44,7 +47,7 @@ function runParsers() {
                 var jsonResult = document.createElement("pre");
                 jsonResult.setAttribute("id", "pl" + line_parsed);
                 jsonResult.innerHTML = syntaxHighlightJSON(JSON.stringify(parsedJSON, null, 2));
-                addParserResult(jsonResult, target_line, preferences.jsonColor, "json");
+                addParserResult(jsonResult, target_line, preferences.jsonColor, "json", timestamp);
             }
             catch (e) {
                 console.log('error parsing json:', e);
@@ -89,6 +92,8 @@ function clickBrowse(id) {
 function updateParsers() {
     custom_parsers_count = 0;
     custom_parsers_div.innerHTML = "";
+    var filterDropdown = document.getElementById("filter_dropdown");
+    filterDropdown.innerHTML = "";
     for (var i = 0; i < custom_parsers.length; i++) {
         createCustomParserField(custom_parsers[i].name, custom_parsers[i].script,
             custom_parsers[i].func, custom_parsers[i].trigger, custom_parsers[i].color);
@@ -97,6 +102,23 @@ function updateParsers() {
             customScript.setAttribute("src", custom_parsers[i].script);
             var body = document.getElementsByTagName('body').item(0);
             body.appendChild(customScript);
+
+            var customFilterLabel = document.createElement("label");
+            customFilterLabel.setAttribute("for", custom_parsers[i].name + "_filter");
+            customFilterLabel.setAttribute("class", "filters_label");
+            customFilterLabel.innerHTML = custom_parsers[i].name;
+
+            var customFilter = document.createElement("input");
+            customFilter.setAttribute("type", "checkbox");
+            customFilter.setAttribute("onchange", "updateParserHistory(this)");
+            customFilter.setAttribute("class", "filters");
+            customFilter.setAttribute("id", custom_parsers[i].name + "_filter");
+            customFilter.setAttribute("data-filter", custom_parsers[i].name);
+            customFilter.checked = true;
+
+            filterDropdown.appendChild(customFilterLabel);
+            filterDropdown.appendChild(customFilter);
+            filterDropdown.appendChild(document.createElement("br"));
         }
     }
     getESPaddr2line();
@@ -123,7 +145,7 @@ function saveCustomParsers() {
     updateParsers();
 }
 
-function addParserResult(newResult, newResultSource, color, parserName) {
+function addParserResult(newResult, newResultSource, color, parserName, timestamp) {
     current_parser_index++;
     var newOutputEntry = document.createElement("button");
     newOutputEntry.setAttribute("id", "b" + newResult.id);
@@ -131,15 +153,17 @@ function addParserResult(newResult, newResultSource, color, parserName) {
     newOutputEntry.setAttribute("data-parser", parserName);
     newOutputEntry.setAttribute("class", "output_entry");
 
-    var target_filter = document.querySelector(`[data-parser="${parserName}"]`);
+    var target_filter = document.querySelector(`[data-filter="${parserName}"]`);
     var display_type = 'block';
-    if (target_filter != null){
-        console.log(target_filter);
+    if (target_filter != null)
         display_type = target_filter.checked ? 'block' : 'none';
-    }
 
     newOutputEntry.setAttribute("style", `display:${display_type};border-color:${color}`);
     newOutputEntry.setAttribute("onclick", "showOutputResult(this.value)");
+    var newOutputTimestamp = document.createElement("span");
+    newOutputTimestamp.setAttribute("class", "parser_timestamp");
+    newOutputTimestamp.innerHTML = timestamp;
+    newOutputEntry.appendChild(newOutputTimestamp);
     newOutputEntry.innerHTML += newResultSource;
     results.push(newResult);
     parsed_ids.push(newResult.id);
@@ -238,12 +262,10 @@ function createCustomParserField(name, script, func, trigger, color) {
 }
 
 function updateParserHistory(target_filter) {
-    console.log('target:', target_filter);
     parsed_ids.forEach((currentValue) => {
         var current_parser_line = document.getElementById("b" + currentValue);
-        console.log('cpl: ', current_parser_line.dataset.parser);
-        console.log('tf: ', target_filter.dataset.parser);
-        if (current_parser_line.dataset.parser === target_filter.dataset.parser)
+        if (current_parser_line.dataset.parser === target_filter.dataset.filter)
             current_parser_line.style.display = target_filter.checked ? 'block' : 'none';
     });
+    updatePreferences();
 }

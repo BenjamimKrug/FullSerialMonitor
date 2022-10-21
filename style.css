@@ -55,6 +55,11 @@
     margin-bottom: 2px;
 }
 
+.parser_timestamp {
+    display: block;
+    font-size: xx-small;
+}
+
 .dropbtn {
     background-color: #04AA6D;
     color: white;
@@ -64,8 +69,22 @@
 }
 
 .dropdown {
+    float: right;
+    right: 0;
     position: relative;
     display: inline-block;
+}
+
+.filters {
+    float: right;
+    right: 0;
+    margin: 0;
+}
+
+.filters_label {
+    display: inline-block;
+    width: 90%;
+    text-align: right;
 }
 
 .dropdown-content {
@@ -75,6 +94,7 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
+    float: right;
 }
 
 

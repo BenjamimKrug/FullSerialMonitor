@@ -71,7 +71,7 @@ function getPorts() {
 }
 
 function connect() {
-    var data = {comPort: com_ports.value, baudrate: baudrate_input.value }
+    var data = { comPort: com_ports.value, baudrate: baudrate_input.value }
     if (data.comPort != undefined && data.baudrate != undefined) {
         if (serialport != null && serialport.isOpen) {
             serialport.port.close().then((err) => {
@@ -160,7 +160,7 @@ function recvData(payload) {
         timestamp.innerHTML = current_datetime + "->";
         if (add_timestamp.checked == false)
             timestamp.setAttribute("style", "display:none");
-        timestamp.setAttribute("id", current_line_index);
+        timestamp.setAttribute("id", 't' + current_line_index);
         message_new_line.innerHTML += message;
         terminal.appendChild(timestamp);
         terminal.appendChild(message_new_line);
@@ -183,7 +183,7 @@ function recvData(payload) {
                 timestamp.innerHTML = current_datetime + "->";
                 if (add_timestamp.checked == false)
                     timestamp.setAttribute("style", "display:none");
-                timestamp.setAttribute("id", current_line_index);
+                timestamp.setAttribute("id", 't' + current_line_index);
                 terminal.appendChild(timestamp);
                 terminal.appendChild(message_new_line);
 
@@ -205,7 +205,7 @@ function recvData(payload) {
                 current_line.innerHTML += chunk;
             }
         }
-        else 
+        else
             current_line.innerHTML += message;
     }
     runParsers();

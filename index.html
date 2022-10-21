@@ -137,14 +137,23 @@
         <input type="button" value="Browse..." class="general_btn" onclick="elf_path.click();" />
 
         OUTPUT HISTORY
+
         <div class="dropdown">
-            <button class="dropbtn">Dropdown</button>
-            <div class="dropdown-content">
-                <label for="json_filter">JSON parser</label>
-                <input type="checkbox" id="json_filter" onchange="updateParserHistory(this)" data-parser="json" class="checkbox_options" checked>
-                <br>
-                <label for="decoder_filter">Exception decoder</label>
-                <input type="checkbox" id="decoder_filter" onchange="updateParserHistory(this)" data-parser="expDecoder" class="checkbox_options" checked>
+            <button class="dropbtn">Filters</button>
+            <div class="dropdown-content" style="right:0">
+                <div>
+                    <label for="json_filter" class="filters_label">
+                        JSON parser
+                    </label>
+                    <input type="checkbox" id="json_filter" onchange="updateParserHistory(this)" data-filter="json"
+                        class="filters" checked>
+                    <br>
+                    <label for="decoder_filter" class="filters_label">Exception decoder</label>
+                    <input type="checkbox" id="decoder_filter" onchange="updateParserHistory(this)"
+                        data-filter="expDecoder" class="filters" checked>
+                </div>
+                <div id="filter_dropdown">
+                </div>
             </div>
         </div>
         <br>

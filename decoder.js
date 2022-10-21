@@ -14,7 +14,7 @@ var esp32_version = "";
 var esp32_gcc_version = "";
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
-function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line) {
+function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, timestamp) {
     if (elf_path_input.value != "") {
         var backtraceResult = document.createElement("a");
         backtraceResult.setAttribute("id", "p" + backtraceDecoder_input_line);
@@ -46,7 +46,7 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line) {
             catch (stderr) {
                 backtraceResult.innerHTML += stderr + "<br>";
             }
-            addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder");
+            addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder", timestamp);
             return;
         }
     }
@@ -80,6 +80,8 @@ function syntaxHighlightDecoder(decoded) {
 
 function getESPaddr2line() {
     var hardwareFolder = preferences.decoderFolder + "packages\\esp32\\hardware\\esp32\\";
+    var localFolder = preferences.decoderFolder.split("Arduino15")[0] + 'Temp';
+    console.log(localFolder);
     fs.readdir(hardwareFolder, (err, files) => {
         if (err) {
             console.log(err);
@@ -98,4 +100,14 @@ function getESPaddr2line() {
             });
         });
     });
+    fs.readdir(localFolder, (err, files) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        files.forEach(file => {
+            if (fs.lstatSync(localFolder + '\\'+ file).isDirectory())
+                console.log(file);
+        });
+    })
 }
