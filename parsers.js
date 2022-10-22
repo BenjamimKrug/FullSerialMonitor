@@ -164,8 +164,13 @@ function addParserResult(newResult, newResultSource, color, parserName, timestam
     newOutputEntry.innerHTML += newResultSource;
     results.push(newResult);
     parsed_ids.push(newResult.id);
-    showOutputResult(current_parser_index);
     output_history.appendChild(newOutputEntry);
+
+    if (auto_scroll.checked == true) {
+        output_history.scrollTop = output_history.scrollHeight;
+        if (target_filter.checked)
+            showOutputResult(current_parser_index);
+    }
 }
 
 function showOutputResult(id) {

@@ -161,8 +161,10 @@ function updatePreferences() {
         elfPath: elf_path_input.value.trim(),
         customParsers: custom_parsers
     };
-    if (preferences.autoScroll == true)
+    if (preferences.autoScroll == true) {
         terminal.scrollTop = terminal.scrollHeight;
+        output_history.scrollTop = output_history.scrollHeight;
+    }
     fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
         if (err)
             window.alert("Error on writing preferences file:", err);

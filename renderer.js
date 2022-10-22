@@ -4,6 +4,7 @@ const { SerialPort } = require("serialport");
 const remote = require('@electron/remote');
 const { FindInPage } = require('electron-find');
 
+const content = document.getElementById("content");
 const terminal = document.getElementById("terminal");
 const output = document.getElementById("output");
 
@@ -13,6 +14,7 @@ const com_ports = document.getElementById("com_ports");
 const com_ports_input = document.getElementById("com_ports_input");
 const baudrate_input = document.getElementById("baudrate_input");
 const add_timestamp = document.getElementById("add_timestamp");
+const sidebar_resizer = document.getElementById("sidebar_resizer");
 
 //send data elements and variables
 const send_input = document.getElementById("send_input");
@@ -52,6 +54,98 @@ ipcRenderer.on('find_request', () => {
 });
 
 
+function makeResizableDiv(div, vertical, horizontal) {
+    const element = document.querySelector(div);
+    const resizers = element.querySelectorAll('.resizer');
+    console.log(element);
+    console.log(resizers);
+    const minimum_size = 20;
+    let original_width = 0;
+    let original_height = 0;
+    let original_x = 0;
+    let original_y = 0;
+    let original_mouse_x = 0;
+    let original_mouse_y = 0;
+    for (let i = 0; i < resizers.length; i++) {
+        const currentResizer = resizers[i];
+        currentResizer.addEventListener('mousedown', function (e) {
+            e.preventDefault()
+            original_width = parseFloat(getComputedStyle(element, null).getPropertyValue('width').replace('px', ''));
+            original_height = parseFloat(getComputedStyle(element, null).getPropertyValue('height').replace('px', ''));
+            original_x = element.getBoundingClientRect().left;
+            original_y = element.getBoundingClientRect().top;
+            original_mouse_x = e.pageX;
+            original_mouse_y = e.pageY;
+            window.addEventListener('mousemove', resize)
+            window.addEventListener('mouseup', stopResize)
+        })
+
+        function resize(e) {
+            if (currentResizer.classList.contains('bottom-right')) {
+                if (horizontal) {
+                    const width = original_width + (e.pageX - original_mouse_x);
+                    if (width > minimum_size)
+                        element.style.width = width + 'px';
+                }
+                if (vertical) {
+                    const height = original_height + (e.pageY - original_mouse_y);
+                    if (height > minimum_size)
+                        element.style.height = height + 'px';
+                }
+            }
+            else if (currentResizer.classList.contains('bottom-left')) {
+                if (horizontal) {
+                    const height = original_height + (e.pageY - original_mouse_y);
+                    if (height > minimum_size)
+                        element.style.height = height + 'px';
+                }
+                if (vertical) {
+                    const width = original_width - (e.pageX - original_mouse_x);
+                    if (width > minimum_size) {
+                        element.style.width = width + 'px';
+                        element.style.left = original_x + (e.pageX - original_mouse_x) + 'px';
+                    }
+                }
+            }
+            else if (currentResizer.classList.contains('top-right')) {
+                if (horizontal) {
+                    const width = original_width + (e.pageX - original_mouse_x);
+                    if (width > minimum_size)
+                        element.style.width = width + 'px';
+                }
+                if (vertical) {
+                    const height = original_height - (e.pageY - original_mouse_y)
+                    if (height > minimum_size) {
+                        element.style.height = height + 'px'
+                        element.style.top = original_y + (e.pageY - original_mouse_y) + 'px'
+                    }
+                }
+            }
+            else {
+                if (horizontal) {
+                    const width = original_width - (e.pageX - original_mouse_x);
+                    if (width > minimum_size) {
+                        element.style.width = width + 'px';
+                        element.style.left = original_x + (e.pageX - original_mouse_x) + 'px';
+                    }
+                }
+                if (vertical) {
+                    const height = original_height - (e.pageY - original_mouse_y);
+                    if (height > minimum_size) {
+                        element.style.height = height + 'px';
+                        element.style.top = original_y + (e.pageY - original_mouse_y) + 'px';
+                    }
+                }
+            }
+            content.style.width = window.innerWidth - element.style.width;
+        }
+
+        function stopResize() {
+            window.removeEventListener('mousemove', resize)
+        }
+    }
+}
+
 //options menu handlers start
 function changeTimestamp() {
     for (var i = start_line_index; i < current_line_index; i++) {
@@ -71,6 +165,10 @@ function getPorts() {
 }
 
 function connect() {
+    if (com_ports.value == "") {
+        window.alert("No COM ports detected");
+        return;
+    }
     var data = { comPort: com_ports.value, baudrate: baudrate_input.value }
     if (data.comPort != undefined && data.baudrate != undefined) {
         if (serialport != null && serialport.isOpen) {
@@ -138,6 +236,7 @@ function connectSerialPort(data) {
     serialport.on("readable", function () {
         recvData(serialport.read().toString());
     });
+
 }
 //options menu handlers end
 
@@ -263,6 +362,12 @@ function sendData() {
     pos++;
     send_input.value = "";
 }
-//Data send handles end
-getPorts();
+
+function init() {
+    //Data send handles end
+    getPorts();
+    makeResizableDiv('.options_menu', false, true);
+}
+
+init();
 

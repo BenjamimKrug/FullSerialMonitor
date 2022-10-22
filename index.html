@@ -5,22 +5,26 @@
 </head>
 
 <body>
-    <div id="header" style="width:80%">
-        <input type="text" id="send_input" style="width:70%" disabled>
-        <button id="send_button" onclick="sendData()" disabled>Send</button>
-        <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
-            <option value="">No line ending</option>
-            <option value='\n'>LF(New line)</option>
-            <option value='\r'>CR(Carriage return)</option>
-            <option value="\r\n">CR+LF(Carriage return + New line)</option>
-        </select>
+    <div id="content">
+        <div id="header" style="width:80%">
+            <input type="text" id="send_input" style="width:70%" disabled>
+            <button id="send_button" onclick="sendData()" disabled>Send</button>
+            <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
+                <option value="">No line ending</option>
+                <option value='\n'>LF(New line)</option>
+                <option value='\r'>CR(Carriage return)</option>
+                <option value="\r\n">CR+LF(Carriage return + New line)</option>
+            </select>
+        </div>
+        <div class="box terminal" id="terminal">
+        </div>
+        <br>
+        OUTPUT
+        <br>
+        <div class="box output" id="output">
+        </div>
     </div>
-    <div class="box terminal" id="terminal">
-    </div>
-    OUTPUT
-    <br>
-    <div class="box output" id="output">
-    </div>
+
 
     <div id="config_menu" class="config_menu" style="display:none">
         Log file
@@ -48,7 +52,7 @@
             <input type="button" value="Browse..." class="general_btn" style="right: 5px;"
                 onclick="decoder_folder.click();" />
             <br>
-            <input type="color" id="decoder_color" />
+            <input type="color" id="decoder_color" value="#0000ff" />
         </label>
         <br><br>
 
@@ -58,7 +62,7 @@
         <label for="ctrl_enter">Use Ctrl key to send</label>
         <br><br>
         JSON parser color&nbsp&nbsp
-        <input type="color" id="json_color" />
+        <input type="color" id="json_color" value="#00ff00" />
         <br><br>
         Custom parsers
         <button id="add_custom_parser" onclick="createCustomParserField()">+</button>
@@ -76,6 +80,10 @@
     </div>
 
     <div id="options_menu" class="options_menu">
+        <button id="sidebar_resizer" class="resizer">
+            ||
+        </button>
+
         <button id="open_config_menu" class="general_btn" style="right:5px">
             <img src="./images/settings gear.png" width="12" height="12">
             Config
@@ -128,6 +136,9 @@
         <label for="decoder_arch" style="position:relative;left:5%">Arch</label>
         <select id="decoder_arch" class="select_input" style="right:5%">
             <option value="esp32">ESP32</option>
+            <option value="esp32s2">ESP32S2</option>
+            <option value="esp32s3">ESP32S3</option>
+            <option value="esp32c3">ESP32C3</option>
             <option value="esp8266">ESP8266</option>
         </select>
         <br>
@@ -135,9 +146,8 @@
         <input type="text" id="elf_path_input" class="file_path" style="width:60%" />
         <input type="file" id="elf_path" style="display:none" onchange="getELF();" />
         <input type="button" value="Browse..." class="general_btn" onclick="elf_path.click();" />
-
+        <br><br>
         OUTPUT HISTORY
-
         <div class="dropdown">
             <button class="dropbtn">Filters</button>
             <div class="dropdown-content" style="right:0">

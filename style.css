@@ -1,6 +1,6 @@
 .terminal {
-    max-height: 79%;
-    min-height: 79%;
+    max-height: 75%;
+    min-height: 75%;
     overflow: hidden;
     overflow-x: scroll;
     overflow-y: scroll;
@@ -9,8 +9,8 @@
 
 .output {
     overflow: hidden;
-    max-height: 10%;
-    min-height: 10%;
+    max-height: 12%;
+    min-height: 12%;
     overflow-x: scroll;
     overflow-y: scroll;
     width: calc(100% - 215px);
@@ -35,8 +35,8 @@
 }
 
 .output_history {
-    max-height: 50%;
-    min-height: 50%;
+    display: flex;
+    flex: 1 1 auto;
     overflow-x: scroll;
     overflow-y: scroll;
 }
@@ -63,7 +63,7 @@
 .dropbtn {
     background-color: #04AA6D;
     color: white;
-    padding: 16px;
+    padding: 10px;
     font-size: 16px;
     border: none;
 }
@@ -72,7 +72,6 @@
     float: right;
     right: 0;
     position: relative;
-    display: inline-block;
 }
 
 .filters {
@@ -242,14 +241,27 @@ button:hover {
 }
 
 .options_menu {
-    resize: horizontal;
+    overflow: hidden;
     position: fixed;
     top: 0;
     right: 0;
     background-color: #303030;
     width: 200px;
     height: 100%;
-    resize: horizontal;
+}
+
+.resizer {
+    cursor: nesw-resize;
+}
+
+#sidebar_resizer {
+    height: 100%;
+    width: 20px;
+    background-color: green;
+    position: fixed;
+    z-index: 999;
+    -ms-transform: translate(-100%, 0);
+    transform: translate(-100%, 0);
 }
 
 input::-webkit-calendar-picker-indicator {

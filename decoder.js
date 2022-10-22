@@ -7,6 +7,7 @@ var elf_path = document.getElementById("elf_path");
 var elf_path_input = document.getElementById("elf_path_input");
 var elf_error_warning = false;
 var elf_file_auto_path = "";
+var general_core = "";
 
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
 var addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
@@ -94,8 +95,19 @@ function getESPaddr2line() {
                     return;
                 }
                 var installed_json = JSON.parse(data);
-                esp32_gcc_version = installed_json.packages[0].platforms[0].toolsDependencies[0].version;
-                addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\" + esp32_gcc_version + "\\bin\\xtensa-esp32-elf-addr2line.exe";
+                if (decoder_arch.value == "esp32c3")
+                    arch_elf_gcc = `riscv32-esp-elf`;
+                else
+                    arch_elf_gcc = `xtensa-${decoder_arch.value}-elf`;
+                var len = installed_json.packages[0].platforms[0].toolsDependencies.length;
+                var platforms = installed_json.packages[0].platforms[0];
+                for (var i = 0; i < len; i++) {
+                    if (platforms.toolsDependencies[i].name == `${arch_elf_gcc}-gcc`) {
+                        esp32_gcc_version = platforms.toolsDependencies[i].version;
+                        break;
+                    }
+                }
+                addr2line_path = `packages\\esp32\\tools\\${arch_elf_gcc}-gcc\\${esp32_gcc_version}\\bin\\${arch_elf_gcc}-addr2line.exe`;
             });
         });
     });
@@ -125,9 +137,16 @@ function getSketchBuild() {
                 var buildOptionsFile = localFolder + '\\' + mostRecentBuild + '\\' + "build.options.json";
                 try {
                     var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
-                    fqbn = buildOptions.fqbn.substring(0, buildOptions.fqbn.indexOf(":"));
-                    if (fqbn.startsWith("esp"))
-                        decoder_arch.value = fqbn;
+                    fqbn = buildOptions.fqbn.split(":");
+
+                    if (fqbn[0] == "esp32") {
+                        decoder_arch.value = fqbn[2];
+                        general_core = fqbn[0];
+                    }
+                    else if (fqbn[0] == "esp8266") {
+                        decoder_arch.value = fqbn[0];
+                        general_core = fqbn[0];
+                    }
                     else
                         window.alert("Core not supported by the exception decoder");
                 }
@@ -135,7 +154,7 @@ function getSketchBuild() {
                     console.log(err);
                 }
             }
-            if (fqbn.startsWith("esp") && file.endsWith("ino.elf")) {
+            if (fqbn[0].startsWith("esp") && file.endsWith("ino.elf")) {
                 elf_file_auto_path = localFolder + '\\' + mostRecentBuild + '\\' + file;
             }
         });
