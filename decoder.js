@@ -31,10 +31,10 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
                 var command = preferences.decoderFolder + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
                 try {
                     var stdout = execSync(command).toString();
-                    backtraceResult.innerHTML += stdout + "<br>";
+                    backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
                 }
                 catch (stderr) {
-                    backtraceResult.innerHTML += stderr + "<br>";
+                    backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
                 }
             }
         }
@@ -43,10 +43,10 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
             var command = preferences.decoderFolder + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
             try {
                 var stdout = execSync(command).toString();
-                backtraceResult.innerHTML += stdout + "<br>";
+                backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
             }
             catch (stderr) {
-                backtraceResult.innerHTML += stderr + "<br>";
+                backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
             }
             addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder", timestamp);
             return;
@@ -59,25 +59,6 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
         }
         return "No ELF file given";
     }
-}
-
-function syntaxHighlightDecoder(decoded) {
-    decoded = decoded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return decoded.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
 }
 
 function getESPaddr2line() {
@@ -159,4 +140,21 @@ function getSketchBuild() {
             }
         });
     }
+}
+
+function syntaxHighlightDecoder(decoded) {
+    decoded = decoded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return decoded.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match))
+                cls = 'key';
+            else
+                cls = 'string';
+        } else if (/true|false/.test(match))
+            cls = 'boolean';
+        else if (/null/.test(match))
+            cls = 'null';
+        return `<span class="${cls}">${match}</span>`;
+    });
 }

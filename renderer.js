@@ -57,8 +57,6 @@ ipcRenderer.on('find_request', () => {
 function makeResizableDiv(div, vertical, horizontal) {
     const element = document.querySelector(div);
     const resizers = element.querySelectorAll('.resizer');
-    console.log(element);
-    console.log(resizers);
     const minimum_size = 20;
     let original_width = 0;
     let original_height = 0;
@@ -137,7 +135,7 @@ function makeResizableDiv(div, vertical, horizontal) {
                     }
                 }
             }
-            content.style.width = window.innerWidth - element.style.width;
+            content.style.width = window.innerWidth - parseInt(element.style.width, 10) - 30 + 'px';
         }
 
         function stopResize() {

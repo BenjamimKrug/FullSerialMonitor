@@ -4,7 +4,7 @@
     overflow: hidden;
     overflow-x: scroll;
     overflow-y: scroll;
-    width: calc(100% - 215px);
+    width: calc(100% - 25px);
 }
 
 .output {
@@ -13,6 +13,11 @@
     min-height: 12%;
     overflow-x: scroll;
     overflow-y: scroll;
+    width: calc(100% - 25px);
+}
+
+#content {
+    overflow: hidden;
     width: calc(100% - 215px);
 }
 
@@ -35,8 +40,8 @@
 }
 
 .output_history {
-    display: flex;
-    flex: 1 1 auto;
+    height: 47%;
+    width: calc(100%-5px);
     overflow-x: scroll;
     overflow-y: scroll;
 }
@@ -226,7 +231,8 @@ button:hover {
 }
 
 .checkbox_options {
-    right: 5%
+    position: fixed;
+    right: 5px;
 }
 
 .label_right {
@@ -251,13 +257,13 @@ button:hover {
 }
 
 .resizer {
-    cursor: nesw-resize;
+    cursor: ew-resize;
 }
 
 #sidebar_resizer {
     height: 100%;
     width: 20px;
-    background-color: green;
+    background-color: grey;
     position: fixed;
     z-index: 999;
     -ms-transform: translate(-100%, 0);
