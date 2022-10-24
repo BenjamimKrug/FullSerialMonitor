@@ -28,7 +28,7 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
             lastIndex = index + 1;
             index = backtraceDecoder_input.indexOf(" ", lastIndex);
             if (!memory_address.startsWith("Backtrace")) {
-                var command = preferences.decoderFolder + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
+                var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
                 try {
                     var stdout = execSync(command).toString();
                     backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
@@ -40,7 +40,7 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
         }
         memory_address = backtraceDecoder_input.substring(lastIndex, m_length - 1);
         if (!memory_address.startsWith("Backtrace")) {
-            var command = preferences.decoderFolder + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
+            var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
             try {
                 var stdout = execSync(command).toString();
                 backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
@@ -62,13 +62,7 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
 }
 
 function getESPaddr2line() {
-    if (preferences == null)
-        return;
-    if (typeof (preferences.decoderFolder) === 'undefined')
-        return
-    if (preferences.decoderFolder == null)
-        return;
-    var hardwareFolder = preferences.decoderFolder + "packages\\esp32\\hardware\\esp32\\";
+    var hardwareFolder = decoder_folder_input.value + "packages\\esp32\\hardware\\esp32\\";
     fs.readdir(hardwareFolder, (err, files) => {
         if (err) {
             console.log(err);
@@ -103,16 +97,18 @@ function getESPaddr2line() {
 }
 
 function getSketchBuild() {
-    var localFolder = preferences.decoderFolder.split("Arduino15")[0] + 'Temp';
+    var localFolder = decoder_folder_input.value.split("Arduino15")[0] + 'Temp';
     var mostRecentBuild = "";
     var mostRecentTimestamp = 0;
     var files = fs.readdirSync(localFolder);
     files.forEach(file => {
-        var stats = fs.lstatSync(localFolder + '\\' + file);
-        if (stats.isDirectory() && file.startsWith("arduino-sketch")) {
-            if (stats.mtimeMs > mostRecentTimestamp) {
-                mostRecentTimestamp = stats.mtimeMs;
-                mostRecentBuild = file;
+        if (file.startsWith("arduino-sketch")) {
+            var stats = fs.lstatSync(localFolder + '\\' + file);
+            if (stats.isDirectory()) {
+                if (stats.mtimeMs > mostRecentTimestamp) {
+                    mostRecentTimestamp = stats.mtimeMs;
+                    mostRecentBuild = file;
+                }
             }
         }
     });

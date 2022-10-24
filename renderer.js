@@ -147,8 +147,8 @@ function makeResizableDiv(div, vertical, horizontal) {
 //options menu handlers start
 function changeTimestamp() {
     for (var i = start_line_index; i < current_line_index; i++) {
-        if (document.getElementById(i) != null)
-            document.getElementById(i).style.display = add_timestamp.checked ? "inline" : "none";
+        if (document.getElementById('t' + i) != null)
+            document.getElementById('t' + i).style.display = add_timestamp.checked ? "inline" : "none";
     }
 }
 
@@ -214,13 +214,16 @@ function connectSerialPort(data) {
         send_button.disabled = false;
         send_input.disabled = false;
         line_ending.disabled = false;
-        if (log_type.value != 'none' && fs.existsSync(log_folder_input.value)) {
+        if (log_type.value == 'none')
+            return;
+        if (fs.existsSync(log_folder_input.value)) {
             log_file_writer = fs.createWriteStream(log_folder_input.value + "log.txt", {
                 flags: log_type.value
             });
         }
         else
             window.alert("Folder for the Log file does not exist");
+
     });
     serialport.on("close", function (err) {
         send_button.disabled = true;
@@ -357,7 +360,7 @@ function sendData() {
         }
     });
     input_history.push(send_input.value);
-    pos++;
+    pos = input_history.length;
     send_input.value = "";
 }
 

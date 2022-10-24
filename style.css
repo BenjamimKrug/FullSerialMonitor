@@ -241,9 +241,11 @@ button:hover {
 }
 
 .label_left {
+    position: fixed;
     display: inline-block;
     width: 150px;
     text-align: right;
+    right: 25px;
 }
 
 .options_menu {
