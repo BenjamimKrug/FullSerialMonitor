@@ -62,7 +62,13 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
 }
 
 function getESPaddr2line() {
-    var hardwareFolder = preferences.decoderFolder + "packages\\esp32\\hardware\\esp32\\";
+	if(preferences==null)
+		return;
+	if(typeof(preferences.decoderFolder) === 'undefined')
+		return
+	if(preferences.decoderFolder == null)
+		return;
+	var hardwareFolder = preferences.decoderFolder + "packages\\esp32\\hardware\\esp32\\";
     fs.readdir(hardwareFolder, (err, files) => {
         if (err) {
             console.log(err);
