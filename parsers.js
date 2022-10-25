@@ -157,11 +157,13 @@ function addParserResult(newResult, newResultSource, color, parserName, timestam
 
     newOutputEntry.setAttribute("style", `display:${display_type};border-color:${color}`);
     newOutputEntry.setAttribute("onclick", "showOutputResult(this.value)");
+
     var newOutputTimestamp = document.createElement("span");
     newOutputTimestamp.setAttribute("class", "parser_timestamp");
     newOutputTimestamp.innerHTML = timestamp;
     newOutputEntry.appendChild(newOutputTimestamp);
     newOutputEntry.innerHTML += newResultSource;
+
     results.push(newResult);
     parsed_ids.push(newResult.id);
     output_history.appendChild(newOutputEntry);
@@ -176,6 +178,7 @@ function addParserResult(newResult, newResultSource, color, parserName, timestam
 function showOutputResult(id) {
     output.innerHTML = "";
     output.appendChild(results[id]);
+    output.scrollTop = 0;
 }
 
 function deleteCustomParserField(id) {

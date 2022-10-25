@@ -47,10 +47,12 @@
 }
 
 .output_entry {
+    background-color: grey;
+    color: white;
     white-space: nowrap;
     overflow: hidden;
     width: 100%;
-    height: 30px;
+    height: 45px;
     text-align: left;
     border: none;
     border-left: solid;
@@ -62,7 +64,8 @@
 
 .parser_timestamp {
     display: block;
-    font-size: xx-small;
+    font-size: small;
+    font-weight: bold;
 }
 
 .dropbtn {
@@ -138,11 +141,11 @@
 }
 
 .string {
-    color: green;
+    color: rgb(182, 182, 2);
 }
 
 .number {
-    color: darkorange;
+    color: rgb(185, 2, 185);
 }
 
 .boolean {
@@ -154,7 +157,7 @@
 }
 
 .key {
-    color: red;
+    color: rgb(105, 190, 45);
 }
 
 .terminal span {

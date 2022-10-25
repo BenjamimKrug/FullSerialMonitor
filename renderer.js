@@ -319,7 +319,7 @@ function recvData(payload) {
 //data receive handlers end
 
 //Data sending handles start
-send_input.addEventListener("keydown", (event) => {
+send_input.addEventListener("keyup", (event) => {
     switch (event.code) { //
         case 'ArrowUp':
             if (pos == input_history.length)
