@@ -26,7 +26,7 @@
     overflow-x: scroll;
     overflow-y: scroll;
     width: 95%;
-    height: 47%;
+    height: calc(38% - 20px);
 }
 
 .box {
@@ -256,7 +256,7 @@ button:hover {
     position: fixed;
     top: 0;
     right: 0;
-    background-color: #303030;
+    background-color: #373737;
     width: 200px;
     height: 100%;
 }

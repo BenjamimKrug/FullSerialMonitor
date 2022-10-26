@@ -197,7 +197,7 @@ function disconnect() {
 function cleanTerminal() {
     terminal.innerHTML = "";
     first_line = true;
-    start_line_index = current_line_index;
+    start_line_index = current_line_index--;
 }
 
 function connectSerialPort(data) {

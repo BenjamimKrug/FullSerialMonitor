@@ -14,12 +14,14 @@ var decoder_filter = document.getElementById("decoder_filter");
 function runParsers() {
     for (; line_parsed < current_line_index - 1;) {
         var target_line_element = document.getElementById('l' + line_parsed);
-        var target_timestamp_element = document.getElementById('t' + line_parsed);
-        var timestamp = target_timestamp_element.innerHTML.split('-')[0] + ':';
         if (typeof (target_line_element) === 'undefined')
-            continue;
+            break;
         if (target_line_element == null)
-            continue;
+            break;
+        var target_timestamp_element = document.getElementById('t' + line_parsed);
+        if (typeof (target_timestamp_element) === 'undefined')
+            break;
+        var timestamp = target_timestamp_element.innerHTML.split('-')[0] + ':';
         var target_line = target_line_element.innerHTML;
         for (var i = 0; i < custom_parsers.length; i++) {
             if (typeof (custom_parsers[i].trigger) !== 'undefined') {

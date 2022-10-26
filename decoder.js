@@ -137,6 +137,8 @@ function getSketchBuild() {
                     console.log(err);
                 }
             }
+            if (typeof (fqbn[0]) === 'undefined')
+                return;
             if (fqbn[0].startsWith("esp") && file.endsWith("ino.elf")) {
                 elf_file_auto_path = localFolder + '\\' + mostRecentBuild + '\\' + file;
             }
