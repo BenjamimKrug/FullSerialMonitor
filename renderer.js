@@ -15,6 +15,7 @@ const com_ports_input = document.getElementById("com_ports_input");
 const baudrate_input = document.getElementById("baudrate_input");
 const add_timestamp = document.getElementById("add_timestamp");
 const sidebar_resizer = document.getElementById("sidebar_resizer");
+const show_con_changes = document.getElementById("show_con_changes");
 
 //send data elements and variables
 const send_input = document.getElementById("send_input");
@@ -190,6 +191,8 @@ function disconnect() {
             line_ending.disabled = true;
             if (log_file_writer != null)
                 log_file_writer.close();
+            if (show_con_changes.checked)
+                recvData("<span style='color:red'>DISCONNECTED</span>\n");
         });
     }
 }
@@ -214,6 +217,8 @@ function connectSerialPort(data) {
         send_button.disabled = false;
         send_input.disabled = false;
         line_ending.disabled = false;
+        if (show_con_changes.checked)
+            recvData("<span style='color:green'>CONNECTED</span>\n");
         if (log_type.value == 'none')
             return;
         if (fs.existsSync(log_folder_input.value)) {
