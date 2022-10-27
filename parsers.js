@@ -5,6 +5,7 @@ var custom_parsers_count = 0;
 var custom_parsers = [];
 var parsed_ids = [];
 var deleted_custom_parsers = [];
+var disconnect_on_boot = document.getElementById("disconnect_on_boot");
 var custom_parsers_div = document.getElementById("custom_parsers_div");
 var json_color = document.getElementById("json_color");
 
@@ -23,6 +24,9 @@ function runParsers() {
             break;
         var timestamp = target_timestamp_element.innerHTML.split('-')[0] + ':';
         var target_line = target_line_element.innerHTML;
+        if (disconnect_on_boot.checked && target_line.startsWith("waiting for download"))
+            disconnect();
+
         for (var i = 0; i < custom_parsers.length; i++) {
             if (typeof (custom_parsers[i].trigger) !== 'undefined') {
                 if (target_line.indexOf(custom_parsers[i].trigger) > -1) {

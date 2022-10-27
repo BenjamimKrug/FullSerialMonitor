@@ -11,7 +11,7 @@
             <button id="send_button" onclick="sendData()" disabled>Send</button>
             <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
                 <option value="">No line ending</option>
-                <option value='\n'>LF(New line)</option>
+                <option value='\n'>LF(Line feed or New line)</option>
                 <option value='\r'>CR(Carriage return)</option>
                 <option value="\r\n">CR+LF(Carriage return + New line)</option>
             </select>
@@ -60,6 +60,12 @@
         <br>
         <input type="checkbox" id="ctrl_enter" />
         <label for="ctrl_enter">Use Ctrl key to send</label>
+        <br>
+        <input type="checkbox" id="disconnect_on_boot" />
+        <label for="disconnect_on_boot">Disconnect on Boot message</label>
+        <br>
+        <input type="checkbox" id="show_con_changes" />
+        <label for="show_con_changes">Show Connection changes</label>
         <br><br>
         JSON parser color&nbsp&nbsp
         <input type="color" id="json_color" value="#00ff00" />
@@ -98,7 +104,7 @@
             onchange="updatePreferences();changeTimestamp()">
         <br>
 
-        <select id="com_ports" class="select_input">
+        <select id="com_ports" class="select_input" onclick="getPorts()">
         </select>
         <button id="list_ports" class="general_btn" style="right: 5px;" onclick="getPorts()">LIST</button>
         <br>

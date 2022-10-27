@@ -54,6 +54,12 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
         if (typeof (preferences.jsonColor) !== 'undefined')
             json_color.value = preferences.jsonColor;
 
+        if (typeof (preferences.disconnectOnBoot) !== 'undefined')
+            disconnect_on_boot.checked = preferences.disconnectOnBoot;
+
+        if (typeof (preferences.showConChanges) !== 'undefined')
+            show_con_changes.checked = preferences.showConChanges;
+
         if (typeof (preferences.elfPath) !== 'undefined')
             elf_path_input.value = preferences.elfPath;
 
@@ -105,6 +111,12 @@ function backupPreferences() {
     if (typeof (prev_preferences.jsonColor) !== 'undefined')
         json_color.value = prev_preferences.jsonColor;
 
+    if (typeof (prev_preferences.disconnectOnBoot) !== 'undefined')
+        disconnect_on_boot.checked = prev_preferences.disconnectOnBoot;
+
+    if (typeof (prev_preferences.showConChanges) !== 'undefined')
+        show_con_changes.checked = prev_preferences.showConChanges;
+
     if (typeof (prev_preferences.elfPath) !== 'undefined')
         elf_path_input.value = prev_preferences.elfPath;
 
@@ -150,6 +162,8 @@ function updatePreferences() {
         decoderFolder: decoder_folder_input.value.trim(),
         decoderColor: decoder_color.value,
         jsonColor: json_color.value,
+        disconnectOnBoot: disconnect_on_boot.checked,
+        showConChanges: show_con_changes.checked,
         logType: log_type.value,
         logAddTimestamp: log_addTimestamp.checked,
         autoScroll: auto_scroll.checked,
