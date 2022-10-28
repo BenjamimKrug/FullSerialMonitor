@@ -1,6 +1,6 @@
 .terminal {
-    max-height: 75%;
-    min-height: 75%;
+    max-height: 73%;
+    min-height: 73%;
     overflow: hidden;
     overflow-x: scroll;
     overflow-y: scroll;
@@ -26,7 +26,7 @@
     overflow-x: scroll;
     overflow-y: scroll;
     width: 95%;
-    height: calc(38% - 20px);
+    height: 26%;
 }
 
 .box {
@@ -145,7 +145,7 @@
 }
 
 .number {
-    color: rgb(185, 2, 185);
+    color: rgb(201, 0, 201);
 }
 
 .boolean {

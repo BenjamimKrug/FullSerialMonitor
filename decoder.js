@@ -121,9 +121,12 @@ function getSketchBuild() {
                 try {
                     var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
                     fqbn = buildOptions.fqbn.split(":");
-
+                    console.log(fqbn);
                     if (fqbn[0] == "esp32") {
-                        decoder_arch.value = fqbn[2];
+                        if (fqbn[2].startsWith("esp"))
+                            decoder_arch.value = fqbn[2];
+                        else
+                            decoder_arch.value = fqbn[0];
                         general_core = fqbn[0];
                     }
                     else if (fqbn[0] == "esp8266") {
@@ -148,9 +151,9 @@ function getSketchBuild() {
 
 function syntaxHighlightDecoder(decoded) {
     decoded = decoded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return decoded.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+    return decoded.replace(/0x[a-f0-9]{8}:|\b:[0-9]{3}\b|[a-zA-Z0-9]{1,} at$/g, function (match) {
         var cls = 'number';
-        if (/^"/.test(match)) {
+        if (/^0x/.test(match)) {
             if (/:$/.test(match))
                 cls = 'key';
             else
