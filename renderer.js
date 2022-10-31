@@ -193,13 +193,14 @@ function disconnect() {
             if (log_file_writer != null)
                 log_file_writer.close();
             if (show_con_changes.checked)
-                recvData("<span style='color:red'>DISCONNECTED</span>\n");
+                recvData("\n<span style='color:red'>DISCONNECTED</span>\n");
         });
     }
 }
 
 function cleanTerminal() {
     terminal.innerHTML = "";
+    output_history.innerHTML = "";
     first_line = true;
     start_line_index = current_line_index--;
 }
@@ -257,7 +258,6 @@ function recvData(payload) {
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (first_line == true) {
         first_line = false;
-        second_line = true;
         if (log_add_timestamp.checked)
             payload = current_datetime + "->" + payload;
 
@@ -268,7 +268,7 @@ function recvData(payload) {
         if (add_timestamp.checked == false)
             timestamp.setAttribute("style", "display:none");
         timestamp.setAttribute("id", 't' + current_line_index);
-        message_new_line.innerHTML += message;
+        message_new_line.innerHTML += message.replace(/(?:\r\n|\n)/g, "<br>" + current_datetime + "->");
         terminal.appendChild(timestamp);
         terminal.appendChild(message_new_line);
         current_line_index++;
@@ -279,10 +279,6 @@ function recvData(payload) {
         var lastIndex = 0;
         var m_length = message.length;
         if (index > -1) {
-            if (second_line == true) {
-                second_line = false;
-                terminal.appendChild(document.createElement("br"));
-            }
             while (index > -1) {
                 var chunk = message.substring(lastIndex, index);
                 var payload_new_line = "";

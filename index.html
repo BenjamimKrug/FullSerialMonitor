@@ -8,7 +8,7 @@
     <div id="content">
         <div id="header" style="width:80%">
             <input type="text" id="send_input" style="width:70%" disabled>
-            <button id="send_button" onclick="sendData()" disabled>Send</button>
+            <button id="send_button" onclick="sendData()" disabled>SEND</button>
             <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
                 <option value="">No line ending</option>
                 <option value='\n'>LF(Line feed or New line)</option>
@@ -108,7 +108,7 @@
             onchange="updatePreferences();changeTimestamp()">
         <br>
 
-        <select id="com_ports" class="select_input" onclick="getPorts()">
+        <select id="com_ports" class="select_input">
         </select>
         <button id="list_ports" class="general_btn" style="right: 5px;" onclick="getPorts()">LIST</button>
         <br>

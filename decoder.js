@@ -121,7 +121,6 @@ function getSketchBuild() {
                 try {
                     var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
                     fqbn = buildOptions.fqbn.split(":");
-                    console.log(fqbn);
                     if (fqbn[0] == "esp32") {
                         if (fqbn[2].startsWith("esp"))
                             decoder_arch.value = fqbn[2];
@@ -151,7 +150,7 @@ function getSketchBuild() {
 
 function syntaxHighlightDecoder(decoded) {
     decoded = decoded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return decoded.replace(/0x[a-f0-9]{8}:|\b:[0-9]{3}\b|[a-zA-Z0-9]{1,} at$/g, function (match) {
+    return decoded.replace(/0x[a-f0-9]{8}:|\b:[0-9]{3}\b|[a-zA-Z0-9_]{1,} at\b/g, function (match) {
         var cls = 'number';
         if (/^0x/.test(match)) {
             if (/:$/.test(match))
