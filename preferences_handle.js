@@ -5,6 +5,8 @@ var log_type = document.getElementById("log_type");
 var log_folder = document.getElementById("log_folder");
 var log_folder_input = document.getElementById("log_folder_input");
 var json_color = document.getElementById("json_color");
+var theme_style = document.getElementById("theme_style");
+var theme_select = document.getElementById("theme_select");
 let log_file_writer = null;
 var preferences = null;
 var prev_preferences = null;
@@ -15,113 +17,68 @@ fs.readFile("./preferences.json", 'utf8', (err, data) => {
     }
     preferences = JSON.parse(data);
     if (preferences != null) {
-        if (typeof (preferences.comPort) !== 'undefined')
-            com_ports.value = preferences.comPort;
-
-        if (typeof (preferences.baudrate) !== 'undefined')
-            baudrate_input.value = preferences.baudrate;
-
-        if (typeof (preferences.autoScroll) !== 'undefined')
-            auto_scroll.checked = preferences.autoScroll;
-
-        if (typeof (preferences.addTimestamp) !== 'undefined')
-            add_timestamp.checked = preferences.addTimestamp;
-
-        if (typeof (preferences.logFolder) !== 'undefined')
-            log_folder_input.value = preferences.logFolder;
-
-        if (typeof (preferences.logType) !== 'undefined')
-            log_type.value = preferences.logType;
-
-        if (typeof (preferences.logAddTimestamp) !== 'undefined')
-            log_add_timestamp.checked = preferences.logAddTimestamp;
-
-        if (typeof (preferences.ctrlEnter) !== 'undefined')
-            ctrl_enter.checked = preferences.ctrlEnter;
-
-        if (typeof (preferences.lineEnding) !== 'undefined')
-            line_ending.value = preferences.lineEnding;
-
-        if (typeof (preferences.decoderFolder) !== 'undefined')
-            decoder_folder_input.value = preferences.decoderFolder;
-
-        if (typeof (preferences.decoderArch) !== 'undefined')
-            decoder_arch.value = preferences.decoderArch;
-
-        if (typeof (preferences.decoderColor) !== 'undefined')
-            decoder_color.value = preferences.decoderColor;
-
-        if (typeof (preferences.jsonColor) !== 'undefined')
-            json_color.value = preferences.jsonColor;
-
-        if (typeof (preferences.disconnectOnBoot) !== 'undefined')
-            disconnect_on_boot.checked = preferences.disconnectOnBoot;
-
-        if (typeof (preferences.showConChanges) !== 'undefined')
-            show_con_changes.checked = preferences.showConChanges;
-
-        if (typeof (preferences.elfPath) !== 'undefined')
-            elf_path_input.value = preferences.elfPath;
-
-        if (typeof (preferences.customParsers) !== 'undefined') {
-            custom_parsers = preferences.customParsers;
-            updateParsers();
-        }
+        setPreferences(preferences);
     }
     prev_preferences = preferences;
 });
 
-function backupPreferences() {
-    if (typeof (prev_preferences.comPort) !== 'undefined')
-        com_ports.value = prev_preferences.comPort;
 
-    if (typeof (prev_preferences.baudrate) !== 'undefined')
-        baudrate_input.value = prev_preferences.baudrate;
+function setPreferences(target_preferences) {
+    if (typeof (target_preferences.comPort) !== 'undefined')
+        com_ports.value = target_preferences.comPort;
 
-    if (typeof (prev_preferences.autoScroll) !== 'undefined')
-        auto_scroll.checked = prev_preferences.autoScroll;
+    if (typeof (target_preferences.baudrate) !== 'undefined')
+        baudrate_input.value = target_preferences.baudrate;
 
-    if (typeof (prev_preferences.addTimestamp) !== 'undefined')
-        add_timestamp.checked = prev_preferences.addTimestamp;
+    if (typeof (target_preferences.autoScroll) !== 'undefined')
+        auto_scroll.checked = target_preferences.autoScroll;
 
-    if (typeof (prev_preferences.logFolder) !== 'undefined')
-        log_folder_input.value = prev_preferences.logFolder;
+    if (typeof (target_preferences.addTimestamp) !== 'undefined')
+        add_timestamp.checked = target_preferences.addTimestamp;
 
-    if (typeof (prev_preferences.logType) !== 'undefined')
-        log_type.value = prev_preferences.logType;
+    if (typeof (target_preferences.logFolder) !== 'undefined')
+        log_folder_input.value = target_preferences.logFolder;
 
-    if (typeof (prev_preferences.logAddTimestamp) !== 'undefined')
-        log_add_timestamp.checked = prev_preferences.logAddTimestamp;
+    if (typeof (target_preferences.logType) !== 'undefined')
+        log_type.value = target_preferences.logType;
 
-    if (typeof (prev_preferences.ctrlEnter) !== 'undefined')
-        ctrl_enter.checked = prev_preferences.ctrlEnter;
+    if (typeof (target_preferences.logAddTimestamp) !== 'undefined')
+        log_add_timestamp.checked = target_preferences.logAddTimestamp;
 
-    if (typeof (prev_preferences.lineEnding) !== 'undefined')
-        line_ending.value = prev_preferences.lineEnding;
+    if (typeof (target_preferences.ctrlEnter) !== 'undefined')
+        ctrl_enter.checked = target_preferences.ctrlEnter;
 
-    if (typeof (prev_preferences.decoderFolder) !== 'undefined')
-        decoder_folder_input.value = prev_preferences.decoderFolder;
+    if (typeof (target_preferences.lineEnding) !== 'undefined')
+        line_ending.value = target_preferences.lineEnding;
 
-    if (typeof (prev_preferences.decoderArch) !== 'undefined')
-        decoder_arch.value = prev_preferences.decoderArch;
+    if (typeof (target_preferences.decoderFolder) !== 'undefined')
+        decoder_folder_input.value = target_preferences.decoderFolder;
 
-    if (typeof (prev_preferences.decoderColor) !== 'undefined')
-        decoder_color.value = prev_preferences.decoderColor;
+    if (typeof (target_preferences.decoderArch) !== 'undefined')
+        decoder_arch.value = target_preferences.decoderArch;
 
-    if (typeof (prev_preferences.jsonColor) !== 'undefined')
-        json_color.value = prev_preferences.jsonColor;
+    if (typeof (target_preferences.decoderColor) !== 'undefined')
+        decoder_color.value = target_preferences.decoderColor;
 
-    if (typeof (prev_preferences.disconnectOnBoot) !== 'undefined')
-        disconnect_on_boot.checked = prev_preferences.disconnectOnBoot;
+    if (typeof (target_preferences.jsonColor) !== 'undefined')
+        json_color.value = target_preferences.jsonColor;
 
-    if (typeof (prev_preferences.showConChanges) !== 'undefined')
-        show_con_changes.checked = prev_preferences.showConChanges;
+    if (typeof (target_preferences.disconnectOnBoot) !== 'undefined')
+        disconnect_on_boot.checked = target_preferences.disconnectOnBoot;
 
-    if (typeof (prev_preferences.elfPath) !== 'undefined')
-        elf_path_input.value = prev_preferences.elfPath;
+    if (typeof (target_preferences.showConChanges) !== 'undefined')
+        show_con_changes.checked = target_preferences.showConChanges;
 
-    if (typeof (prev_preferences.customParsers) !== 'undefined') {
-        custom_parsers = prev_preferences.customParsers;
+    if (typeof (target_preferences.elfPath) !== 'undefined')
+        elf_path_input.value = target_preferences.elfPath;
+
+    if (typeof (target_preferences.theme) !== 'undefined') {
+        theme_select.value = target_preferences.theme;
+        theme_style.href = theme_select.value + "_theme_style.css";
+    }
+
+    if (typeof (target_preferences.customParsers) !== 'undefined') {
+        custom_parsers = target_preferences.customParsers;
         updateParsers();
     }
 }
@@ -172,6 +129,7 @@ function updatePreferences() {
         comPort: com_ports.value,
         baudrate: baudrate_input.value,
         ctrlEnter: ctrl_enter.checked,
+        theme: theme_select.value,
         elfPath: elf_path_input.value.trim(),
         customParsers: custom_parsers
     };

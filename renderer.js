@@ -29,6 +29,7 @@ var prev_send_input = "";
 var serialport = null;
 var lineStart = false;
 var first_line = true;
+var second_line = true;
 var current_line_index = 0;
 var current_line = null;
 var prev_line = null;
@@ -256,6 +257,7 @@ function recvData(payload) {
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (first_line == true) {
         first_line = false;
+        second_line = true;
         if (log_add_timestamp.checked)
             payload = current_datetime + "->" + payload;
 
@@ -277,6 +279,10 @@ function recvData(payload) {
         var lastIndex = 0;
         var m_length = message.length;
         if (index > -1) {
+            if (second_line == true) {
+                second_line = false;
+                terminal.appendChild(document.createElement("br"));
+            }
             while (index > -1) {
                 var chunk = message.substring(lastIndex, index);
                 var payload_new_line = "";

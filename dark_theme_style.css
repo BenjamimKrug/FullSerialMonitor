@@ -32,8 +32,6 @@
 .box {
     background: rgb(45, 45, 45);
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
     padding: 10px;
     resize: none;
     white-space: nowrap;
@@ -196,6 +194,7 @@
 body {
     background: rgb(70, 70, 70);
     color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .general_btn {

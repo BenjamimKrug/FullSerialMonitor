@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="style.css">
+    <link id="theme_style" rel="stylesheet" href="dark_theme_style.css">
 </head>
 
 <body>
@@ -58,6 +58,10 @@
 
         Miscellaneous
         <br>
+        <select id="theme_select" onChange="theme_style.href = theme_select.value + '_theme_style.css';">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+        </select>
         <input type="checkbox" id="ctrl_enter" />
         <label for="ctrl_enter">Use Ctrl key to send</label>
         <br>
@@ -75,8 +79,8 @@
         <br>
         <div id="custom_parsers_div" class="box customParsersDiv">
         </div>
-        <button onclick="backupPreferences();config_menu.style.display = 'none'" class="general_btn close_btn"
-            style="right: 150px;position: fixed;">
+        <button onclick="setPreferences(prev_preferences);config_menu.style.display = 'none'"
+            class="general_btn close_btn" style="right: 150px;position: fixed;">
             Cancel
         </button>
         <button onclick="updatePreferences();config_menu.style.display = 'none'" class="general_btn close_btn"
@@ -157,7 +161,7 @@
         <br><br>
         OUTPUT HISTORY
         <div class="dropdown">
-            <button class="dropbtn general_btn">Filters</button>
+            <button class="dropbtn">Filters</button>
             <div class="dropdown-content" style="right:0">
                 <div>
                     <label for="json_filter" class="filters_label">
