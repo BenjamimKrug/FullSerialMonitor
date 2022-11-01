@@ -1,5 +1,5 @@
 {
-  "name": "fullserialmonitorjs",
+  "name": "ben-full_serial_monitor",
   "version": "1.0.0",
   "description": "Full serial monitor and ESP32 exception Decoder",
   "main": "main.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BenjamimKrug/EspExceptionDecoderC--.git"
+    "url": "git+https://github.com/BenjamimKrug/FullSerialMonitorJS.git"
   },
   "author": "BenjamimKrug",
   "license": "ISC",

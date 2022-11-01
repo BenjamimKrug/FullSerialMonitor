@@ -147,7 +147,7 @@
 }
 
 .boolean {
-    color: yellow;
+    color: red;
 }
 
 .null {
@@ -177,13 +177,13 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #888;
+    background: #777;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #f1f1f1;
-    border-radius: 10px;
+    background: #999;
+    border-radius: 7px;
 }
 
 /* Handle on hover */

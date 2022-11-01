@@ -150,17 +150,14 @@ function getSketchBuild() {
 
 function syntaxHighlightDecoder(decoded) {
     decoded = decoded.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return decoded.replace(/0x[a-f0-9]{8}:|\b:[0-9]{3}\b|[a-zA-Z0-9_]{1,} at\b/g, function (match) {
-        var cls = 'number';
-        if (/^0x/.test(match)) {
-            if (/:$/.test(match))
-                cls = 'key';
-            else
-                cls = 'string';
-        } else if (/true|false/.test(match))
+    return decoded.replace(/0x[a-f0-9]{8}:|\b:[0-9]{1,}\b|[a-zA-Z0-9_*\(\)]{1,} at\b|\b\/[a-zA-Z0-9_]{1,}\.[a-z]{1,}/g, function (match) {
+        var cls = 'key';
+        if (/ at$/.test(match))
+            cls = 'string';
+        else if (/\.[a-z]{1,}/.test(match))
             cls = 'boolean';
         else if (/null/.test(match))
             cls = 'null';
-        return `<span class="${cls}">${match}</span>`;
+        return `<span class="${cls}">` + (cls == 'string' ? `${match.substring(0, match.indexOf(" at"))}</span> at` : `${match}</span>`);
     });
 }
