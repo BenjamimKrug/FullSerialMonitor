@@ -90,6 +90,9 @@ app.on('ready', function () {
                     }
                 }
             ]
+        },
+        {
+            role:'toggleDevTools'                
         }
 
     ]

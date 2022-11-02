@@ -1,5 +1,6 @@
 {
   "name": "ben-full_serial_monitor",
+  "productName": "Ben's Full Serial Monitor",
   "version": "1.0.0",
   "description": "Full serial monitor and ESP32 exception Decoder",
   "main": "main.js",
@@ -17,7 +18,8 @@
   },
   "homepage": "https://github.com/BenjamimKrug/FullSerialMonitor#readme",
   "devDependencies": {
-    "electron": "^20.1.4"
+    "electron": "^20.1.4",
+    "electron-packager": "^17.1.1"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",

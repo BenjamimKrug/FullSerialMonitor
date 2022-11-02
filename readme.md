@@ -14,9 +14,8 @@ Included features:
     - ESP exception Decoder: automatic .elf file detection and processor architecture detection
     - JSON parser for JSON sent on the serial port
     - Custom parsers that can be added by the user, also written in JS, activated on custom trigger words.
-    - Parser entries history similar to the packet history in MQTT Explorer by Thomas Nordquist(https://github.com/thomasnordquist)
-    ![alt text](parser output entry history.png)
-    
+    - Parser entries history similar to the packet history in MQTT Explorer by Thomas Nordquist(https://github.com/thomasnordquist)    
     - Parser entries with customized colors to help differientiate entries according to the parser similar to MQTT FX by SoftBlade
+    <img src="/documentation/parser output entry history.png" alt="Alt text" title="Optional title">
 - Optional connection status change display
 - Optional disconnection on Boot message from ESP series microcontrollers
