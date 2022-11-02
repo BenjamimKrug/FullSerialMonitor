@@ -15,6 +15,8 @@ Included features:
     - JSON parser for JSON sent on the serial port
     - Custom parsers that can be added by the user, also written in JS, activated on custom trigger words.
     - Parser entries history similar to the packet history in MQTT Explorer by Thomas Nordquist(https://github.com/thomasnordquist)
+    ![alt text](parser output entry history.png)
+    
     - Parser entries with customized colors to help differientiate entries according to the parser similar to MQTT FX by SoftBlade
 - Optional connection status change display
 - Optional disconnection on Boot message from ESP series microcontrollers

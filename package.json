@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BenjamimKrug/FullSerialMonitorJS.git"
+    "url": "git+https://github.com/BenjamimKrug/FullSerialMonitor.git"
   },
   "author": "BenjamimKrug",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BenjamimKrug/FullSerialMonitorJS/issues"
+    "url": "https://github.com/BenjamimKrug/FullSerialMonitor/issues"
   },
-  "homepage": "https://github.com/BenjamimKrug/FullSerialMonitorJS#readme",
+  "homepage": "https://github.com/BenjamimKrug/FullSerialMonitor#readme",
   "devDependencies": {
     "electron": "^20.1.4"
   },

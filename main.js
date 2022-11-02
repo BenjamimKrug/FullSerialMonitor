@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, globalShortcut, shell } = require('electron');
 const path = require('path');
 const url = require('url');
 require('@electron/remote/main').initialize();
@@ -22,7 +22,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true, // to allow require
             contextIsolation: false, // allow use with Electron 12+
-        }
+        },
+        icon: __dirname + '/icon.ico'
     });
     mainWindow.maximize();
 
@@ -60,7 +61,41 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', function () {
+    createWindow();
+    const template = [
+        {
+            label: 'Edit',
+            submenu: [
+                { role: 'cut' },
+                { role: 'copy' },
+                { role: 'paste' },
+                { role: 'selectAll' }
+            ]
+        },
+        {
+            label: 'Help',
+            submenu: [
+                {
+                    label: 'Documentation',
+                    click: function () {
+                        shell.openExternal("https://github.com/BenjamimKrug/FullSerialMonitor#readme");
+                    }
+
+                },
+                {
+                    label: 'Issues',
+                    click: function () {
+                        shell.openExternal("https://github.com/BenjamimKrug/FullSerialMonitor/issues");
+                    }
+                }
+            ]
+        }
+
+    ]
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
