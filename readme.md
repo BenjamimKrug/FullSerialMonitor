@@ -20,7 +20,7 @@ This is a Serial monitor I developed with every feature I ever saw on other moni
     <img src="/documentation/custom parser registry.png" alt="parser registry">
     a deeper explanation on how to use the custom parser feature can be found later on in this readme file
     - Parser entries history similar to the packet history in MQTT Explorer by Thomas Nordquist(https://github.com/thomasnordquist)  
-    <img src="/documentation/parser output entry history.png" alt="parser history" style="height:400px">  
+    <img src="/documentation/parser output entry history.png" alt="parser history">  
     - Parser entries with customized colors to help differientiate entries according to the parser similar to MQTT FX by SoftBlade    
     <img src="/documentation/exception decoder parser color.png" alt="exception color">
     <img src="/documentation/json parser color.png" alt="json color">
@@ -61,8 +61,13 @@ Obs.: all the parsing is done only when the line is fully sent, so it happens wh
 ### How to use the Parser output history functionality
 As the parsers put out results, the get added to the history div as a button with the time of entry, the payload used in the parser and the color assigned to that parser. 
 <img src="/documentation/output history example.png" alt="parser output history">
+
 In the right corner you can see there is a filter button
+
 <img src="/documentation/filter example.png" alt="filter example">
+
 On this dropdown you can check the parsers you actively want to see, in this case the JSON parser is unchecked so only the exception decoder gets show:
+
 <img src="/documentation/filtered history example.png" alt="filtered history example">
+
 When you click on the parser output entry, the output div gets filled with the parser result for that entry.
