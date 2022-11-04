@@ -101,27 +101,32 @@ function updateParsers() {
         createCustomParserField(custom_parsers[i].name, custom_parsers[i].script,
             custom_parsers[i].func, custom_parsers[i].trigger, custom_parsers[i].color);
         if (fs.existsSync(custom_parsers[i].script)) {
-            var customScript = document.createElement("script");
-            customScript.setAttribute("src", custom_parsers[i].script);
-            var body = document.getElementsByTagName('body').item(0);
-            body.appendChild(customScript);
+            var current_script = document.getElementById(custom_parsers[i].name);
+            if (typeof (current_script) === 'undefined' || current_script == null) {
+                console.log(current_script);
+                var customScript = document.createElement("script");
+                customScript.setAttribute("src", custom_parsers[i].script);
+                customScript.setAttribute("id", custom_parsers[i].name);
+                var body = document.getElementsByTagName('body').item(0);
+                body.appendChild(customScript);
 
-            var customFilterLabel = document.createElement("label");
-            customFilterLabel.setAttribute("for", custom_parsers[i].name + "_filter");
-            customFilterLabel.setAttribute("class", "filters_label");
-            customFilterLabel.innerHTML = custom_parsers[i].name;
+                var customFilterLabel = document.createElement("label");
+                customFilterLabel.setAttribute("for", custom_parsers[i].name + "_filter");
+                customFilterLabel.setAttribute("class", "filters_label");
+                customFilterLabel.innerHTML = custom_parsers[i].name;
 
-            var customFilter = document.createElement("input");
-            customFilter.setAttribute("type", "checkbox");
-            customFilter.setAttribute("onchange", "updateParserHistory(this)");
-            customFilter.setAttribute("class", "filters");
-            customFilter.setAttribute("id", custom_parsers[i].name + "_filter");
-            customFilter.setAttribute("data-filter", custom_parsers[i].name);
-            customFilter.checked = true;
+                var customFilter = document.createElement("input");
+                customFilter.setAttribute("type", "checkbox");
+                customFilter.setAttribute("onchange", "updateParserHistory(this)");
+                customFilter.setAttribute("class", "filters");
+                customFilter.setAttribute("id", custom_parsers[i].name + "_filter");
+                customFilter.setAttribute("data-filter", custom_parsers[i].name);
+                customFilter.checked = true;
 
-            filterDropdown.appendChild(customFilterLabel);
-            filterDropdown.appendChild(customFilter);
-            filterDropdown.appendChild(document.createElement("br"));
+                filterDropdown.appendChild(customFilterLabel);
+                filterDropdown.appendChild(customFilter);
+                filterDropdown.appendChild(document.createElement("br"));
+            }
         }
     }
     getESPaddr2line();
