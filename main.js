@@ -1,3 +1,8 @@
+/*
+    Full Serial monitor written by Benjamim Krug
+    https://github.com/BenjamimKrug/FullSerialMonitor
+    for more information refer to the readme file
+*/
 const { app, BrowserWindow, Menu, ipcMain, globalShortcut, shell } = require('electron');
 const path = require('path');
 const url = require('url');
