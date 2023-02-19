@@ -7,6 +7,17 @@ var log_folder_input = document.getElementById("log_folder_input");
 var json_color = document.getElementById("json_color");
 var theme_style = document.getElementById("theme_style");
 var theme_select = document.getElementById("theme_select");
+var advanced_config = document.getElementById("advanced_config");
+var advanced_config_div = document.getElementById("advanced_config_div");
+var parity_select = document.getElementById("parity");
+var dataBits_select = document.getElementById("dataBits");
+var stopBits_select = document.getElementById("stopBits");
+var rtscts_enable = document.getElementById("rtscts");
+var xon_enable = document.getElementById("xon");
+var xoff_enable = document.getElementById("xoff");
+var xany_enable = document.getElementById("xany");
+var hupcl_enable = document.getElementById("hupcl");
+
 let log_file_writer = null;
 var preferences = null;
 var prev_preferences = null;
@@ -69,17 +80,31 @@ function setPreferences(target_preferences) {
     if (typeof (target_preferences.showConChanges) !== 'undefined')
         show_con_changes.checked = target_preferences.showConChanges;
 
+
     if (typeof (target_preferences.elfPath) !== 'undefined')
         elf_path_input.value = target_preferences.elfPath;
 
     if (typeof (target_preferences.theme) !== 'undefined') {
         theme_select.value = target_preferences.theme;
-        theme_style.href = theme_select.value + "_theme_style.css";
+        theme_style.href = "style/" + theme_select.value + "_theme_style.css";
     }
 
     if (typeof (target_preferences.customParsers) !== 'undefined') {
         custom_parsers = target_preferences.customParsers;
         updateParsers();
+    }
+
+    if (typeof (target_preferences.advancedConfig) !== 'undefined') {
+        advanced_config.checked = target_preferences.advancedConfig.enabled;
+        stopBits_select.value = target_preferences.advancedConfig.stopBits;
+        dataBits_select.value = target_preferences.advancedConfig.dataBits;
+        parity_select.value = target_preferences.advancedConfig.parity;
+        rtscts_enable.checked = target_preferences.advancedConfig.rtscts;
+        xon_enable.checked = target_preferences.advancedConfig.xon;
+        xoff_enable.checked = target_preferences.advancedConfig.xoff;
+        xany_enable.checked = target_preferences.advancedConfig.xany;
+        hupcl_enable.checked = target_preferences.advancedConfig.hupcl;
+        changeAdvConfigDiv();
     }
 }
 
@@ -112,8 +137,38 @@ elf_path_input.addEventListener('blur', () => {
     elf_path_input.scrollLeft = elf_path_input.scrollWidth;
 });
 
+function changeAdvConfigDiv() {
+    if (advanced_config.checked) {
+        advanced_config_div.style.display = "block";
+        output_history.style.height = "23%";
+    }
+    else {
+        advanced_config_div.style.display = "none";
+        output_history.style.height = "46%";
+        stopBits_select.value = "1";
+        dataBits_select.value = "8";
+        parity_select.value = "none";
+        rtscts_enable.checked = false;
+        xon_enable.checked = false;
+        xoff_enable.checked = false;
+        xany_enable.checked = false;
+        hupcl_enable.checked = false;
+    }
+}
+
 function updatePreferences() {
     saveCustomParsers();
+    var advancedConfig_json = {
+        enabled: advanced_config.checked,
+        stopBits: stopBits_select.value,
+        dataBits: dataBits_select.value,
+        parity: parity_select.value,
+        rtscts: rtscts_enable.checked,
+        xon: xon_enable.checked,
+        xoff: xoff_enable.checked,
+        xany: xany_enable.checked,
+        hupcl: hupcl_enable.checked
+    };
     preferences = {
         logFolder: log_folder_input.value.trim(),
         decoderFolder: decoder_folder_input.value.trim(),
@@ -129,6 +184,7 @@ function updatePreferences() {
         comPort: com_ports.value,
         baudrate: baudrate_input.value,
         ctrlEnter: ctrl_enter.checked,
+        advancedConfig: advancedConfig_json,
         theme: theme_select.value,
         elfPath: elf_path_input.value.trim(),
         customParsers: custom_parsers

@@ -1,12 +1,12 @@
 <html>
 
 <head>
-    <link id="theme_style" rel="stylesheet" href="dark_theme_style.css">
+    <link id="theme_style" rel="stylesheet" href="style/dark_theme_style.css">
 </head>
 
 <body>
     <div id="content">
-        <div id="header" style="width:80%">
+        <div id="header" style="width:80%;height:30px">
             <input type="text" id="send_input" style="width:70%" disabled>
             <button id="send_button" onclick="sendData()" disabled>SEND</button>
             <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
@@ -16,6 +16,7 @@
                 <option value="\r\n">CR+LF(Carriage return + New line)</option>
             </select>
         </div>
+
         <div class="box terminal" id="terminal">
         </div>
         <br>
@@ -45,7 +46,7 @@
         Exception decoder
         <br>
         <label>
-            Arduino packages folder<br>
+            Arduino Data folder<br>
             <input type="text" id="decoder_folder_input" class="file_path" />
             <input type="file" id="decoder_folder" style="display:none" onchange="readDirPaths(false,true)"
                 webkitdirectory />
@@ -59,7 +60,7 @@
         Miscellaneous
         <br>
         Theme
-        <select id="theme_select" onChange="theme_style.href = theme_select.value + '_theme_style.css';">
+        <select id="theme_select" onChange="theme_style.href = 'style/' + theme_select.value + '_theme_style.css';">
             <option value="dark">Dark</option>
             <option value="light">Light</option>
         </select>
@@ -72,6 +73,9 @@
         <br>
         <input type="checkbox" id="show_con_changes" />
         <label for="show_con_changes">Show Connection changes</label>
+        <br>
+        <input type="checkbox" id="advanced_config" onchange="changeAdvConfigDiv();updatePreferences();" />
+        <label for="advanced_config">Enable advanced Config</label>
         <br><br>
         JSON parser color&nbsp&nbsp
         <input type="color" id="json_color" value="#00ff00" />
@@ -110,11 +114,13 @@
             onchange="updatePreferences();changeTimestamp()">
         <br>
 
+        <label for="com_ports" style="position:relative;left:4%">Port</label>
         <select id="com_ports" class="select_input">
         </select>
         <button id="list_ports" class="general_btn" style="right: 5px;" onclick="getPorts()">LIST</button>
         <br>
 
+        <label for="baudrate" style="position:relative;left:4%">Baud</label>
         <select id="baudrate_input" class="select_input">
             <option>300</option>
             <option>1200</option>
@@ -136,7 +142,52 @@
             <option>5000000</option>
         </select>
         <label for="baudrate" style="position:absolute;right:25px;transform: translate(0, 10%);">bps</label>
-        <br><br>
+        <br>
+
+        <div id="advanced_config_div" style="display: none;">
+            <br>
+            <label for="parity" style="position:relative;left:4%">Parity</label>
+            <select id="parity" class="select_input" style="right:5%" value="none">
+                <option value="none">none</option>
+                <option value="odd">odd</option>
+                <option value="even">even</option>
+            </select>
+            <br>
+
+            <label for="dataBits" style="position:relative;left:4%">DataBits</label>
+            <select id="dataBits" class="select_input" style="right:5%" value="8">
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+            </select>
+            <br>
+
+            <label for="stopBits" style="position:relative;left:4%">StopBits</label>
+            <select id="stopBits" class="select_input" style="right:5%" value="1">
+                <option>1</option>
+                <option>1.5</option>
+                <option>2</option>
+            </select>
+            <br>
+            <input type="checkbox" id="rtscts" />
+            <label for="rtscts">RTS/CTS flow control</label>
+            <br>
+            <input type="checkbox" id="xon" />
+            <label for="xon">XON flow control</label>
+            <br>
+            <input type="checkbox" id="xoff" />
+            <label for="xoff">XOFF flow control</label>
+            <br>
+            <input type="checkbox" id="xany" />
+            <label for="xany">XANY flow control</label>
+            <br>
+            <input type="checkbox" id="hupcl" />
+            <label for="hupcl">Drop DTR on close</label>
+            <br>
+        </div>
+        <br>
+
         <button id="connect_serial" class="options_button" onclick="connect()">
             <img src="./images/usb-connected-16.png" width="16" height="16">
             CONNECT

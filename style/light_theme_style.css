@@ -26,7 +26,7 @@
     overflow-x: scroll;
     overflow-y: scroll;
     width: 95%;
-    height: 26%;
+    height: 140px;
 }
 
 .box {
@@ -282,7 +282,7 @@ input::-webkit-calendar-picker-indicator {
     position: absolute;
     right: 60px;
     text-align: right;
-    width: 130px;
+    width: 100px;
     height: 20px;
 }
 

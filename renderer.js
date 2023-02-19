@@ -78,7 +78,7 @@ function makeResizableDiv(div, vertical, horizontal) {
             original_mouse_y = e.pageY;
             window.addEventListener('mousemove', resize)
             window.addEventListener('mouseup', stopResize)
-        })
+        });
 
         function resize(e) {
             if (currentResizer.classList.contains('bottom-right')) {
@@ -169,18 +169,30 @@ function connect() {
         window.alert("No COM ports detected");
         return;
     }
-    var data = { comPort: com_ports.value, baudrate: baudrate_input.value }
-    if (data.comPort != undefined && data.baudrate != undefined) {
-        if (serialport != null && serialport.isOpen) {
-            serialport.port.close().then((err) => {
-                connectSerialPort(data);
-            });
-        }
-        else
+    var data = {
+        path: com_ports.value,
+        baudRate: parseInt(baudrate_input.value),
+        dataBits: parseInt(dataBits_select.value),
+        stopBits: parseInt(stopBits_select.value),
+        parity: parity_select.value,
+        rtscts: rtscts_enable.checked,
+        xon: xon_enable.checked,
+        xoff: xoff_enable.checked,
+        xany: xany_enable.checked,
+        hupcl: hupcl_enable.checked
+    }
+    if (data.path == undefined && data.baudrate == undefined) {
+        window.alert("error: undefined value");
+        return;
+    }
+
+    if (serialport != null && serialport.isOpen) {
+        serialport.port.close().then((err) => {
             connectSerialPort(data);
+        });
     }
     else
-        window.alert("error: undefined value");
+        connectSerialPort(data);
 }
 
 
@@ -207,7 +219,7 @@ function cleanTerminal() {
 
 function connectSerialPort(data) {
     updatePreferences();
-    serialport = new SerialPort({ path: data.comPort, baudRate: parseInt(data.baudrate), hupcl: false });
+    serialport = new SerialPort(data);
     serialport.on('error', function (err) {
         window.alert("Error trying to open Port: " + err);
     });

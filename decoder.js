@@ -1,4 +1,5 @@
 const { exec, execSync } = require("child_process");
+const os = require('os');
 var decoder_folder = document.getElementById("decoder_folder");
 var decoder_folder_input = document.getElementById("decoder_folder_input");
 var decoder_arch = document.getElementById("decoder_arch");
@@ -10,7 +11,7 @@ var elf_file_auto_path = "";
 var general_core = "";
 
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
-var addr2line_path = "packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\gcc8_4_0-esp-2021r2-patch3\\bin\\xtensa-esp32-elf-addr2line.exe";
+var addr2line_path = "";
 var memory_address = null;
 var esp32_version = "";
 var esp32_gcc_version = "";
@@ -61,6 +62,7 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
     }
 }
 
+
 function getESPaddr2line() {
     if (decoder_folder_input.value.length < 10)
         return;
@@ -99,55 +101,57 @@ function getESPaddr2line() {
 }
 
 function getSketchBuild() {
-    var localFolder = decoder_folder_input.value.split("Arduino15")[0] + 'Temp';
+    var tempFolder = os.tmpdir();
     var mostRecentBuild = "";
     var mostRecentTimestamp = 0;
-    var files = fs.readdirSync(localFolder);
+    var files = fs.readdirSync(tempFolder);
     files.forEach(file => {
-        if (file.startsWith("arduino-sketch")) {
-            var stats = fs.lstatSync(localFolder + '\\' + file);
-            if (stats.isDirectory()) {
-                if (stats.mtimeMs > mostRecentTimestamp) {
-                    mostRecentTimestamp = stats.mtimeMs;
-                    mostRecentBuild = file;
-                }
+        if (!file.startsWith("arduino-sketch") && !file.startsWith("arduino_build"))
+            return;
+        var stats = fs.lstatSync(tempFolder + '\\' + file);
+        if (stats.isDirectory()) {
+            if (stats.mtimeMs > mostRecentTimestamp) {
+                mostRecentTimestamp = stats.mtimeMs;
+                mostRecentBuild = file;
             }
         }
+
     });
-    if (mostRecentBuild != "") {
-        var filesSketch = fs.readdirSync(localFolder + '\\' + mostRecentBuild);
-        var fqbn = "";
-        filesSketch.forEach(file => {
-            if (file == "build.options.json") {
-                var buildOptionsFile = localFolder + '\\' + mostRecentBuild + '\\' + "build.options.json";
-                try {
-                    var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
-                    fqbn = buildOptions.fqbn.split(":");
-                    if (fqbn[0] == "esp32") {
-                        if (fqbn[2].startsWith("esp"))
-                            decoder_arch.value = fqbn[2];
-                        else
-                            decoder_arch.value = fqbn[0];
-                        general_core = fqbn[0];
-                    }
-                    else if (fqbn[0] == "esp8266") {
-                        decoder_arch.value = fqbn[0];
-                        general_core = fqbn[0];
-                    }
-                    else
-                        window.alert("Core not supported by the exception decoder");
-                }
-                catch (err) {
-                    console.log(err);
-                }
+    if (mostRecentBuild != "")
+        return;
+    var filesSketch = fs.readdirSync(tempFolder + '\\' + mostRecentBuild);
+    var fqbn = "";
+    filesSketch.forEach(file => {
+        if (file != "build.options.json")
+            return;
+        var buildOptionsFile = tempFolder + '\\' + mostRecentBuild + '\\' + "build.options.json";
+        try {
+            var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
+            fqbn = buildOptions.fqbn.split(":");
+            if (fqbn[0] == "esp32") {
+                if (fqbn[2].startsWith("esp"))
+                    decoder_arch.value = fqbn[2];
+                else
+                    decoder_arch.value = fqbn[0];
+                general_core = fqbn[0];
             }
-            if (typeof (fqbn[0]) === 'undefined')
-                return;
-            if (fqbn[0].startsWith("esp") && file.endsWith("ino.elf")) {
-                elf_file_auto_path = localFolder + '\\' + mostRecentBuild + '\\' + file;
+            else if (fqbn[0] == "esp8266") {
+                decoder_arch.value = fqbn[0];
+                general_core = fqbn[0];
             }
-        });
-    }
+            else
+                window.alert("Core not supported by the exception decoder");
+        }
+        catch (err) {
+            console.log(err);
+        }
+
+        if (typeof (fqbn[0]) === 'undefined')
+            return;
+        if (fqbn[0].startsWith("esp") && file.endsWith("ino.elf")) {
+            elf_file_auto_path = tempFolder + '\\' + mostRecentBuild + '\\' + file;
+        }
+    });
 }
 
 function syntaxHighlightDecoder(decoded) {

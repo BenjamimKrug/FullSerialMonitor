@@ -28,7 +28,7 @@ function createWindow() {
             nodeIntegration: true, // to allow require
             contextIsolation: false, // allow use with Electron 12+
         },
-        icon: __dirname + '/icon.ico'
+        icon: __dirname + '/images/icon.ico'
     });
     mainWindow.maximize();
 
