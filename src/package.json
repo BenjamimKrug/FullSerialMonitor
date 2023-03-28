@@ -5,7 +5,10 @@
   "description": "Full serial monitor and ESP32 exception Decoder",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
   "repository": {
     "type": "git",
@@ -18,12 +21,14 @@
   },
   "homepage": "https://github.com/BenjamimKrug/FullSerialMonitor#readme",
   "devDependencies": {
+    "@electron-forge/publisher-github": "^6.0.5",
     "electron": "^20.1.4",
     "electron-packager": "^17.1.1"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "electron-find": "^1.0.7",
+    "electron-forge": "^5.2.4",
     "remote": "^0.2.6",
     "serialport": "^10.4.0",
     "websocket": "^1.0.34",

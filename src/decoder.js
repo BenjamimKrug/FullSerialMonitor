@@ -106,52 +106,70 @@ function getSketchBuild() {
     var mostRecentTimestamp = 0;
     var files = fs.readdirSync(tempFolder);
     files.forEach(file => {
-        if (!file.startsWith("arduino-sketch") && !file.startsWith("arduino_build"))
+        if (!file.startsWith("arduino"))
             return;
         var stats = fs.lstatSync(tempFolder + '\\' + file);
         if (stats.isDirectory()) {
-            if (stats.mtimeMs > mostRecentTimestamp) {
+            if (mostRecentBuild != "arduino" && stats.mtimeMs > mostRecentTimestamp) {
                 mostRecentTimestamp = stats.mtimeMs;
                 mostRecentBuild = file;
             }
         }
-
     });
-    if (mostRecentBuild != "")
+    if (mostRecentBuild == "")
         return;
-    var filesSketch = fs.readdirSync(tempFolder + '\\' + mostRecentBuild);
+
+    if (mostRecentBuild == "arduino") {
+        var currentPath = tempFolder + '\\' + mostRecentBuild + '\\sketches';
+        var sketchesFolder = fs.readdirSync(currentPath);
+        sketchesFolder.forEach(file => {
+            var stats = fs.lstatSync(currentPath + '\\' + file);
+            if (stats.isDirectory()) {
+                if (stats.mtimeMs > mostRecentTimestamp) {
+                    mostRecentTimestamp = stats.mtimeMs;
+                    mostRecentBuild = currentPath + '\\' + file;
+                }
+            }
+        });
+    }
+
+    console.log("rcnt build: ", mostRecentBuild);
+    var filesSketch = fs.readdirSync(mostRecentBuild);
     var fqbn = "";
     filesSketch.forEach(file => {
-        if (file != "build.options.json")
-            return;
-        var buildOptionsFile = tempFolder + '\\' + mostRecentBuild + '\\' + "build.options.json";
-        try {
-            var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
-            fqbn = buildOptions.fqbn.split(":");
-            if (fqbn[0] == "esp32") {
-                if (fqbn[2].startsWith("esp"))
-                    decoder_arch.value = fqbn[2];
-                else
+        if (file == "build.options.json") {
+            var buildOptionsFile = mostRecentBuild + '\\' + "build.options.json";
+            try {
+                var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
+                fqbn = buildOptions.fqbn.split(":");
+                console.log(fqbn);
+                if (fqbn[0] == "esp32") {
+                    if (fqbn[2].startsWith("esp"))
+                        decoder_arch.value = fqbn[2];
+                    else
+                        decoder_arch.value = fqbn[0];
+                    general_core = fqbn[0];
+                }
+                else if (fqbn[0] == "esp8266") {
                     decoder_arch.value = fqbn[0];
-                general_core = fqbn[0];
+                    general_core = fqbn[0];
+                }
+                else
+                    window.alert("Core not supported by the exception decoder");
             }
-            else if (fqbn[0] == "esp8266") {
-                decoder_arch.value = fqbn[0];
-                general_core = fqbn[0];
+            catch (err) {
+                console.log(err);
             }
-            else
-                window.alert("Core not supported by the exception decoder");
-        }
-        catch (err) {
-            console.log(err);
         }
 
         if (typeof (fqbn[0]) === 'undefined')
             return;
         if (fqbn[0].startsWith("esp") && file.endsWith("ino.elf")) {
-            elf_file_auto_path = tempFolder + '\\' + mostRecentBuild + '\\' + file;
+            elf_file_auto_path = mostRecentBuild + '\\' + file;
         }
     });
+    if (elf_file_auto_path == "")
+        window.alert("Could not find .elf file");
 }
 
 function syntaxHighlightDecoder(decoded) {

@@ -254,7 +254,10 @@ function connectSerialPort(data) {
         }
     });
     serialport.on("readable", function () {
+        console.time("recebido");
         recvData(serialport.read().toString());
+        console.timeEnd("recebido");
+        console.log("\n\n");
     });
 
 }
@@ -262,12 +265,13 @@ function connectSerialPort(data) {
 
 
 //data receive handlers start
-function recvData(payload) {
+function recvData(payload) {    
+    console.time("data");
     var message = payload;
     let date = new Date();
     var tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
-    var dateISO = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
-    var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
+    var dateISO = (new Date(date - tzoffset)).toISOString().slice(0, -1);
+    var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);    
     if (first_line == true) {
         first_line = false;
         if (log_add_timestamp.checked)
@@ -334,6 +338,8 @@ function recvData(payload) {
     //terminal.innerHTML += message;
     if (auto_scroll.checked == true)
         terminal.scrollTop = terminal.scrollHeight;
+          
+    console.timeEnd("data");
 }
 //data receive handlers end
 
