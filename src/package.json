@@ -3,12 +3,9 @@
   "productName": "Ben's Full Serial Monitor",
   "version": "1.0.1",
   "description": "Full serial monitor and ESP32 exception Decoder",
-  "main": "main.js",
+  "main": "main.js", 
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
