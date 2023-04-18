@@ -18,30 +18,31 @@ var esp32_gcc_version = "";
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
 function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, timestamp) {
-    if (elf_path_input.value != "") {
-        var backtraceResult = document.createElement("a");
-        backtraceResult.setAttribute("id", "p" + backtraceDecoder_input_line);
-        var index = backtraceDecoder_input.indexOf(" ");
-        var lastIndex = 0;
-        var m_length = backtraceDecoder_input.length;
-        while (index > -1) {
-            memory_address = backtraceDecoder_input.substring(lastIndex, index);
-            lastIndex = index + 1;
-            index = backtraceDecoder_input.indexOf(" ", lastIndex);
-            if (!memory_address.startsWith("Backtrace")) {
-                var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
-                try {
-                    var stdout = execSync(command).toString();
-                    backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
-                }
-                catch (stderr) {
-                    backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
-                }
-            }
+    if (decoder_folder_input.value == "") {
+        if (!elf_error_warning) {
+            elf_error_warning = true;
+            window.alert("Backtrace could not be parsed, select Arduino Data Folder");
         }
-        memory_address = backtraceDecoder_input.substring(lastIndex, m_length - 1);
+        return "No Backtrace folder given";
+    }
+    if (elf_path_input.value == "") {
+        if (!elf_error_warning) {
+            elf_error_warning = true;
+            window.alert("Backtrace could not be parsed, choose .elf file please");
+        }
+        return "No ELF file given";
+    }
+    var backtraceResult = document.createElement("a");
+    backtraceResult.setAttribute("id", "p" + backtraceDecoder_input_line);
+    var index = backtraceDecoder_input.indexOf(" ");
+    var lastIndex = 0;
+    var m_length = backtraceDecoder_input.length;
+    while (index > -1) {
+        memory_address = backtraceDecoder_input.substring(lastIndex, index);
+        lastIndex = index + 1;
+        index = backtraceDecoder_input.indexOf(" ", lastIndex);
         if (!memory_address.startsWith("Backtrace")) {
-            var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
+            var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
             try {
                 var stdout = execSync(command).toString();
                 backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
@@ -49,16 +50,20 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
             catch (stderr) {
                 backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
             }
-            addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder", timestamp);
-            return;
         }
     }
-    else {
-        if (!elf_error_warning) {
-            elf_error_warning = true;
-            window.alert("Backtrace could not be parsed, choose .elf file please");
+    memory_address = backtraceDecoder_input.substring(lastIndex, m_length - 1);
+    if (!memory_address.startsWith("Backtrace")) {
+        var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
+        try {
+            var stdout = execSync(command).toString();
+            backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
         }
-        return "No ELF file given";
+        catch (stderr) {
+            backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
+        }
+        addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder", timestamp);
+        return;
     }
 }
 

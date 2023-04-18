@@ -22,8 +22,38 @@ let log_file_writer = null;
 var preferences = null;
 var prev_preferences = null;
 
+var defaultPreferences = {
+    decoderColor: "#0000ff",
+    jsonColor: "#00ff00",
+    disconnectOnBoot: false,
+    showConChanges: false,
+    logType: "none",
+    logAddTimestamp: false,
+    autoScroll: true,
+    lineEnding: "",
+    addTimestamp: true,
+    comPort: "",
+    baudrate: 115200,
+    ctrlEnter: false,
+    advancedConfig: {
+        enabled: false,
+        stopBits: 1,
+        dataBits: 8,
+        parity: "none",
+        rtscts: false,
+        xon: false,
+        xoff: false,
+        xany: false,
+        hupcl: false
+    },
+    theme: "dark",
+    elfPath: "",
+    customParsers: ""
+};
+
 fs.readFile("./preferences.json", 'utf8', (err, data) => {
     if (err) {
+        setPreferences(defaultPreferences);
         return;
     }
     preferences = JSON.parse(data);

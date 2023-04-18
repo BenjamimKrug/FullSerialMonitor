@@ -1,0 +1,26 @@
+<html>
+
+<head>
+    <link id="theme_style" rel="stylesheet" href="style/dark_theme_style.css">
+</head>
+
+<body>
+    <div>
+        Sequence
+        <button id="add_packet" onclick="createPacketField()">+</button>
+        <label for="continuous_sequence" class="label_left">Continuous Sequence</label>
+        <input type="checkbox" id="continuous_sequence" class="checkbox_options">
+        <br>
+        <br>
+        <div id="packets_div" class="box customParsersDiv">
+        </div>
+        <button id="save_sequence" onclick="saveSequence()">Save Sequence</button>
+        &nbsp;&nbsp;&nbsp;
+        <button id="send_sequence" onclick="sendSequence()">Send Sequence</button>
+        <button id="stop_sequence" onclick="stopSequence()">Stop Sequence</button>
+        
+    </div>
+    <script src="./sequencer.js"></script>
+</body>
+
+</html>

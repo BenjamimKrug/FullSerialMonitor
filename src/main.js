@@ -10,7 +10,8 @@ require('@electron/remote/main').initialize();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+const windows = [];
+var windows_count = 0;
 var options = {
     forward: true,
     findNext: false,
@@ -18,9 +19,9 @@ var options = {
     wordStart: false,
     medialCapitalAsWordStart: false
 }
-function createWindow() {
+function createWindow(file_name) {
     // Create the browser window.
-    mainWindow = new BrowserWindow({
+    let newWindow = new BrowserWindow({
         width: 1000,
         height: 800,
         backgroundColor: "#ccc",
@@ -30,11 +31,11 @@ function createWindow() {
         },
         icon: __dirname + '/images/icon.ico'
     });
-    mainWindow.maximize();
+    newWindow.maximize();
 
     // and load the index.html of the app.
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
+    newWindow.loadURL(url.format({
+        pathname: path.join(__dirname, file_name),
         protocol: 'file:',
         slashes: true
     }));
@@ -43,31 +44,35 @@ function createWindow() {
     //mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
-    mainWindow.on('closed', function () {
+    newWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        mainWindow = null;
+        windows[windows_count] = null;
+        newWindow = null;
     });
-    require("@electron/remote/main").enable(mainWindow.webContents);
+    require("@electron/remote/main").enable(newWindow.webContents);
 
 
-    mainWindow.on('focus', () => {
+    newWindow.on('focus', () => {
         globalShortcut.register('CmdorCtrl+F', () => {
-            mainWindow.webContents.send('find_request', options);
+            newWindow.webContents.send('find_request', options);
         });
     });
 
-    mainWindow.on('blur', () => {
+    newWindow.on('blur', () => {
         globalShortcut.unregister('CmdorCtrl+F')
     })
+    windows.push(newWindow);
+    windows_count++;
+    return newWindow;
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function () {
-    createWindow();
+    createWindow('index.html');
     const template = [
         {
             label: 'Edit',
@@ -97,12 +102,29 @@ app.on('ready', function () {
             ]
         },
         {
-            role:'toggleDevTools'                
+            label: 'Tools',
+            submenu: [
+                {
+                    label: 'Payload Sequencer',
+                    click: function () {
+                        createWindow('sequencerWindow.html');
+                    }
+                }
+            ]
+        },
+        {
+            role: 'toggleDevTools'
         }
-
     ]
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+
+    ipcMain.on('recvMain', (event, arg) => {
+        windows[arg.id].webContents.send('recvChannel', arg); // sends the stuff from Window1 to Window2.
+    });
+    ipcMain.on('createWindow', (event, arg) => {
+        createWindow(arg);
+    });
 });
 
 // Quit when all windows are closed.

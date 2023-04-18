@@ -34,6 +34,9 @@ var current_line_index = 0;
 var current_line = null;
 var prev_line = null;
 var start_line_index = 0;
+var sequence;
+var sequenceTimeout;
+var sequence_pos = 0;
 
 // config UI of find interface
 let findInPage = new FindInPage(remote.getCurrentWebContents(), {
@@ -55,6 +58,55 @@ ipcRenderer.on('find_request', () => {
     findInPage.openFindWindow();
 });
 
+ipcRenderer.on('recvChannel', (_event, arg) => {
+    var cmd = arg.cmd;
+    if (cmd == "sendSequence") {
+        clearTimeout(sequenceTimeout);
+        if (serialport == null) {
+            window.alert("Serial Port not Open to send Sequence");
+            return;
+        }
+        sequence_pos = 0;
+        sequence = JSON.parse(fs.readFileSync(arg.sequence));
+        sequenceTimeout = setTimeout(sendSequence, sequence.packets[sequence_pos].delay);
+    }
+    if (cmd == "stopSequence") {
+        clearTimeout(sequenceTimeout);
+    }
+});
+
+function sendSequence() {
+    var line_end = "";
+    if (line_ending.value == "\\n")
+        line_end = "\n";
+    if (line_ending.value == "\\r")
+        line_end = "\r";
+    if (line_ending.value == "\\r\\n")
+        line_end = "\r\n";
+    var data = Buffer.from(sequence.packets[sequence_pos].data + line_end, "utf-8");
+    serialport.write(data, function (err) {
+        if (err) {
+            window.alert('Error on write: ', err.message);
+            return;
+        }
+    });
+
+    if (sequence.count - 1 == sequence_pos) {
+        if (sequence.continuous)
+            sequence_pos = -1;
+        else {
+            clearTimeout(sequenceTimeout);
+            return;
+        }
+    }
+    sequence_pos++;
+    sequenceTimeout = setTimeout(sendSequence, sequence.packets[sequence_pos].delay);
+}
+
+
+function createWindow(window_url) {
+    ipcRenderer.send("createWindow", window_url);
+}
 
 function makeResizableDiv(div, vertical, horizontal) {
     const element = document.querySelector(div);
@@ -254,10 +306,7 @@ function connectSerialPort(data) {
         }
     });
     serialport.on("readable", function () {
-        console.time("recebido");
         recvData(serialport.read().toString());
-        console.timeEnd("recebido");
-        console.log("\n\n");
     });
 
 }
@@ -265,13 +314,12 @@ function connectSerialPort(data) {
 
 
 //data receive handlers start
-function recvData(payload) {    
-    console.time("data");
+function recvData(payload) {
     var message = payload;
     let date = new Date();
     var tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
     var dateISO = (new Date(date - tzoffset)).toISOString().slice(0, -1);
-    var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);    
+    var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
     if (first_line == true) {
         first_line = false;
         if (log_add_timestamp.checked)
@@ -338,8 +386,6 @@ function recvData(payload) {
     //terminal.innerHTML += message;
     if (auto_scroll.checked == true)
         terminal.scrollTop = terminal.scrollHeight;
-          
-    console.timeEnd("data");
 }
 //data receive handlers end
 
