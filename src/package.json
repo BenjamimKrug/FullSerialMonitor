@@ -1,9 +1,9 @@
 {
   "name": "ben-full_serial_monitor",
   "productName": "Ben's Full Serial Monitor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Full serial monitor and ESP32 exception Decoder",
-  "main": "main.js", 
+  "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
