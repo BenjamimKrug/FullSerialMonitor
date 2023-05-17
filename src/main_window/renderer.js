@@ -59,19 +59,27 @@ ipcRenderer.on('find_request', () => {
 });
 
 ipcRenderer.on('recvChannel', (_event, arg) => {
-    var cmd = arg.cmd;
-    if (cmd == "sendSequence") {
-        clearTimeout(sequenceTimeout);
-        if (serialport == null) {
-            window.alert("Serial Port not Open to send Sequence");
-            return;
+    console.log(arg)
+    switch (arg.cmd) {
+        case "sendSequence": {
+            clearTimeout(sequenceTimeout);
+            if (serialport == null) {
+                window.alert("Serial Port not Open to send Sequence");
+                return;
+            }
+            sequence_pos = 0;
+            sequence = JSON.parse(fs.readFileSync(arg.sequence));
+            sequenceTimeout = setTimeout(sendSequence, sequence.packets[sequence_pos].delay);
+            break;
         }
-        sequence_pos = 0;
-        sequence = JSON.parse(fs.readFileSync(arg.sequence));
-        sequenceTimeout = setTimeout(sendSequence, sequence.packets[sequence_pos].delay);
-    }
-    if (cmd == "stopSequence") {
-        clearTimeout(sequenceTimeout);
+        case "stopSequence": {
+            clearTimeout(sequenceTimeout);
+            break;
+        }
+        case "getTheme": {
+            ipcRenderer.send('recvMain', { id: arg.requester, cmd: "setTheme", theme: theme_style.href});
+            break;
+        }
     }
 });
 

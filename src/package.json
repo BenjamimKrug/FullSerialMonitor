@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
+    "chart.js": "^4.3.0",
     "electron-find": "^1.0.7",
     "electron-forge": "^5.2.4",
     "remote": "^0.2.6",

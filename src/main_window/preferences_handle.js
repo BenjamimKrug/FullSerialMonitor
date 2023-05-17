@@ -18,6 +18,8 @@ var xoff_enable = document.getElementById("xoff");
 var xany_enable = document.getElementById("xany");
 var hupcl_enable = document.getElementById("hupcl");
 
+const preferences_file_path = "./preferences.json";
+
 let log_file_writer = null;
 var preferences = null;
 var prev_preferences = null;
@@ -51,7 +53,7 @@ var defaultPreferences = {
     customParsers: ""
 };
 
-fs.readFile("./preferences.json", 'utf8', (err, data) => {
+fs.readFile(preferences_file_path, 'utf8', (err, data) => {
     if (err) {
         setPreferences(defaultPreferences);
         return;
@@ -116,7 +118,7 @@ function setPreferences(target_preferences) {
 
     if (typeof (target_preferences.theme) !== 'undefined') {
         theme_select.value = target_preferences.theme;
-        theme_style.href = "style/" + theme_select.value + "_theme_style.css";
+        theme_style.href = "../style/" + theme_select.value + "_theme_style.css";
     }
 
     if (typeof (target_preferences.customParsers) !== 'undefined') {
@@ -223,7 +225,7 @@ function updatePreferences() {
         terminal.scrollTop = terminal.scrollHeight;
         output_history.scrollTop = output_history.scrollHeight;
     }
-    fs.writeFile("./preferences.json", JSON.stringify(preferences), (err) => {
+    fs.writeFile(preferences_file_path, JSON.stringify(preferences), (err) => {
         if (err)
             window.alert("Error on writing preferences file:", err);
     });

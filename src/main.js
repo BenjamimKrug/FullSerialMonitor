@@ -10,7 +10,7 @@ require('@electron/remote/main').initialize();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-const windows = [];
+const windows = [null, null, null, null];
 var windows_count = 0;
 var options = {
     forward: true,
@@ -19,7 +19,7 @@ var options = {
     wordStart: false,
     medialCapitalAsWordStart: false
 }
-function createWindow(file_name) {
+function createWindow(file_name, index) {
     // Create the browser window.
     let newWindow = new BrowserWindow({
         width: 1000,
@@ -33,7 +33,6 @@ function createWindow(file_name) {
     });
     newWindow.maximize();
 
-    // and load the index.html of the app.
     newWindow.loadURL(url.format({
         pathname: path.join(__dirname, file_name),
         protocol: 'file:',
@@ -53,17 +52,19 @@ function createWindow(file_name) {
     });
     require("@electron/remote/main").enable(newWindow.webContents);
 
-
-    newWindow.on('focus', () => {
-        globalShortcut.register('CmdorCtrl+F', () => {
-            newWindow.webContents.send('find_request', options);
+    if (file_name.indexOf("main") > -1) {
+        newWindow.on('focus', () => {
+            globalShortcut.register('CmdorCtrl+F', () => {
+                newWindow.webContents.send('find_request', options);
+            });
         });
-    });
 
-    newWindow.on('blur', () => {
-        globalShortcut.unregister('CmdorCtrl+F')
-    })
-    windows.push(newWindow);
+        newWindow.on('blur', () => {
+            globalShortcut.unregister('CmdorCtrl+F');
+        });
+    }
+    windows[index] = newWindow;
+    console.log(windows);
     windows_count++;
     return newWindow;
 }
@@ -72,7 +73,7 @@ function createWindow(file_name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function () {
-    createWindow('index.html');
+    createWindow('main_window/index.html', 0);
     const template = [
         {
             label: 'Edit',
@@ -107,7 +108,13 @@ app.on('ready', function () {
                 {
                     label: 'Payload Sequencer',
                     click: function () {
-                        createWindow('sequencerWindow.html');
+                        createWindow('sequencer_window/index.html', 1);
+                    }
+                },
+                {
+                    label: 'Grapher',
+                    click: function () {
+                        createWindow('graph_window/index.html', 2);
                     }
                 }
             ]

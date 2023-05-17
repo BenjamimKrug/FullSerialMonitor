@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link id="theme_style" rel="stylesheet" href="style/dark_theme_style.css">
+    <link id="theme_style" rel="stylesheet" href="../style/dark_theme_style.css">
 </head>
 
 <body>
@@ -60,7 +60,7 @@
         Miscellaneous
         <br>
         Theme
-        <select id="theme_select" onChange="theme_style.href = 'style/' + theme_select.value + '_theme_style.css';">
+        <select id="theme_select" onChange="theme_style.href = '../style/' + theme_select.value + '_theme_style.css';">
             <option value="dark">Dark</option>
             <option value="light">Light</option>
         </select>
@@ -101,7 +101,7 @@
         </button>
 
         <button id="open_config_menu" class="general_btn" style="right:5px">
-            <img src="./images/settings gear.png" width="12" height="12">
+            <img src="../images/settings gear.png" width="12" height="12">
             Config
         </button>
         <br><br>
@@ -189,16 +189,16 @@
         <br>
 
         <button id="connect_serial" class="options_button" onclick="connect()">
-            <img src="./images/usb-connected-16.png" width="16" height="16">
+            <img src="../images/usb-connected-16.png" width="16" height="16">
             CONNECT
         </button>
         <br><br>
         <button id="disconnect_serial" class="options_button" onclick="disconnect()">
-            <img src="./images/usb-disconnected-16.png" width="16" height="16">
+            <img src="../images/usb-disconnected-16.png" width="16" height="16">
             DISCONNECT
         </button><br><br>
         <button id="clean_terminal" class="options_button" onclick="cleanTerminal()">
-            <img src="./images/trash-2-16.png" width="16" height="16">
+            <img src="../images/trash-2-16.png" width="16" height="16">
             CLEAN
         </button><br><br>
 
@@ -245,7 +245,7 @@
     <script src="./preferences_handle.js"></script>
     <script src="./parsers.js"></script>
     <script src="./decoder.js"></script>
-    <script src="./jlink_handler.js"></script>
+    <!--<script src="./jlink_handler.js"></script>-->
 </body>
 
 </html>
