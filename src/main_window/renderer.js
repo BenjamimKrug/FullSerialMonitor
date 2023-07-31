@@ -59,7 +59,6 @@ ipcRenderer.on('find_request', () => {
 });
 
 ipcRenderer.on('recvChannel', (_event, arg) => {
-    console.log(arg)
     switch (arg.cmd) {
         case "sendSequence": {
             clearTimeout(sequenceTimeout);
