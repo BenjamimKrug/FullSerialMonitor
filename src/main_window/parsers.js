@@ -12,6 +12,9 @@ var json_color = document.getElementById("json_color");
 var json_filter = document.getElementById("json_filter");
 var decoder_filter = document.getElementById("decoder_filter");
 
+var graphTrigger = ["valor", "teste"];
+var graphTriggerSize = 1;
+
 function runParsers() {
     for (; line_parsed < current_line_index - 1;) {
         var target_line_element = document.getElementById('l' + line_parsed);
@@ -41,9 +44,11 @@ function runParsers() {
                 }
             }
         }
+
         if (target_line.indexOf("Backtrace") > -1) {
             decodeBacktrace(target_line, target_line_element.id, timestamp);
         }
+
         if (target_line.startsWith("{")) {
             try {
                 var parsedJSON = JSON.parse(target_line);
@@ -56,6 +61,13 @@ function runParsers() {
                 console.log('error parsing json:', e);
             }
         }
+
+        for (var i = 0; i < graphTriggerSize; i++) {
+            if (target_line.indexOf(graphTrigger[i]) > -1) {
+                ipcRenderer.send('recvMain', { id: 2, cmd: "newGraphData", time: timestamp, value: target_line.replace(graphTrigger[i], ""), position: i });
+            }
+        }
+
         line_parsed++;
     }
     //line_parsed = current_line_index;
