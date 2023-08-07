@@ -12,8 +12,6 @@ var json_color = document.getElementById("json_color");
 var json_filter = document.getElementById("json_filter");
 var decoder_filter = document.getElementById("decoder_filter");
 
-var graphTrigger = ["valor", "teste"];
-var graphTriggerSize = 1;
 
 function runParsers() {
     for (; line_parsed < current_line_index - 1;) {
@@ -62,11 +60,7 @@ function runParsers() {
             }
         }
 
-        for (var i = 0; i < graphTriggerSize; i++) {
-            if (target_line.indexOf(graphTrigger[i]) > -1) {
-                ipcRenderer.send('recvMain', { id: 2, cmd: "newGraphData", time: timestamp, value: target_line.replace(graphTrigger[i], ""), position: i });
-            }
-        }
+        checkGraphTriggers(timestamp, target_line);
 
         line_parsed++;
     }

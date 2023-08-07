@@ -79,6 +79,11 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
             ipcRenderer.send('recvMain', { id: arg.requester, cmd: "setTheme", theme: theme_style.href});
             break;
         }
+        case "graphOpened": {
+            graphWindow = true;
+            updateGraphTriggers();
+            break;
+        }
     }
 });
 

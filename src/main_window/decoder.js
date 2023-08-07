@@ -138,7 +138,6 @@ function getSketchBuild() {
         });
     }
 
-    console.log("rcnt build: ", mostRecentBuild);
     var filesSketch = fs.readdirSync(mostRecentBuild);
     var fqbn = "";
     filesSketch.forEach(file => {
@@ -147,7 +146,6 @@ function getSketchBuild() {
             try {
                 var buildOptions = JSON.parse(fs.readFileSync(buildOptionsFile));
                 fqbn = buildOptions.fqbn.split(":");
-                console.log(fqbn);
                 if (fqbn[0] == "esp32") {
                     if (fqbn[2].startsWith("esp"))
                         decoder_arch.value = fqbn[2];
