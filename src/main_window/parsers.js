@@ -14,8 +14,9 @@ var decoder_filter = document.getElementById("decoder_filter");
 
 
 function runParsers() {
-    for (; line_parsed < current_line_index - 1;) {
+    for (; line_parsed < current_line_index;) {
         var target_line_element = document.getElementById('l' + line_parsed);
+        console.log(target_line_element);
         if (typeof (target_line_element) === 'undefined')
             break;
         if (target_line_element == null)

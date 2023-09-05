@@ -27,9 +27,9 @@ var input_history = [];
 var prev_send_input = "";
 
 var serialport = null;
-var lineStart = false;
+var lineStart;
 var first_line = true;
-var second_line = true;
+var new_line = true;
 var current_line_index = 0;
 var current_line = null;
 var prev_line = null;
@@ -76,7 +76,7 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
             break;
         }
         case "getTheme": {
-            ipcRenderer.send('recvMain', { id: arg.requester, cmd: "setTheme", theme: theme_style.href});
+            ipcRenderer.send('recvMain', { id: arg.requester, cmd: "setTheme", theme: theme_style.href });
             break;
         }
         case "graphOpened": {
@@ -266,10 +266,10 @@ function disconnect() {
             send_button.disabled = true;
             send_input.disabled = true;
             line_ending.disabled = true;
-            if (log_file_writer != null)
-                log_file_writer.close();
             if (show_con_changes.checked)
                 recvData("\n<span style='color:red'>DISCONNECTED</span>\n");
+            if (log_file_writer != null)
+                log_file_writer.close();
         });
     }
 }
@@ -277,7 +277,7 @@ function disconnect() {
 function cleanTerminal() {
     terminal.innerHTML = "";
     output_history.innerHTML = "";
-    first_line = true;
+    new_line = true;
     start_line_index = current_line_index--;
 }
 
@@ -328,69 +328,59 @@ function connectSerialPort(data) {
 //data receive handlers start
 function recvData(payload) {
     var message = payload;
+    payload = "";
     let date = new Date();
     var tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
     var dateISO = (new Date(date - tzoffset)).toISOString().slice(0, -1);
     var current_datetime = dateISO.match(/\d\d:\d\d:\d\d.\d\d\d/);
-    if (first_line == true) {
-        first_line = false;
-        if (log_add_timestamp.checked)
-            payload = current_datetime + "->" + payload;
 
-        var message_new_line = document.createElement("a");
-        message_new_line.setAttribute("id", 'l' + current_line_index);
-        var timestamp = document.createElement("a");
-        timestamp.innerHTML = current_datetime + "->";
-        if (add_timestamp.checked == false)
-            timestamp.setAttribute("style", "display:none");
-        timestamp.setAttribute("id", 't' + current_line_index);
-        message_new_line.innerHTML += message.replace(/(?:\r\n|\n)/g, "<br>" + current_datetime + "->");
-        terminal.appendChild(timestamp);
-        terminal.appendChild(message_new_line);
-        current_line_index++;
-        current_line = message_new_line;
-    }
-    else {
-        var index = message.indexOf("\n");
-        var lastIndex = 0;
-        var m_length = message.length;
-        if (index > -1) {
-            while (index > -1) {
-                var chunk = message.substring(lastIndex, index);
-                var payload_new_line = "";
-                current_line.innerHTML += chunk;
-                terminal.appendChild(document.createElement("br"));
-                var message_new_line = document.createElement("a");
-                message_new_line.setAttribute("id", 'l' + current_line_index);
-                var timestamp = document.createElement("a");
-                timestamp.innerHTML = current_datetime + "->";
-                if (add_timestamp.checked == false)
-                    timestamp.setAttribute("style", "display:none");
-                timestamp.setAttribute("id", 't' + current_line_index);
-                terminal.appendChild(timestamp);
-                terminal.appendChild(message_new_line);
+    var m_length = message.length;
+    var index = 0;
+    while (index < m_length) {
+        var message_new_line_content = "";
+        var payload_new_line = "";
 
-                if (log_add_timestamp.checked)
-                    payload_new_line = "\r\n" + current_datetime + "->";
+        //add the timestamp if a new line was started
+        if (new_line == true) {
+            new_line = false;
+            var timestamp = document.createElement("a");
+            timestamp.innerHTML = current_datetime + "->";
+            if (add_timestamp.checked == false)
+                timestamp.setAttribute("style", "display:none");
+            timestamp.setAttribute("id", 't' + current_line_index);
+            terminal.appendChild(timestamp);
 
-                if (index == m_length)
-                    lineStart = true;
+            current_line = document.createElement("a");
+            current_line.setAttribute("id", 'l' + current_line_index);
+            terminal.appendChild(current_line);
 
-                payload = payload.replace(/(?:\r\n|\n)/g, payload_new_line);
-                lastIndex = index + 1;
-                index = message.indexOf("\n", lastIndex);
-                prev_line = current_line;
-                current_line = message_new_line;
-                current_line_index++;
-            }
-            if (index < m_length) {
-                var chunk = message.substring(lastIndex, m_length);
-                current_line.innerHTML += chunk;
+            if (log_add_timestamp.checked)
+                payload_new_line = current_datetime + "->";
+        }
+
+        for (; index < m_length; index++) {
+            var c = message[index];
+            payload_new_line += c;
+            if (c == '\n') {
+                new_line = true;
+                index++;
+                break;
+            } else if (c != '\r') {
+                message_new_line_content += c;
             }
         }
-        else
-            current_line.innerHTML += message;
+
+        current_line.innerHTML += message_new_line_content;
+
+        payload += payload_new_line;
+
+        //adds the new line in html if a new line was detected
+        if (new_line == true) {
+            terminal.appendChild(document.createElement("br"));
+            current_line_index++;
+        }
     }
+
     runParsers();
 
     if (log_file_writer != null)
