@@ -3,8 +3,10 @@ const fs = require('fs');
 const { ipcRenderer } = require('electron');
 var theme_style = document.getElementById("theme_style");
 var data = [];
+var dataArraySize = 0;
 var dataSet;
 var dataLength = -1;
+var lastKnownValues = [];
 var chart;
 
 ipcRenderer.on('recvChannel', (_event, arg) => {
@@ -32,6 +34,9 @@ function createGraph(line_name, position) {
     // create the series and name them
     var newSeries = chart.line(newSeriesData);
     newSeries.name(line_name);
+    lastKnownValues[position] = 0;
+    if (dataArraySize < position)
+        dataArraySize = position;
 }
 
 anychart.onDocumentReady(function () {
@@ -48,7 +53,23 @@ anychart.onDocumentReady(function () {
     chart.draw();
 });
 
+function fillEmptyValues(position) {
+    if (dataLength < 2)
+        return;
+    if (typeof (dataSet.oc[dataLength - 1][position]) == "undefined")
+        dataSet.oc[dataLength - 1][position] = NaN;
+
+    if (isNaN(dataSet.oc[dataLength - 1][position])) {
+        var lastKnownValue = lastKnownValues[position];
+        if (typeof (lastKnownValue) == "undefined" || isNaN(lastKnownValue))
+            lastKnownValue = 0;
+        dataSet.oc[dataLength - 1][position] = (dataSet.oc[dataLength][position] + lastKnownValue) / 2;
+    }
+}
+
 function newData(time, value, position) {
+    console.time("newGraphData");
+    value = parseFloat(value);
     var createNewLine = false;
     try {
         if (dataSet.oc[dataLength][0] == time) {
@@ -62,9 +83,19 @@ function newData(time, value, position) {
     }
     if (createNewLine) {
         var newDataArray = [time];
+        for (var i = 0; i < dataArraySize; i++)
+            newDataArray.push(NaN);
         newDataArray[position] = value;
         dataSet.append(newDataArray);
+        lastKnownValues[position] = value;
         dataLength++;
+        fillEmptyValues(position);
+        if (dataLength >= 50) {
+            dataSet.oc.shift();
+            dataLength--;
+        }
+
     }
     chart.draw();
+    console.timeEnd("newGraphData");
 }

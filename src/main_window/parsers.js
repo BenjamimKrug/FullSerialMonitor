@@ -16,7 +16,6 @@ var decoder_filter = document.getElementById("decoder_filter");
 function runParsers() {
     for (; line_parsed < current_line_index;) {
         var target_line_element = document.getElementById('l' + line_parsed);
-        console.log(target_line_element);
         if (typeof (target_line_element) === 'undefined')
             break;
         if (target_line_element == null)
@@ -110,7 +109,6 @@ function updateParsers() {
         if (fs.existsSync(custom_parsers[i].script)) {
             var current_script = document.getElementById(custom_parsers[i].name);
             if (typeof (current_script) === 'undefined' || current_script == null) {
-                console.log(current_script);
                 var customScript = document.createElement("script");
                 customScript.setAttribute("src", custom_parsers[i].script);
                 customScript.setAttribute("id", custom_parsers[i].name);

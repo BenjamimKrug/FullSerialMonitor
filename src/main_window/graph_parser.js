@@ -24,7 +24,6 @@ function checkGraphTriggers(timestamp, target_line) {
                 try {
                     ipcRenderer.send('recvMain', { id: 2, cmd: "newGraphData", time: timestamp, value: target_line.replace(graphsArray[i].trigger, ""), position: i });
                 } catch (e) {
-                    console.log("acabou");
                     graphWindow = false;
                 }
             }

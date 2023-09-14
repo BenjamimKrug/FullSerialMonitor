@@ -84,6 +84,10 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
             updateGraphTriggers();
             break;
         }
+        case "graphClosed": {
+            graphWindow = false;
+            break;
+        }
     }
 });
 
@@ -116,8 +120,8 @@ function sendSequence() {
 }
 
 
-function createWindow(window_url) {
-    ipcRenderer.send("createWindow", window_url);
+function createWindow(window_url, i) {
+    ipcRenderer.send("createWindow", {url: window_url, index: i});
 }
 
 function makeResizableDiv(div, vertical, horizontal) {
@@ -380,8 +384,8 @@ function recvData(payload) {
             current_line_index++;
         }
     }
-
-    runParsers();
+    if (new_line)
+        runParsers();
 
     if (log_file_writer != null)
         log_file_writer.write(payload);

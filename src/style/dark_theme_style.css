@@ -1,48 +1,9 @@
-.terminal {
-    max-height: 73%;
-    min-height: 73%;
-    overflow: hidden;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: calc(100% - 25px);
-}
-
-.output {
-    overflow: hidden;
-    max-height: 12%;
-    min-height: 12%;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: calc(100% - 25px);
-	font-weight:bold;
-}
-
-#content {
-    overflow: hidden;
-    width: calc(100% - 225px);
-}
-
-.customParsersDiv {
-    overflow: hidden;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: 95%;
-    height: 125px;
-}
-
 .box {
     background: rgb(25, 25, 25);
     color: white;
     padding: 10px;
     resize: none;
     white-space: nowrap;
-}
-
-.output_history {
-    height: 47%;
-    width: calc(100%-5px);
-    overflow-x: scroll;
-    overflow-y: scroll;
 }
 
 .output_entry {
@@ -61,66 +22,11 @@
     margin-bottom: 2px;
 }
 
-.parser_timestamp {
-    display: block;
-    font-size: small;
-    font-weight: bold;
-}
-
-.dropbtn {
-    background: rgb(70, 113, 150);
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-}
-
-.dropdown {
-    float: right;
-    right: 0;
-    position: relative;
-}
-
-.filters {
-    float: right;
-    right: 0;
-    margin: 0;
-}
-
-.filters_label {
-    display: inline-block;
-    width: 90%;
-    text-align: right;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #555;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    float: right;
-}
-
-
 .dropdown-content a {
     color: white;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background: rgb(60, 96, 128);
 }
 
 .custom_parser_entry {
@@ -132,11 +38,6 @@
     position: relative;
     white-space: nowrap;
     overflow: hidden;
-}
-
-.custom_parser_input {
-    position: sticky;
-    left: 60px;
 }
 
 .string {
@@ -159,24 +60,6 @@
     color: rgb(105, 190, 45);
 }
 
-.terminal span {
-    display: table-cell;
-    width: 1px;
-}
-
-.terminal input {
-    display: table-cell;
-    border: none;
-    background: black;
-    color: white;
-    outline: none;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
 /* Track */
 ::-webkit-scrollbar-track {
     background: #888;
@@ -186,106 +69,6 @@
 ::-webkit-scrollbar-thumb {
     background: #f1f1f1;
     border-radius: 7px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-body {
-    background: rgb(70, 70, 70);
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.general_btn {
-    background: rgb(70, 113, 150);
-    color: white;
-    border-radius: 4px;
-    border-style: solid;
-    border-color: rgb(70, 113, 150);
-    position: absolute;
-}
-
-.general_btn:hover {
-    background: rgb(50, 93, 130);
-}
-
-.options_button {
-    background: rgb(70, 113, 150);
-    color: white;
-    border-radius: 4px;
-    border-style: solid;
-    border-color: rgb(70, 113, 150);
-    left: 50%;
-    width: 90%;
-    position: absolute;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-button:hover {
-    background: rgb(50, 93, 130);
-}
-
-.line {
-    display: table;
-    width: 100%;
-}
-
-.checkbox_options {
-    position: fixed;
-    right: 5px;
-}
-
-.label_right {
-    display: inline-block;
-    width: 150px;
-}
-
-.label_left {
-    position: fixed;
-    display: inline-block;
-    width: 150px;
-    text-align: right;
-    right: 25px;
-}
-
-.options_menu {
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    right: 0;
-    background-color: #373737;
-    width: 210px;
-    height: 100%;
-}
-
-.resizer {
-    cursor: ew-resize;
-}
-
-#sidebar_resizer {
-    height: 100%;
-    width: 20px;
-    background-color: grey;
-    position: fixed;
-    z-index: 999;
-    -ms-transform: translate(-100%, 0);
-    transform: translate(-100%, 0);
-}
-
-input::-webkit-calendar-picker-indicator {
-    opacity: 100;
-}
-
-.select_input {
-    position: absolute;
-    right: 60px;
-    text-align: right;
-    width: 100px;
-    height: 20px;
 }
 
 .config_menu {
@@ -301,17 +84,4 @@ input::-webkit-calendar-picker-indicator {
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     z-index: 999;
-}
-
-.close_btn {
-    position: absolute;
-    bottom: 10px;
-}
-
-.file_path {
-    width: 82%;
-}
-
-img {
-    transform: translate(0, 20%);
 }

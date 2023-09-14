@@ -41,15 +41,42 @@ function createWindow(file_name, index) {
 
     // Open the DevTools.
     //mainWindow.webContents.openDevTools()
+    if (index == 2) {
+        // Emitted when the window is closed.
+        newWindow.on('closed', function () {
+            // Dereference the window object, usually you would store windows
+            // in an array if your app supports multi windows, this is the time
+            // when you should delete the corresponding element.
 
-    // Emitted when the window is closed.
-    newWindow.on('closed', function () {
+            try {
+                windows[0].webContents.send('recvChannel', { cmd: "graphClosed" });
+            } catch (e) {
+
+            }
+            windows[index] = null;
+            newWindow = null;
+        });
+    }
+    else if (index == 0) {
+        newWindow.on('closed', function () {
+            // Dereference the window object, usually you would store windows
+            // in an array if your app supports multi windows, this is the time
+            // when you should delete the corresponding element.
+            for (var i = 1; i < windows.length; i++) {
+                if (windows[i] != null)
+                    windows[i].close();
+            }
+            windows[index] = null;
+            newWindow = null;
+        });
+    } else newWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        windows[windows_count] = null;
+        windows[index] = null;
         newWindow = null;
     });
+
     require("@electron/remote/main").enable(newWindow.webContents);
 
     if (file_name.indexOf("main") > -1) {
@@ -64,7 +91,6 @@ function createWindow(file_name, index) {
         });
     }
     windows[index] = newWindow;
-    console.log(windows);
     windows_count++;
     return newWindow;
 }
@@ -129,8 +155,9 @@ app.on('ready', function () {
     ipcMain.on('recvMain', (event, arg) => {
         windows[arg.id].webContents.send('recvChannel', arg); // sends the stuff from Window1 to Window2.
     });
+
     ipcMain.on('createWindow', (event, arg) => {
-        createWindow(arg);
+        createWindow(arg.url, arg.index);
     });
 });
 
