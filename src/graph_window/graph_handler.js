@@ -34,7 +34,7 @@ function createGraph(line_name, position) {
     // create the series and name them
     var newSeries = chart.line(newSeriesData);
     newSeries.name(line_name);
-    lastKnownValues[position] = 0;
+    lastKnownValues[position] = [0, 0];
     if (dataArraySize < position)
         dataArraySize = position;
 }
@@ -56,14 +56,20 @@ anychart.onDocumentReady(function () {
 function fillEmptyValues(position) {
     if (dataLength < 2)
         return;
-    if (typeof (dataSet.oc[dataLength - 1][position]) == "undefined")
-        dataSet.oc[dataLength - 1][position] = NaN;
 
-    if (isNaN(dataSet.oc[dataLength - 1][position])) {
-        var lastKnownValue = lastKnownValues[position];
-        if (typeof (lastKnownValue) == "undefined" || isNaN(lastKnownValue))
+    var difference = dataLength - lastKnownValues[position][1];
+    console.log(position, "diff:", difference);
+    var step = (data[dataLength][position] - lastKnownValues[position][0]) / difference;
+    for (var i = lastKnownValues[position][1]; i < dataLength; i++) {
+        var lastKnownValue = 0;
+        console.log(data[i - 1]);
+        if (typeof (data[i - 1]) != "undefined")
+            lastKnownValue = data[i - 1][position];
+        if (isNaN(lastKnownValue))
             lastKnownValue = 0;
-        dataSet.oc[dataLength - 1][position] = (dataSet.oc[dataLength][position] + lastKnownValue) / 2;
+        if (isNaN(data[i][position])) {
+            data[i][position] = lastKnownValue + step;
+        }
     }
 }
 
@@ -72,8 +78,8 @@ function newData(time, value, position) {
     value = parseFloat(value);
     var createNewLine = false;
     try {
-        if (dataSet.oc[dataLength][0] == time) {
-            dataSet.oc[dataLength][position] = value;
+        if (data[dataLength][0] == time) {
+            data[dataLength][position] = value;
         }
         else
             createNewLine = true;
@@ -86,16 +92,22 @@ function newData(time, value, position) {
         for (var i = 0; i < dataArraySize; i++)
             newDataArray.push(NaN);
         newDataArray[position] = value;
-        dataSet.append(newDataArray);
-        lastKnownValues[position] = value;
+        data.push(newDataArray);
         dataLength++;
-        fillEmptyValues(position);
-        if (dataLength >= 50) {
-            dataSet.oc.shift();
+        if (dataLength > 100) {
+            data.shift();
             dataLength--;
         }
-
+        fillEmptyValues(position);
+        lastKnownValues[position] = [value, dataLength];
     }
-    chart.draw();
     console.timeEnd("newGraphData");
 }
+
+function drawGraph(){
+    console.time("drawGraph");
+    dataSet.data(data);
+    console.timeEnd("drawGraph");
+}
+
+setInterval(drawGraph, 100);

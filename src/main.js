@@ -153,7 +153,11 @@ app.on('ready', function () {
     Menu.setApplicationMenu(menu);
 
     ipcMain.on('recvMain', (event, arg) => {
-        windows[arg.id].webContents.send('recvChannel', arg); // sends the stuff from Window1 to Window2.
+        try {
+            windows[arg.id].webContents.send('recvChannel', arg); // sends the stuff from Window1 to Window2.
+        } catch (e) {
+
+        }
     });
 
     ipcMain.on('createWindow', (event, arg) => {
