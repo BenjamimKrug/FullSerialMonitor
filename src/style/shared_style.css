@@ -138,12 +138,6 @@
     background: #555;
 }
 
-body {
-    background: rgb(70, 70, 70);
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 .general_btn {
     background: rgb(70, 113, 150);
     color: white;
@@ -195,16 +189,6 @@ button:hover {
     width: 150px;
     text-align: right;
     right: 25px;
-}
-
-.options_menu {
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    right: 0;
-    background-color: #373737;
-    width: 210px;
-    height: 100%;
 }
 
 .resizer {

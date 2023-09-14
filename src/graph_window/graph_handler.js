@@ -8,32 +8,41 @@ var dataSet;
 var dataLength = -1;
 var lastKnownValues = [];
 var chart;
+const LIMIT = 100;
 
 ipcRenderer.on('recvChannel', (_event, arg) => {
     switch (arg.cmd) {
         case "setTheme": {
             theme_style.href = arg.theme;
+            if (arg.theme.includes("dark"))
+                chart.background().fill("rgb(25, 25, 25)");
+            else
+                chart.background().fill("white");
             break;
         }
         case "createGraph": {
-            createGraph(arg.name, arg.position + 1);
+            createGraph(arg.name, arg.position + 1, arg.color);
         }
         case "newGraphData": {
             newData(arg.time, arg.value, arg.position + 1);
         }
     }
 });
-ipcRenderer.send('recvMain', { id: 0, cmd: "getTheme", requester: 2 });
+
+setInterval(function () { ipcRenderer.send('recvMain', { id: 0, cmd: "getTheme", requester: 2 }); }, 1000);
 ipcRenderer.send('recvMain', { id: 0, cmd: "graphOpened", requester: 2 });
 
 
-function createGraph(line_name, position) {
+function createGraph(line_name, position, color) {
     // map the data for all series
     var newSeriesData = dataSet.mapAs({ x: 0, value: position });
 
     // create the series and name them
     var newSeries = chart.line(newSeriesData);
     newSeries.name(line_name);
+    newSeries.normal().stroke(color);
+    newSeries.hovered().stroke(color);
+    newSeries.selected().stroke(color);
     lastKnownValues[position] = [0, 0];
     if (dataArraySize < position)
         dataArraySize = position;
@@ -57,24 +66,26 @@ function fillEmptyValues(position) {
     if (dataLength < 2)
         return;
 
-    var difference = dataLength - lastKnownValues[position][1];
-    console.log(position, "diff:", difference);
-    var step = (data[dataLength][position] - lastKnownValues[position][0]) / difference;
-    for (var i = lastKnownValues[position][1]; i < dataLength; i++) {
-        var lastKnownValue = 0;
-        console.log(data[i - 1]);
-        if (typeof (data[i - 1]) != "undefined")
-            lastKnownValue = data[i - 1][position];
-        if (isNaN(lastKnownValue))
+    var lastKnownValue;
+    var lkv_pos = dataLength - 1;
+    for (; lkv_pos > 0; lkv_pos--) {
+        lastKnownValue = data[lkv_pos][position];
+        if (typeof (lastKnownValue) == "undefined")
             lastKnownValue = 0;
-        if (isNaN(data[i][position])) {
+        if (!isNaN(lastKnownValue))
+            break;
+    }
+
+    var difference = dataLength - lkv_pos;
+    var step = (data[dataLength][position] - lastKnownValue) / difference;
+    for (var i = lkv_pos; i < dataLength; i++) {
+        if (isNaN(data[i][position]))
             data[i][position] = lastKnownValue + step;
-        }
+        lastKnownValue = data[i][position];
     }
 }
 
 function newData(time, value, position) {
-    console.time("newGraphData");
     value = parseFloat(value);
     var createNewLine = false;
     try {
@@ -94,20 +105,16 @@ function newData(time, value, position) {
         newDataArray[position] = value;
         data.push(newDataArray);
         dataLength++;
-        if (dataLength > 100) {
+        if (dataLength > LIMIT) {
             data.shift();
             dataLength--;
         }
         fillEmptyValues(position);
-        lastKnownValues[position] = [value, dataLength];
     }
-    console.timeEnd("newGraphData");
 }
 
-function drawGraph(){
-    console.time("drawGraph");
+function drawGraph() {
     dataSet.data(data);
-    console.timeEnd("drawGraph");
 }
 
 setInterval(drawGraph, 100);

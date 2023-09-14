@@ -71,6 +71,22 @@
     border-radius: 7px;
 }
 
+body {
+    background: rgb(70, 70, 70);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.options_menu {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #373737;
+    width: 210px;
+    height: 100%;
+}
+
 .config_menu {
     overflow: hidden;
     position: fixed;
