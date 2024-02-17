@@ -63,9 +63,6 @@ function getESPaddr2line() {
     else
         arch_elf_gcc = `xtensa-${decoder_arch.value}-elf`;
     addr2line_path = `decoders\\${arch_elf_gcc}-addr2line.exe`;
-
-    getSketchBuild();
-    elf_path_input.value = elf_file_auto_path;
 }
 
 function getSketchBuild() {
@@ -136,6 +133,7 @@ function getSketchBuild() {
     });
     if (elf_file_auto_path == "")
         ipcRenderer.send("openAlert", { title: "Could not find .elf file", content: "" });
+    elf_path_input.value = elf_file_auto_path;
 }
 
 function syntaxHighlightDecoder(decoded) {

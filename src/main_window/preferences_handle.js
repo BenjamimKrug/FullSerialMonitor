@@ -109,6 +109,8 @@ function setPreferences(target_preferences) {
     if (typeof (target_preferences.showConChanges) !== 'undefined')
         show_con_changes.checked = target_preferences.showConChanges;
 
+    if (typeof (target_preferences.decoderArch) !== 'undefined')
+        decoder_arch.value = target_preferences.decoderArch;
 
     if (typeof (target_preferences.elfPath) !== 'undefined')
         elf_path_input.value = target_preferences.elfPath;
@@ -206,6 +208,7 @@ function updatePreferences() {
         ctrlEnter: ctrl_enter.checked,
         advancedConfig: advancedConfig_json,
         theme: theme_select.value,
+        decoderArch: decoder_arch.value.trim(),
         elfPath: elf_path_input.value.trim(),
         customParsers: custom_parsers
     };
