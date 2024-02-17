@@ -1,4 +1,6 @@
 node_modules/
 builds/
 src/preferences.json
+src/graph_tracker.json
+src/sequence.json
 log.txt
