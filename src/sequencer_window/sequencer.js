@@ -96,8 +96,15 @@ function createPacketField(data_packet, delay) {
         newPacketDelay.setAttribute("value", delay);
 
     var newPacketExclude = document.createElement("button");
-    newPacketExclude.setAttribute("style", "position: absolute;right:5px");
-    newPacketExclude.innerHTML = "Delete";
+    newPacketExclude.setAttribute("class", "sequencer_button");
+    newPacketExclude.setAttribute("style", "position: absolute;right:5px;");
+    
+    var newPacketExclude_icon = document.createElement("img");
+    newPacketExclude_icon.setAttribute("width", "16");
+    newPacketExclude_icon.setAttribute("height", "16");
+    newPacketExclude_icon.setAttribute("src", "../images/trash-2-16.png");
+    newPacketExclude.appendChild(newPacketExclude_icon);
+    newPacketExclude.innerHTML += "Delete";
     newPacketExclude.setAttribute("onclick", `deletePacketField(${sequence.count})`);
 
     newPacketField.innerHTML = "Packet ";

@@ -30,8 +30,6 @@ This is a Serial monitor I developed with every feature I ever saw on other moni
 - Optional disconnection on Boot message from ESP series microcontrollers
 
 ### Planned features to be added on future versions:
-- Sent payload sequencer, where you can set a list of payloads to be sent and the delay between each payload
-- Data grapher, ideally a mix of the Arduino Serial Plotter and the MQTT Explorer graphs
 - Other useful built in parsers, like ModBus - RTU
 - Manual input Exception decoder similar to the solution from me-no-dev(https://github.com/me-no-dev/EspExceptionDecoder) for Arduino 1.x, currently the decoder can only be used with data that come from the COM port
 - Increase parser output history usability

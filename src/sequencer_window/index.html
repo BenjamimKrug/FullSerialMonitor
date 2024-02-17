@@ -8,18 +8,17 @@
 <body>
     <div>
         Sequence
-        <button id="add_packet" onclick="createPacketField()">+</button>
-        <label for="continuous_sequence" class="label_left">Continuous Sequence</label>
-        <input type="checkbox" id="continuous_sequence" class="checkbox_options">
+        <button id="add_packet"  class="sequencer_button" style="width:auto" onclick="createPacketField()">+ Add packet</button>
         <br>
         <br>
         <div id="packets_div" class="box packetsDiv">
         </div>
-        <button id="save_sequence" onclick="saveSequence()">Save Sequence</button>
+        <button id="save_sequence" class="sequencer_button" onclick="saveSequence()">Save Sequence</button>
+        <button id="send_sequence" class="sequencer_button" onclick="sendSequence()">Send Sequence</button>
+        <button id="stop_sequence" class="sequencer_button" onclick="stopSequence()">Stop Sequence</button>
         &nbsp;&nbsp;&nbsp;
-        <button id="send_sequence" onclick="sendSequence()">Send Sequence</button>
-        <button id="stop_sequence" onclick="stopSequence()">Stop Sequence</button>
-        
+        <input type="checkbox" id="continuous_sequence">    
+        <label for="continuous_sequence">Continuous Sequence</label>    
     </div>
     <script src="./sequencer.js"></script>
 </body>
