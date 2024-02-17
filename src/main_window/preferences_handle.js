@@ -25,6 +25,7 @@ var preferences = null;
 var prev_preferences = null;
 
 var defaultPreferences = {
+    lang: "en.json",
     decoderColor: "#0000ff",
     jsonColor: "#00ff00",
     disconnectOnBoot: false,
@@ -66,7 +67,13 @@ fs.readFile(preferences_file_path, 'utf8', (err, data) => {
 });
 
 
-function setPreferences(target_preferences) {
+function setPreferences(target_preferences) {    
+    updateLanguageList();
+    if (typeof (target_preferences.lang) !== 'undefined')
+        language_config.value = target_preferences.lang;
+    readLanguage();
+    updateContentLang();
+
     if (typeof (target_preferences.comPort) !== 'undefined')
         com_ports.value = target_preferences.comPort;
 
@@ -193,6 +200,7 @@ function updatePreferences() {
         hupcl: hupcl_enable.checked
     };
     preferences = {
+        lang: language_config.value.trim(),
         logFolder: log_folder_input.value.trim(),
         decoderColor: decoder_color.value,
         jsonColor: json_color.value,
@@ -224,6 +232,7 @@ function updatePreferences() {
 }
 
 document.getElementById("open_config_menu").onclick = function () {
+    updateLanguageList();
     prev_preferences = preferences;
     if (config_menu.style.display != "none")
         config_menu.style.display = "none";

@@ -9,83 +9,83 @@
     <div id="content">
         <div id="header" style="width:80%;height:30px">
             <input type="text" id="send_input" style="width:70%" disabled>
-            <button id="send_button" onclick="sendData()" disabled>SEND</button>
+            <button id="send_button" onclick="sendData()" data-i18n="send" disabled></button>
             <select id="line_ending" style="width:120px" onchange="updatePreferences()" disabled>
-                <option value="">No line ending</option>
-                <option value='\n'>LF(Line feed or New line)</option>
-                <option value='\r'>CR(Carriage return)</option>
-                <option value="\r\n">CR+LF(Carriage return + New line)</option>
+                <option value="" data-i18n="no_line_ending"></option>
+                <option value='\n' data-i18n="line_feed"></option>
+                <option value='\r' data-i18n="carriage_return"></option>
+                <option value="\r\n" data-i18n="carriage_plus_new_line"></option>
             </select>
         </div>
 
-        <div class="box terminal" id="terminal">
-        </div>
+        <div class="box terminal" id="terminal"></div>
         <br>
-        OUTPUT
-        <br>
-        <div class="box output" id="output">
-        </div>
+        <div data-i18n="output"></div>
+        <div class="box output" id="output"></div>
     </div>
 
 
     <div id="config_menu" class="config_menu" style="display:none">
-        Log file
+        <a data-i18n="language_label"></a>
+        <select id="language_config" onchange="readLanguage();updateContentLang()">
+        </select>
         <br>
+        <br>
+        <div data-i18n="log_file"></div>
         <select id="log_type">
-            <option value="none">None</option>
-            <option value="w">Overwrite</option>
-            <option value="a">Append</option>
+            <option value="none" data-i18n="none"></option>
+            <option value="w" data-i18n="overwrite"></option>
+            <option value="a" data-i18n="append"></option>
         </select>
         <input type="checkbox" id="log_add_timestamp" />
-        <label for="log_add_timestamp">Add Timestamp</label>
+        <label for="log_add_timestamp" data-i18n="add_timestamp"></label>
         <br>
         <input type="text" id="log_folder_input" class="file_path" />
         <input type="file" id="log_folder" style="display:none" onchange="readDirPaths(true, false)" webkitdirectory />
-        <input type="button" value="Browse..." class="general_btn" style="right: 5px;" onclick="log_folder.click();" />
+        <button class="general_btn" style="right: 5px;" onclick="log_folder.click();" data-i18n="browse"></button>
         <br><br>
 
-        Exception decoder
+        <label data-i18n="miscellaneous"></label>
         <br>
-        <label>
-            <input type="color" id="decoder_color" value="#0000ff" />
-        </label>
-        <br><br>
-
-        Miscellaneous
-        <br>
-        Theme
+        <label data-i18n="theme"></label>
         <select id="theme_select" onChange="theme_style.href = '../style/' + theme_select.value + '_theme_style.css';">
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
+            <option value="dark" data-i18n="dark"></option>
+            <option value="light" data-i18n="light"></option>
         </select>
-        &nbsp;
+        <br>
         <input type="checkbox" id="ctrl_enter" />
-        <label for="ctrl_enter">Use Ctrl key to send</label>
+        <label for="ctrl_enter" data-i18n="ctrl_enter"></label>
         <br>
         <input type="checkbox" id="disconnect_on_boot" />
-        <label for="disconnect_on_boot">Disconnect on Boot message</label>
+        <label for="disconnect_on_boot" data-i18n="disconnect_on_boot"></label>
         <br>
         <input type="checkbox" id="show_con_changes" />
-        <label for="show_con_changes">Show Connection changes</label>
+        <label for="show_con_changes" data-i18n="show_con_changes"></label>
         <br>
         <input type="checkbox" id="advanced_config" onchange="changeAdvConfigDiv();updatePreferences();" />
-        <label for="advanced_config">Enable advanced Config</label>
+        <label for="advanced_config" data-i18n="advanced_config"></label>
         <br><br>
-        JSON parser color&nbsp&nbsp
+
+
+        <label data-i18n="exception_decoder"></label>
+        &nbsp
+        <input type="color" id="decoder_color" value="#0000ff" />
+        <br>
+
+        <label data-i18n="json_parser"></label>
+        &nbsp
         <input type="color" id="json_color" value="#00ff00" />
         <br><br>
-        Custom parsers
+        <label data-i18n="custom_parsers"></label>
         <button id="add_custom_parser" onclick="createCustomParserField()">+</button>
         <br>
         <div id="custom_parsers_div" class="box customParsersDiv">
         </div>
         <button onclick="setPreferences(prev_preferences);config_menu.style.display = 'none'"
-            class="general_btn close_btn" style="right: 150px;position: fixed;">
-            Cancel
+            class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
         </button>
         <button onclick="updatePreferences();config_menu.style.display = 'none'" class="general_btn close_btn"
-            style="right: 10px;position: fixed;">
-            Save and Close
+            style="right: 10px;position: fixed;" data-i18n="save_and_close">
         </button>
     </div>
 
@@ -96,19 +96,19 @@
 
         <button id="open_config_menu" class="general_btn" style="right:5px">
             <img src="../images/settings gear.png" width="12" height="12">
-            Config
+            <label data-i18n="config"></label>
         </button>
         <br><br>
-        <label for="auto_scroll" class="label_left">autoScroll</label>
+        <label for="auto_scroll" class="label_left" data-i18n="auto_scroll"></label>
         <input type="checkbox" id="auto_scroll" onchange="updatePreferences()" class="checkbox_options">
         <br>
 
-        <label for="add_timestamp" class="label_left">Add Timestamp</label>
+        <label for="add_timestamp" class="label_left" data-i18n="add_timestamp"></label>
         <input type="checkbox" id="add_timestamp" class="checkbox_options"
             onchange="updatePreferences();changeTimestamp()">
         <br>
 
-        <label for="com_ports" style="position:relative;left:4%">Port</label>
+        <label for="com_ports" style="position:relative;left:4%" data-i18n="port"></label>
         <select id="com_ports" class="select_input">
         </select>
         <br>
@@ -139,15 +139,15 @@
 
         <div id="advanced_config_div" style="display: none;">
             <br>
-            <label for="parity" style="position:relative;left:4%">Parity</label>
+            <label for="parity" style="position:relative;left:4%" data-i18n="parity"></label>
             <select id="parity" class="select_input" style="right:5%" value="none">
-                <option value="none">none</option>
-                <option value="odd">odd</option>
-                <option value="even">even</option>
+                <option value="none" data-i18n="none"></option>
+                <option value="odd" data-i18n="odd"></option>
+                <option value="even" data-i18n="even"></option>
             </select>
             <br>
 
-            <label for="dataBits" style="position:relative;left:4%">DataBits</label>
+            <label for="dataBits" style="position:relative;left:4%" data-i18n="databits"></label>
             <select id="dataBits" class="select_input" style="right:5%" value="8">
                 <option>5</option>
                 <option>6</option>
@@ -156,7 +156,7 @@
             </select>
             <br>
 
-            <label for="stopBits" style="position:relative;left:4%">StopBits</label>
+            <label for="stopBits" style="position:relative;left:4%" data-i18n="stopbits"></label>
             <select id="stopBits" class="select_input" style="right:5%" value="1">
                 <option>1</option>
                 <option>1.5</option>
@@ -164,43 +164,42 @@
             </select>
             <br>
             <input type="checkbox" id="rtscts" />
-            <label for="rtscts">RTS/CTS flow control</label>
+            <label for="rtscts" data-i18n="rtscts"></label>
             <br>
             <input type="checkbox" id="xon" />
-            <label for="xon">XON flow control</label>
+            <label for="xon" data-i18n="xon"></label>
             <br>
             <input type="checkbox" id="xoff" />
-            <label for="xoff">XOFF flow control</label>
+            <label for="xoff" data-i18n="xoff"></label>
             <br>
             <input type="checkbox" id="xany" />
-            <label for="xany">XANY flow control</label>
+            <label for="xany" data-i18n="xany"></label>
             <br>
             <input type="checkbox" id="hupcl" />
-            <label for="hupcl">Drop DTR on close</label>
+            <label for="hupcl" data-i18n="hupcl"></label>
             <br>
         </div>
         <br>
 
         <button id="connect_serial" class="options_button" onclick="connect()">
             <img src="../images/usb-connected-16.png" width="16" height="16">
-            CONNECT
+            <label data-i18n="connect"></label>
         </button>
         <br><br>
         <button id="disconnect_serial" class="options_button" onclick="disconnect()">
             <img src="../images/usb-disconnected-16.png" width="16" height="16">
-            DISCONNECT
+            <label data-i18n="disconnect"></label>
         </button><br><br>
         <button id="clean_terminal" class="options_button" onclick="cleanTerminal()">
             <img src="../images/trash-2-16.png" width="16" height="16">
-            CLEAN
+            <label data-i18n="clean"></label>
         </button><br><br>
 
-        ESP EXCEPTION DECODER
+        <label data-i18n="exception_decoder_label"></label>
         <br><br>
-        <button id="auto_detect_sketch" class="options_button"  onclick="getSketchBuild()">
-            AUTO DETECT
+        <button id="auto_detect_sketch" class="options_button" onclick="getSketchBuild()" data-i18n="auto_detect">
         </button><br>
-        <label for="decoder_arch" style="position:relative;left:5%">Arch</label>
+        <label for="decoder_arch" style="position:relative;left:5%" data-i18n="arch"></label>
         <select id="decoder_arch" class="select_input" style="right:5%" onchange="getESPaddr2line()">
             <option value="esp32">ESP32</option>
             <option value="esp32s2">ESP32S2</option>
@@ -209,23 +208,22 @@
             <option value="esp8266">ESP8266</option>
         </select>
         <br>
-        ELF File<br>
+        <label data-i18n="elf_file"></label>
+        <br>
         <input type="text" id="elf_path_input" class="file_path" style="width:60%" />
         <input type="file" id="elf_path" style="display:none" onchange="getELF();" />
-        <input type="button" value="Browse..." class="general_btn" onclick="elf_path.click();" />
+        <button class="general_btn" onclick="elf_path.click();" data-i18n="browse"></button>
         <br><br>
-        OUTPUT HISTORY
+        <label data-i18n="output_history"></label>
         <div class="dropdown">
-            <button class="dropbtn">Filters</button>
+            <button class="dropbtn" data-i18n="filters"></button>
             <div class="dropdown-content" style="right:0">
                 <div>
-                    <label for="json_filter" class="filters_label">
-                        JSON parser
-                    </label>
+                    <label for="json_filter" class="filters_label" data-i18n="json_parser"></label>
                     <input type="checkbox" id="json_filter" onchange="updateParserHistory(this)" data-filter="json"
                         class="filters" checked>
                     <br>
-                    <label for="decoder_filter" class="filters_label">Exception decoder</label>
+                    <label for="decoder_filter" class="filters_label" data-i18n="exception_decoder"></label>
                     <input type="checkbox" id="decoder_filter" onchange="updateParserHistory(this)"
                         data-filter="expDecoder" class="filters" checked>
                 </div>
@@ -237,6 +235,7 @@
         <div class="box output_history" id="output_history" style="width:90%">
         </div>
     </div>
+    <script src="../language/language_handler.js"></script>
     <script src="./renderer.js"></script>
     <script src="./preferences_handle.js"></script>
     <script src="./parsers.js"></script>

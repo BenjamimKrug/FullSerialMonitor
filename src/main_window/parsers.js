@@ -209,7 +209,7 @@ function createCustomParserField(name, script, func, trigger, color) {
     newParserField.setAttribute("class", "custom_parser_entry");
     var newParserName = document.createElement("input");
     newParserName.setAttribute("type", "text");
-    newParserName.setAttribute("placeholder", "parser name");
+    newParserName.setAttribute("placeholder", current_language["parser_name_placeholder"]);
     newParserName.setAttribute("id", "cpName" + custom_parsers_count);
     newParserName.setAttribute("class", "custom_parser_input");
     if (typeof (name) !== 'undefined')
@@ -217,7 +217,7 @@ function createCustomParserField(name, script, func, trigger, color) {
 
     var newParserFunc = document.createElement("input");
     newParserFunc.setAttribute("type", "text");
-    newParserFunc.setAttribute("placeholder", "parser function");
+    newParserFunc.setAttribute("placeholder", current_language["parser_function_placeholder"]);
     newParserFunc.setAttribute("id", "cpFunc" + custom_parsers_count);
     newParserFunc.setAttribute("class", "custom_parser_input");
     if (typeof (func) !== 'undefined')
@@ -225,7 +225,7 @@ function createCustomParserField(name, script, func, trigger, color) {
 
     var newParserColor = document.createElement("input");
     newParserColor.setAttribute("type", "color");
-    newParserColor.setAttribute("placeholder", "parser color");
+    newParserColor.setAttribute("placeholder", current_language["parser_color_placeholder"]);
     newParserColor.setAttribute("id", "cpColor" + custom_parsers_count);
     newParserColor.setAttribute("class", "custom_parser_input");
     if (typeof (color) !== 'undefined')
@@ -233,7 +233,7 @@ function createCustomParserField(name, script, func, trigger, color) {
 
     var newParserScript_input = document.createElement("input");
     newParserScript_input.setAttribute("type", "text");
-    newParserScript_input.setAttribute("placeholder", "script file path");
+    newParserScript_input.setAttribute("placeholder", current_language["parser_script_placeholder"]);
     newParserScript_input.setAttribute("id", "cpScriptInput" + custom_parsers_count);
     newParserScript_input.setAttribute("class", "custom_parser_input");
     if (typeof (script) !== 'undefined')
@@ -250,11 +250,11 @@ function createCustomParserField(name, script, func, trigger, color) {
     newParserScriptBrowse.setAttribute("onclick", `clickBrowse(${custom_parsers_count})`);
     newParserScriptBrowse.setAttribute("class", "general_btn");
     newParserScriptBrowse.setAttribute("style", "position:relative;left:10px");
-    newParserScriptBrowse.innerHTML = "Browse...";
+    newParserScriptBrowse.innerHTML = current_language["browse"];
 
     var newParserTrigger = document.createElement("input");
     newParserTrigger.setAttribute("type", "text");
-    newParserTrigger.setAttribute("placeholder", "parser trigger");
+    newParserTrigger.setAttribute("placeholder", current_language["parser_trigger_placeholder"]);
     newParserTrigger.setAttribute("id", "cpTrig" + custom_parsers_count);
     newParserTrigger.setAttribute("class", "custom_parser_input");
     if (typeof (trigger) !== 'undefined')
@@ -262,20 +262,20 @@ function createCustomParserField(name, script, func, trigger, color) {
 
     var newParserExclude = document.createElement("button");
     newParserExclude.setAttribute("style", "position: absolute;right:5px");
-    newParserExclude.innerHTML = "Delete";
+    newParserExclude.innerHTML = current_language["delete"];
     newParserExclude.setAttribute("onclick", `deleteCustomParserField(${custom_parsers_count})`);
 
-    newParserField.innerHTML = "Name ";
+    newParserField.innerHTML = current_language["name"] + "&nbsp";
     newParserField.appendChild(newParserName);
-    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbspFunction ";
+    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbsp" + current_language["function"];
     newParserField.appendChild(newParserFunc);
     newParserField.appendChild(newParserColor);
     newParserField.appendChild(document.createElement("br"));
-    newParserField.innerHTML += "Script ";
+    newParserField.innerHTML += current_language["script"] + "&nbsp";
     newParserField.appendChild(newParserScript_input);
     newParserField.appendChild(newParserScript);
     newParserField.appendChild(newParserScriptBrowse);
-    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbspTrigger ";
+    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbsp" + current_language["trigger"];
     newParserField.appendChild(newParserTrigger);
     newParserField.appendChild(newParserExclude);
     custom_parsers_div.appendChild(newParserField);

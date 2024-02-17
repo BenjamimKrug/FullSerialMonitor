@@ -81,6 +81,10 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
             ipcRenderer.send('recvMain', { id: arg.requester, cmd: "setTheme", theme: theme_style.href });
             break;
         }
+        case "getLang": {
+            ipcRenderer.send('recvMain', { id: arg.requester, cmd: "setLang", lang: current_language });
+            break;
+        }
         case "graphOpened": {
             graphWindow = true;
             updateGraphTriggers();

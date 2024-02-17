@@ -7,19 +7,22 @@
 
 <body>
     <div>
-        Sequence
-        <button id="add_packet"  class="sequencer_button" style="width:auto" onclick="createPacketField()">+ Add packet</button>
-        <br>
+        <label data-i18n="sequence"></label>
+        <button id="add_packet"  class="sequencer_button" style="width:auto" onclick="createPacketField()">
+            + &nbsp
+            <label data-i18n="add_packet"></label>
+        </button>
         <br>
         <div id="packets_div" class="box packetsDiv">
         </div>
-        <button id="save_sequence" class="sequencer_button" onclick="saveSequence()">Save Sequence</button>
-        <button id="send_sequence" class="sequencer_button" onclick="sendSequence()">Send Sequence</button>
-        <button id="stop_sequence" class="sequencer_button" onclick="stopSequence()">Stop Sequence</button>
+        <button id="save_sequence" class="sequencer_button" onclick="saveSequence()" data-i18n="save_sequence"></button>
+        <button id="send_sequence" class="sequencer_button" onclick="sendSequence()" data-i18n="send_sequence"></button>
+        <button id="stop_sequence" class="sequencer_button" onclick="stopSequence()" data-i18n="stop_sequence"></button>
         &nbsp;&nbsp;&nbsp;
         <input type="checkbox" id="continuous_sequence">    
-        <label for="continuous_sequence">Continuous Sequence</label>    
+        <label for="continuous_sequence" data-i18n="continuous_sequence"></label>    
     </div>
+    <script src="../language/language_handler.js"></script>
     <script src="./sequencer.js"></script>
 </body>
 

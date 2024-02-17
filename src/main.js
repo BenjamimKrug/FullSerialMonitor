@@ -3,7 +3,7 @@
     https://github.com/BenjamimKrug/FullSerialMonitor
     for more information refer to the readme file
 */
-const { app, BrowserWindow, Menu, ipcMain, globalShortcut, shell , dialog} = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, globalShortcut, shell, dialog } = require('electron');
 const path = require('path');
 const url = require('url');
 require('@electron/remote/main').initialize();
@@ -19,6 +19,10 @@ var options = {
     wordStart: false,
     medialCapitalAsWordStart: false
 }
+
+// needs to have this for atleast the first time
+var current_language = {};
+
 function createWindow(file_name, index) {
     // Create the browser window.
     let newWindow = new BrowserWindow({
@@ -95,33 +99,29 @@ function createWindow(file_name, index) {
     return newWindow;
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', function () {
-    createWindow('main_window/index.html', 0);
+function makeMenuTemplate() {
     const template = [
         {
-            label: 'Edit',
+            label: current_language["edit"],
             submenu: [
-                { role: 'cut' },
-                { role: 'copy' },
-                { role: 'paste' },
-                { role: 'selectAll' }
+                { label: current_language["cut"], role: 'cut' },
+                { label: current_language["copy"], role: 'copy' },
+                { label: current_language["paste"], role: 'paste' },
+                { label: current_language["select_all"], role: 'selectAll' }
             ]
         },
         {
-            label: 'Help',
+            label: current_language["help"],
             submenu: [
                 {
-                    label: 'Documentation',
+                    label: current_language["documentation"],
                     click: function () {
                         shell.openExternal("https://github.com/BenjamimKrug/FullSerialMonitor#readme");
                     }
 
                 },
                 {
-                    label: 'Issues',
+                    label: current_language["issues"],
                     click: function () {
                         shell.openExternal("https://github.com/BenjamimKrug/FullSerialMonitor/issues");
                     }
@@ -129,16 +129,16 @@ app.on('ready', function () {
             ]
         },
         {
-            label: 'Tools',
+            label: current_language["tools"],
             submenu: [
                 {
-                    label: 'Payload Sequencer',
+                    label: current_language["payload_sequencer"],
                     click: function () {
                         createWindow('sequencer_window/index.html', 1);
                     }
                 },
                 {
-                    label: 'Grapher',
+                    label: current_language["grapher"],
                     click: function () {
                         createWindow('graph_window/index.html', 2);
                     }
@@ -146,11 +146,20 @@ app.on('ready', function () {
             ]
         },
         {
+            label: current_language["toggle_dev_tools"],
             role: 'toggleDevTools'
         }
-    ]
+    ];
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+}
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', function () {
+    createWindow('main_window/index.html', 0);
+    makeMenuTemplate();
 
     ipcMain.on('recvMain', (event, arg) => {
         try {
@@ -166,6 +175,11 @@ app.on('ready', function () {
 
     ipcMain.on('createWindow', (event, arg) => {
         createWindow(arg.url, arg.index);
+    });
+
+    ipcMain.on('setLang', (event, arg) => {
+        current_language = arg;
+        makeMenuTemplate();
     });
 });
 

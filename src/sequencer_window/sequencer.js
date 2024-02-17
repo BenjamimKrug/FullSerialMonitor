@@ -9,9 +9,17 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
             theme_style.href = arg.theme;
             break;
         }
+        case "setLang": {
+            current_language = arg.lang;
+            updateContentLang();
+            break;
+        }
+        default:
+            break;
     }
 });
 ipcRenderer.send('recvMain', { id: 0, cmd: "getTheme", requester: 1 });
+ipcRenderer.send('recvMain', { id: 0, cmd: "getLang", requester: 1 });
 
 /*Start of specific implementation */
 
@@ -53,7 +61,6 @@ function saveSequence() {
         if (!deleted_packets.includes(i)) {
             var newParserData = document.getElementById("cpData" + i);
             var newParserDelay = document.getElementById("cpDelay" + i);
-            console.log("data: ", newParserData);
             sequence.packets.push({
                 data: newParserData.value.trim(),
                 delay: newParserDelay.value.trim()
@@ -104,10 +111,10 @@ function createPacketField(data_packet, delay) {
     newPacketExclude_icon.setAttribute("height", "16");
     newPacketExclude_icon.setAttribute("src", "../images/trash-2-16.png");
     newPacketExclude.appendChild(newPacketExclude_icon);
-    newPacketExclude.innerHTML += "Delete";
+    newPacketExclude.innerHTML += current_language["delete"];
     newPacketExclude.setAttribute("onclick", `deletePacketField(${sequence.count})`);
 
-    newPacketField.innerHTML = "Packet ";
+    newPacketField.innerHTML = "Packet "+"&nbsp";
     newPacketField.appendChild(newPacketData);
     newPacketField.appendChild(document.createElement("br"));
     newPacketField.innerHTML += "Delay";
