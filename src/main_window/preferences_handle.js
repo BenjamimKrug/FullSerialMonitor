@@ -94,9 +94,6 @@ function setPreferences(target_preferences) {
     if (typeof (target_preferences.lineEnding) !== 'undefined')
         line_ending.value = target_preferences.lineEnding;
 
-    if (typeof (target_preferences.decoderFolder) !== 'undefined')
-        decoder_folder_input.value = target_preferences.decoderFolder;
-
     if (typeof (target_preferences.decoderArch) !== 'undefined')
         decoder_arch.value = target_preferences.decoderArch;
 
@@ -147,15 +144,7 @@ function readDirPaths(log, decoder) {
             log_folder_input.value = log_folder_path.substring(0, log_folder_path.lastIndexOf('\\') + 1);
         }
         else
-            window.alert("Folder completly empty, must have at least one file");
-    }
-    if (decoder) {
-        if (typeof (decoder_folder.files[0]) !== 'undefined') {
-            var decoderFolderPath = decoder_folder.files[0].path.trim();
-            decoder_folder_input.value = decoderFolderPath.substring(0, decoderFolderPath.lastIndexOf('\\') + 1);
-        }
-        else
-            window.alert("Folder completly empty, must have at least one file");
+            ipcRenderer.send("openAlert", { title: "Folder completly empty, must have at least one file", content: "" });
     }
 }
 
@@ -203,7 +192,6 @@ function updatePreferences() {
     };
     preferences = {
         logFolder: log_folder_input.value.trim(),
-        decoderFolder: decoder_folder_input.value.trim(),
         decoderColor: decoder_color.value,
         jsonColor: json_color.value,
         disconnectOnBoot: disconnect_on_boot.checked,
@@ -227,7 +215,7 @@ function updatePreferences() {
     }
     fs.writeFile(preferences_file_path, JSON.stringify(preferences), (err) => {
         if (err)
-            window.alert("Error on writing preferences file:", err);
+            ipcRenderer.send("openAlert", { title: "Error on writing preferences file:", content: err.message });
     });
     prev_preferences = preferences;
 }

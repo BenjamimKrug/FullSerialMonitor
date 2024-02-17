@@ -1,0 +1,14 @@
+[
+    {
+        "trigger": "valor",
+        "created": false,
+        "name": "VALOR",
+        "color": "red"
+    },
+    {
+        "trigger": "teste",
+        "created": false,
+        "name": "TESTE",
+        "color": "blue"
+    }
+]

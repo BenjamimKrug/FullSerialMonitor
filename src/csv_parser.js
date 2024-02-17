@@ -3,7 +3,7 @@ function parsePayload(data_line, data_line_index) {
     let csvContent = rows.join(',') + "\r\n";
     fs.appendFile("./csv_test.csv", csvContent, (err) => {
         if (err)
-            window.alert("Error on writing csv file:", err);
+            ipcRenderer.send("openAlert", { title: "Error on writing csv file:", content: err.message});
     });
     var customResult = document.createElement("pre");
     customResult.innerHTML = csvContent;

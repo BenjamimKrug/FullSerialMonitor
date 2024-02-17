@@ -11,7 +11,7 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
         }
     }
 });
-ipcRenderer.send('recvMain', { id: 0, cmd: "getTheme", requester: 1});
+ipcRenderer.send('recvMain', { id: 0, cmd: "getTheme", requester: 1 });
 
 /*Start of specific implementation */
 
@@ -64,7 +64,7 @@ function saveSequence() {
     updateSequence();
     fs.writeFile(sequence_file_path, JSON.stringify(sequence), (err) => {
         if (err)
-            window.alert("Error on writing sequence file:", err);
+            ipcRenderer.send("openAlert", { title: "Error on writing sequence file:", content: err.message });
     });
 }
 

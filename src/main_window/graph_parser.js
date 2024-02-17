@@ -1,6 +1,16 @@
-var graphsArray = [{ trigger: "valor", created: false, name: "VALOR", color: "red" }, { trigger: "teste", created: false, name: "TESTE", color: "blue" }];
+var graphsArray = "";
 var graphTriggerSize = 2;
 var graphWindow = false;
+
+const graph_tracker_file_path = "graph_tracker.json"
+
+fs.readFile(graph_tracker_file_path, 'utf8', (err, data) => {
+    if (err) {
+        console.log(err);
+        return;
+    }
+    graphsArray = JSON.parse(data);
+});
 
 function updateGraphTriggers() {
     if (!graphWindow)

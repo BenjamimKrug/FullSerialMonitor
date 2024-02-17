@@ -54,6 +54,8 @@ let findInPage = new FindInPage(remote.getCurrentWebContents(), {
     parent: terminal
 });
 
+setInterval(() => { getPorts() }, 1000);
+
 ipcRenderer.on('find_request', () => {
     findInPage.openFindWindow();
 });
@@ -63,7 +65,7 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
         case "sendSequence": {
             clearTimeout(sequenceTimeout);
             if (serialport == null) {
-                window.alert("Serial Port not Open to send Sequence");
+                ipcRenderer.send("openAlert", { title: "Serial Port not Open ", content: "Cannot send Sequence, please connect to a serial port" });
                 return;
             }
             sequence_pos = 0;
@@ -102,7 +104,7 @@ function sendSequence() {
     var data = Buffer.from(sequence.packets[sequence_pos].data + line_end, "utf-8");
     serialport.write(data, function (err) {
         if (err) {
-            window.alert('Error on write: ', err.message);
+            ipcRenderer.send("openAlert", { title: 'Error on write:', content: err.message });
             return;
         }
     });
@@ -121,7 +123,7 @@ function sendSequence() {
 
 
 function createWindow(window_url, i) {
-    ipcRenderer.send("createWindow", {url: window_url, index: i});
+    ipcRenderer.send("createWindow", { url: window_url, index: i });
 }
 
 function makeResizableDiv(div, vertical, horizontal) {
@@ -223,18 +225,20 @@ function changeTimestamp() {
 }
 
 function getPorts() {
-    var returnList = "";
     SerialPort.list().then(function (ports) {
+        var current_port = com_ports.value;
+        var returnList = "";
         ports.forEach(function (port) {
             returnList += "<option>" + port.path + "</option>";
         });
         com_ports.innerHTML = returnList;
+        com_ports.value = current_port;
     });
 }
 
 function connect() {
     if (com_ports.value == "") {
-        window.alert("No COM ports detected");
+        ipcRenderer.send("openAlert", { title: "No COM ports detected", content: "" });
         return;
     }
     var data = {
@@ -250,7 +254,7 @@ function connect() {
         hupcl: hupcl_enable.checked
     }
     if (data.path == undefined && data.baudrate == undefined) {
-        window.alert("error: undefined value");
+        ipcRenderer.send("openAlert", { title: "error: undefined value", content: "" });
         return;
     }
 
@@ -289,11 +293,11 @@ function connectSerialPort(data) {
     updatePreferences();
     serialport = new SerialPort(data);
     serialport.on('error', function (err) {
-        window.alert("Error trying to open Port: " + err);
+        ipcRenderer.send("openAlert", { title: "Error trying to open Port:", content: err.message });
     });
     serialport.on("open", function (err) {
         if (err) {
-            window.alert("Error on opening port:", err);
+            ipcRenderer.send("openAlert", { title: "Error on opening port:", content: err.message });
             return;
         }
         send_button.disabled = false;
@@ -309,7 +313,7 @@ function connectSerialPort(data) {
             });
         }
         else
-            window.alert("Folder for the Log file does not exist");
+            ipcRenderer.send("openAlert", { title: "Folder for the Log file does not exist", content: "" });
 
     });
     serialport.on("close", function (err) {
@@ -317,7 +321,11 @@ function connectSerialPort(data) {
         send_input.disabled = true;
         line_ending.disabled = true;
         if (err) {
-            window.alert("Port disconnected: " + err);
+            ipcRenderer.send("openAlert", { title: "Port disconnected", content: err.message });
+            if (show_con_changes.checked)
+                recvData("\n<span style='color:red'>DISCONNECTED</span>\n");
+            if (log_file_writer != null)
+                log_file_writer.close();
             return;
         }
     });
@@ -432,7 +440,7 @@ function sendData() {
     var data = Buffer.from(send_input.value + line_end, "utf-8");
     serialport.write(data, function (err) {
         if (err) {
-            window.alert('Error on write: ', err.message);
+            ipcRenderer.send("openAlert", { title: 'Error on write: ', content: err.message });
             return;
         }
     });

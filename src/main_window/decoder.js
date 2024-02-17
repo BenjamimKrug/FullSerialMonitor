@@ -1,7 +1,5 @@
 const { exec, execSync } = require("child_process");
 const os = require('os');
-var decoder_folder = document.getElementById("decoder_folder");
-var decoder_folder_input = document.getElementById("decoder_folder_input");
 var decoder_arch = document.getElementById("decoder_arch");
 var decoder_color = document.getElementById("decoder_color");
 var elf_path = document.getElementById("elf_path");
@@ -13,22 +11,13 @@ var general_core = "";
 //"C:\Users\benja\AppData\Local\Arduino15\packages\esp32\tools\xtensa-esp32-elf-gcc\gcc8_4_0-esp-2021r2-patch3\bin\xtensa-esp32-elf-addr2line.exe"
 var addr2line_path = "";
 var memory_address = null;
-var esp32_version = "";
-var esp32_gcc_version = "";
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
 function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, timestamp) {
-    if (decoder_folder_input.value == "") {
-        if (!elf_error_warning) {
-            elf_error_warning = true;
-            window.alert("Backtrace could not be parsed, select Arduino Data Folder");
-        }
-        return "No Backtrace folder given";
-    }
     if (elf_path_input.value == "") {
         if (!elf_error_warning) {
             elf_error_warning = true;
-            window.alert("Backtrace could not be parsed, choose .elf file please");
+            ipcRenderer.send("openAlert", { title: "Parse Error", content: "Backtrace could not be parsed, choose .elf file please" });
         }
         return "No ELF file given";
     }
@@ -42,25 +31,25 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
         lastIndex = index + 1;
         index = backtraceDecoder_input.indexOf(" ", lastIndex);
         if (!memory_address.startsWith("Backtrace")) {
-            var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
+            var command = addr2line_path + " -pfiaC -e " + elf_path_input.value.trim() + " " + memory_address;
+
             try {
                 var stdout = execSync(command).toString();
                 backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
             }
             catch (stderr) {
-                backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
             }
         }
     }
     memory_address = backtraceDecoder_input.substring(lastIndex, m_length - 1);
     if (!memory_address.startsWith("Backtrace")) {
-        var command = decoder_folder_input.value + addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
+        var command = addr2line_path + " -pfiaC -e " + elf_path_input.value + " " + memory_address;
         try {
             var stdout = execSync(command).toString();
             backtraceResult.innerHTML += syntaxHighlightDecoder(stdout) + "<br>";
         }
         catch (stderr) {
-            backtraceResult.innerHTML += syntaxHighlightDecoder(stderr) + "<br>";
+            backtraceResult.innerHTML += stderr.message + "<br>";
         }
         addParserResult(backtraceResult, backtraceDecoder_input, preferences.decoderColor, "expDecoder", timestamp);
         return;
@@ -69,38 +58,12 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
 
 
 function getESPaddr2line() {
-    if (decoder_folder_input.value.length < 10)
-        return;
-    var hardwareFolder = decoder_folder_input.value + "packages\\esp32\\hardware\\esp32\\";
-    fs.readdir(hardwareFolder, (err, files) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        files.forEach(file => {
-            esp32_version = file;
-            fs.readFile(hardwareFolder + esp32_version + "\\installed.json", 'utf8', (err, data) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                var installed_json = JSON.parse(data);
-                if (decoder_arch.value == "esp32c3")
-                    arch_elf_gcc = `riscv32-esp-elf`;
-                else
-                    arch_elf_gcc = `xtensa-${decoder_arch.value}-elf`;
-                var len = installed_json.packages[0].platforms[0].toolsDependencies.length;
-                var platforms = installed_json.packages[0].platforms[0];
-                for (var i = 0; i < len; i++) {
-                    if (platforms.toolsDependencies[i].name == `${arch_elf_gcc}-gcc`) {
-                        esp32_gcc_version = platforms.toolsDependencies[i].version;
-                        break;
-                    }
-                }
-                addr2line_path = `packages\\esp32\\tools\\${arch_elf_gcc}-gcc\\${esp32_gcc_version}\\bin\\${arch_elf_gcc}-addr2line.exe`;
-            });
-        });
-    });
+    if (decoder_arch.value == "esp32c3")
+        arch_elf_gcc = `riscv32-esp-elf`;
+    else
+        arch_elf_gcc = `xtensa-${decoder_arch.value}-elf`;
+    addr2line_path = `decoders\\${arch_elf_gcc}-addr2line.exe`;
+
     getSketchBuild();
     elf_path_input.value = elf_file_auto_path;
 }
@@ -158,7 +121,7 @@ function getSketchBuild() {
                     general_core = fqbn[0];
                 }
                 else
-                    window.alert("Core not supported by the exception decoder");
+                    ipcRenderer.send("openAlert", { title: "Support Error", content: "Core not supported by the exception decoder" });
             }
             catch (err) {
                 console.log(err);
@@ -172,7 +135,7 @@ function getSketchBuild() {
         }
     });
     if (elf_file_auto_path == "")
-        window.alert("Could not find .elf file");
+        ipcRenderer.send("openAlert", { title: "Could not find .elf file", content: "" });
 }
 
 function syntaxHighlightDecoder(decoded) {

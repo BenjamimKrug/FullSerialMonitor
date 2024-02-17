@@ -3,7 +3,7 @@
     https://github.com/BenjamimKrug/FullSerialMonitor
     for more information refer to the readme file
 */
-const { app, BrowserWindow, Menu, ipcMain, globalShortcut, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, globalShortcut, shell , dialog} = require('electron');
 const path = require('path');
 const url = require('url');
 require('@electron/remote/main').initialize();
@@ -158,6 +158,10 @@ app.on('ready', function () {
         } catch (e) {
 
         }
+    });
+
+    ipcMain.on('openAlert', (event, incomingMessage) => {
+        dialog.showErrorBox(incomingMessage.title, incomingMessage.content);
     });
 
     ipcMain.on('createWindow', (event, arg) => {
