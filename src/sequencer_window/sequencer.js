@@ -88,7 +88,7 @@ function createPacketField(data_packet, delay) {
 
     var newPacketData = document.createElement("input");
     newPacketData.setAttribute("type", "text");
-    newPacketData.setAttribute("placeholder", "packet data");
+    newPacketData.setAttribute("placeholder", current_language["packet_data_placeholder"]);
     newPacketData.setAttribute("id", "cpData" + sequence.count);
     newPacketData.setAttribute("class", "custom_parser_input");
     if (typeof (data_packet) !== 'undefined')

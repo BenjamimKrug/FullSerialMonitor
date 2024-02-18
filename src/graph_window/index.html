@@ -8,7 +8,12 @@
 <body>
 
   <div id="config_menu" class="config_menu" style="display:none">
-    <button onclick="setGraphsArray(prev_preferences);config_menu.style.display = 'none'"
+    <label data-i18n="graphs"></label>
+    <button id="add_graphs" onclick="createGraphField()">+</button>
+    <br>
+    <div id="graphs_list_div" class="box graphsListDiv">
+    </div>
+    <button onclick="setGraphsArray(prev_graphsArray);config_menu.style.display = 'none'"
         class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
     </button>
     <button onclick="saveGraphsArray();config_menu.style.display = 'none'" class="general_btn close_btn"

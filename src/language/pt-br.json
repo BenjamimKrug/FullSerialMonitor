@@ -66,6 +66,7 @@
     "stop_sequence": "Parar Sequência",
     "continuous_sequence": "Sequência Contínua",
     "packet": "Pacote",
+    "packet_data_placeholder": "dados do pacote",
     "delay": "Delay",
     "edit": "Editar",
     "cut": "Cortar",
@@ -117,5 +118,6 @@
         "title": "Pasta do arquivo de registros não existe",
         "content": ""
     },
-    "port_disconnected": "Porta COM desconectada"
+    "port_disconnected": "Porta COM desconectada",
+    "graphs": "Gráficos"
 }

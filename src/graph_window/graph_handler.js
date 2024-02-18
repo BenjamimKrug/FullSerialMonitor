@@ -2,15 +2,18 @@
 const fs = require('fs');
 const { ipcRenderer } = require('electron');
 const Dygraph = require('dygraphs');
-var theme_style = document.getElementById("theme_style");
-var graph_container = document.getElementById("graph_container");
-var config_menu = document.getElementById("config_menu");
+const theme_style = document.getElementById("theme_style");
+const graph_container = document.getElementById("graph_container");
+const config_menu = document.getElementById("config_menu");
+const graphs_list_div = document.getElementById("graphs_list_div");
 var dataArraySize = 0;
-var data = [[0, 0]];
+var data = [];
 var dataLength = -1;
 var lastKnownValues = [];
 var chart;
+var LIMIT = 100;
 
+var prev_graphsArray = null;
 var graphsArray = [];
 var deleted_graphs = [];
 var graph_count = 0;
@@ -22,10 +25,12 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
             break;
         }
         case "createGraph": {
-            createGraph(arg.name, arg.position + 1, arg.color);
+            createGraph(arg.name, arg.position, arg.color);
+            break;
         }
         case "newGraphData": {
             newData(arg.time, arg.value, arg.position + 1);
+            break;
         }
         case "setLang": {
             current_language = arg.lang;
@@ -45,6 +50,7 @@ fs.readFile(graph_tracker_file_path, 'utf8', (err, data) => {
         return;
     }
     graphsArray = JSON.parse(data);
+    prev_graphsArray = graphsArray;
     updateGraphsArray();
 });
 
@@ -57,8 +63,6 @@ window.addEventListener('load', () => {
     chart = new Dygraph(graph_container, data, {
         drawPoints: true,
         showRoller: true,
-        valueRange: [0.0, 1.2],
-        labels: ['Time', 'Random']
     });
     /*// create a data set
     // create a line chart
@@ -73,14 +77,18 @@ window.addEventListener('load', () => {
 });
 
 function updateGraphsArray() {
+    deleted_graphs = [];
+    graphs_list_div.innerHTML = "";
+    graph_count = 0;
     ipcRenderer.send('recvMain', { id: 0, cmd: "setGraphsArray", requester: 2, graphsArray: graphsArray });
     var graphTriggerSize = graphsArray.length;
+    var labels_array = ['Time'];
     for (var i = 0; i < graphTriggerSize; i++) {
-        if (graphsArray[i].created)
-            continue;
+        createGraphField(graphsArray[i].name, graphsArray[i].color, graphsArray[i].trigger);
         createGraph(graphsArray[i].name, i, graphsArray[i].color);
-        graphsArray[i].created = true;
+        labels_array.push(graphsArray[i].name);
     }
+    chart.updateOptions({ labels: labels_array});
 }
 
 function createGraph(line_name, position, color) {
@@ -122,7 +130,11 @@ function fillEmptyValues(position) {
 }
 
 function newData(time, value, position) {
-    console.log(time, value, position);
+    console.log(time);
+    time = time.split(':');
+    let now = new Date();
+    time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...time);
+    console.log(time);
     value = parseFloat(value);
     var createNewLine = false;
     try {
@@ -142,13 +154,9 @@ function newData(time, value, position) {
         newDataArray[position] = value;
         data.push(newDataArray);
         dataLength++;
-        if (dataLength > LIMIT) {
-            data.shift();
-            dataLength--;
-        }
         fillEmptyValues(position);
     }
-    chart.setOptions({ 'file': data });
+    chart.updateOptions({ 'file': data });
 }
 
 function saveGraphsArray() {
@@ -156,10 +164,12 @@ function saveGraphsArray() {
     for (var i = 0; i < graph_count; i++) {
         if (!deleted_graphs.includes(i)) {
             var newGraphName = document.getElementById("cgName" + i);
+            var newGraphColor = document.getElementById("cgColor" + i);
             var newGraphTrigger = document.getElementById("cgTrigger" + i);
             graphsArray.push({
-                data: newGraphName.value.trim(),
-                delay: newGraphTrigger.value.trim()
+                name: newGraphName.value.trim(),
+                color: newGraphColor.value.trim(),
+                trigger: newGraphTrigger.value.trim()
             });
         }
     }
@@ -174,37 +184,43 @@ function saveGraphsArray() {
 function setGraphsArray(newGraphsArray) {
     if (typeof newGraphsArray != "undefined")
         graphsArray = newGraphsArray;
+    updateGraphsArray();
 }
-
 
 function deleteGraphField(id) {
-    targetGraphField = document.getElementById(`cpDiv${id}`);
-    Graphs_div.removeChild(targetGraphField);
-    deleted_Graphs.push(id);
+    targetGraphField = document.getElementById(`cgDiv${id}`);
+    graphs_list_div.removeChild(targetGraphField);
+    deleted_graphs.push(id);
 }
 
-function createGraphField(name, trigger) {
+function createGraphField(name, color, trigger) {
     var newGraphField = document.createElement("div");
-    newGraphField.setAttribute("id", "cpDiv" + graph_count);
+    newGraphField.setAttribute("id", "cgDiv" + graph_count);
     newGraphField.setAttribute("class", "custom_parser_entry");
 
-    var newGraphData = document.createElement("input");
-    newGraphData.setAttribute("type", "text");
-    newGraphData.setAttribute("placeholder", "Graph data");
-    newGraphData.setAttribute("id", "cgName" + graph_count);
-    newGraphData.setAttribute("class", "custom_parser_input");
+    var newGraphName = document.createElement("input");
+    newGraphName.setAttribute("type", "text");
+    newGraphName.setAttribute("placeholder", current_language["graph_name_placeholder"]);
+    newGraphName.setAttribute("id", "cgName" + graph_count);
+    newGraphName.setAttribute("class", "custom_parser_input");
     if (typeof (name) !== 'undefined')
-        newGraphData.setAttribute("value", name);
+        newGraphName.setAttribute("value", name);
+
+    var newGraphColor = document.createElement("input");
+    newGraphColor.setAttribute("type", "color");
+    newGraphColor.setAttribute("placeholder", current_language["graph_color_placeholder"]);
+    newGraphColor.setAttribute("id", "cgColor" + graph_count);
+    newGraphColor.setAttribute("class", "custom_parser_input");
+    if (typeof (color) !== 'undefined')
+        newGraphColor.setAttribute("value", color);
 
     var newGraphTrigger = document.createElement("input");
     newGraphTrigger.setAttribute("type", "text");
-    newGraphTrigger.setAttribute("placeholder", "500");
+    newGraphTrigger.setAttribute("placeholder", current_language["graph_trigger_placeholder"]);
     newGraphTrigger.setAttribute("id", "cgTrigger" + graph_count);
     newGraphTrigger.setAttribute("class", "custom_parser_input");
-    if (typeof (Trigger) !== 'undefined')
+    if (typeof (trigger) !== 'undefined')
         newGraphTrigger.setAttribute("value", trigger);
-
-
 
     var newGraphExclude = document.createElement("button");
     newGraphExclude.setAttribute("class", "sequencer_button");
@@ -220,11 +236,13 @@ function createGraphField(name, trigger) {
 
     newGraphField.innerHTML = current_language["name"] + "&nbsp";
     newGraphField.appendChild(newGraphName);
+    newGraphField.innerHTML += "&nbsp&nbsp&nbsp";
+    newGraphField.appendChild(newGraphColor);
     newGraphField.appendChild(document.createElement("br"));
     newGraphField.innerHTML += current_language["trigger"];
     newGraphField.appendChild(newGraphTrigger);
     newGraphField.appendChild(newGraphExclude);
-    Graphs_div.appendChild(newGraphField);
+    graphs_list_div.appendChild(newGraphField);
     graph_count++;
 }
 

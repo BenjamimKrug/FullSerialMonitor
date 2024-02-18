@@ -66,6 +66,7 @@
     "stop_sequence": "Stop Sequence",
     "continuous_sequence": "Continuous Sequence",
     "packet": "Packet",
+    "packet_data_placeholder": "packet data",
     "delay": "Delay",
     "edit": "Edit",
     "cut": "Cut",
@@ -117,5 +118,9 @@
         "title": "Folder for the Log file does not exist",
         "content": ""
     },
-    "port_disconnected": "Port disconnected"
+    "port_disconnected": "Port disconnected",
+    "graphs": "Graphs",
+    "graph_name_placeholder": "graph name",
+    "graph_color_placeholder": "graph color",
+    "graph_trigger_placeholder": "graph trigger"
 }
