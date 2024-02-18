@@ -231,6 +231,12 @@ function updatePreferences() {
     prev_preferences = preferences;
 }
 
+function updateTheme(){
+    theme_style.href = '../style/' + theme_select.value + '_theme_style.css';
+    ipcRenderer.send('recvMain', { id: 1, cmd: "setTheme", theme: theme_style.href });
+    ipcRenderer.send('recvMain', { id: 2, cmd: "setTheme", theme: theme_style.href });
+}
+
 document.getElementById("open_config_menu").onclick = function () {
     updateLanguageList();
     prev_preferences = preferences;

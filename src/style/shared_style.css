@@ -240,3 +240,10 @@ input::-webkit-calendar-picker-indicator {
 img {
     transform: translate(0, 20%);
 }
+
+#graph_container {
+    width: 100%;
+    height: 95%;
+    margin: auto;
+    padding: 0;
+}

@@ -87,11 +87,14 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
         }
         case "graphOpened": {
             graphWindow = true;
-            updateGraphTriggers();
             break;
         }
         case "graphClosed": {
             graphWindow = false;
+            break;
+        }
+        case "setGraphsArray": {
+            setGraphsArray(arg.graphsArray);
             break;
         }
     }

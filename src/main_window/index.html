@@ -48,7 +48,7 @@
         <label data-i18n="miscellaneous"></label>
         <br>
         <label data-i18n="theme"></label>
-        <select id="theme_select" onChange="theme_style.href = '../style/' + theme_select.value + '_theme_style.css';">
+        <select id="theme_select" onChange="updateTheme();">
             <option value="dark" data-i18n="dark"></option>
             <option value="light" data-i18n="light"></option>
         </select>

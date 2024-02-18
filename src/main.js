@@ -11,7 +11,6 @@ require('@electron/remote/main').initialize();
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 const windows = [null, null, null, null];
-var windows_count = 0;
 var options = {
     forward: true,
     findNext: false,
@@ -24,6 +23,10 @@ var options = {
 var current_language = {};
 
 function createWindow(file_name, index) {
+    if (windows[index] != null){
+        windows[index].focus();
+        return;
+    }
     // Create the browser window.
     let newWindow = new BrowserWindow({
         width: 1000,
@@ -95,7 +98,6 @@ function createWindow(file_name, index) {
         });
     }
     windows[index] = newWindow;
-    windows_count++;
     return newWindow;
 }
 
