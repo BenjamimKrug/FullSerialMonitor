@@ -65,7 +65,7 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
         case "sendSequence": {
             clearTimeout(sequenceTimeout);
             if (serialport == null) {
-                ipcRenderer.send("openAlert", { title: "Serial Port not Open ", content: "Cannot send Sequence, please connect to a serial port" });
+                ipcRenderer.send("openAlert", current_language["serial_port_not_open_error"]);
                 return;
             }
             sequence_pos = 0;
@@ -108,7 +108,7 @@ function sendSequence() {
     var data = Buffer.from(sequence.packets[sequence_pos].data + line_end, "utf-8");
     serialport.write(data, function (err) {
         if (err) {
-            ipcRenderer.send("openAlert", { title: 'Error on write:', content: err.message });
+            ipcRenderer.send("openAlert", current_language["writing_error"]);
             return;
         }
     });
@@ -242,7 +242,7 @@ function getPorts() {
 
 function connect() {
     if (com_ports.value == "") {
-        ipcRenderer.send("openAlert", { title: "No COM ports detected", content: "" });
+        ipcRenderer.send("openAlert", current_language["no_com_ports_error"]);
         return;
     }
     var data = {
@@ -258,7 +258,7 @@ function connect() {
         hupcl: hupcl_enable.checked
     }
     if (data.path == undefined && data.baudrate == undefined) {
-        ipcRenderer.send("openAlert", { title: "error: undefined value", content: "" });
+        ipcRenderer.send("openAlert", current_language["undefined_value_error"]);
         return;
     }
 
@@ -297,11 +297,11 @@ function connectSerialPort(data) {
     updatePreferences();
     serialport = new SerialPort(data);
     serialport.on('error', function (err) {
-        ipcRenderer.send("openAlert", { title: "Error trying to open Port:", content: err.message });
+        ipcRenderer.send("openAlert", { title: current_language["serialport_error"], content: err.message });
     });
     serialport.on("open", function (err) {
         if (err) {
-            ipcRenderer.send("openAlert", { title: "Error on opening port:", content: err.message });
+            ipcRenderer.send("openAlert", { title: current_language["serialport_open_error"], content: err.message });
             return;
         }
         send_button.disabled = false;
@@ -317,7 +317,7 @@ function connectSerialPort(data) {
             });
         }
         else
-            ipcRenderer.send("openAlert", { title: "Folder for the Log file does not exist", content: "" });
+            ipcRenderer.send("openAlert", current_language["log_folder_does_not_exist"]);
 
     });
     serialport.on("close", function (err) {
@@ -325,7 +325,7 @@ function connectSerialPort(data) {
         send_input.disabled = true;
         line_ending.disabled = true;
         if (err) {
-            ipcRenderer.send("openAlert", { title: "Port disconnected", content: err.message });
+            ipcRenderer.send("openAlert", { title: current_language["port_disconnected"], content: err.message });
             if (show_con_changes.checked)
                 recvData("\n<span style='color:red'>DISCONNECTED</span>\n");
             if (log_file_writer != null)
@@ -444,7 +444,7 @@ function sendData() {
     var data = Buffer.from(send_input.value + line_end, "utf-8");
     serialport.write(data, function (err) {
         if (err) {
-            ipcRenderer.send("openAlert", { title: 'Error on write: ', content: err.message });
+            ipcRenderer.send("openAlert", current_language["writing_error"]);
             return;
         }
     });

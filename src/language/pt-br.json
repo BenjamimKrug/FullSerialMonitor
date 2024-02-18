@@ -78,5 +78,44 @@
     "tools": "Ferramentas",
     "payload_sequencer": "Sequenciador de Pacotes",
     "grapher": "Gráfico",
-    "toggle_dev_tools": "Abrir Ferramentas de Desenvolvedor"
+    "toggle_dev_tools": "Abrir Ferramentas de Desenvolvedor",
+    "backtrace_error": {
+        "title": "Erro de Parseamento",
+        "content": "Backtrace não pode ser parseado, selecione um arquivo .elf"
+    },
+    "esp_support_error": {
+        "title": "Erro de Suporte",
+        "content": "Core não suportado pelo decoder de exceções"
+    },
+    "elf_not_found_error": {
+        "title": "Não foi possível encontrar o arquivo .elf",
+        "content": ""
+    },
+    "folder_empty_error": {
+        "title": "Pasta completamente vazia, precisa ter ao menos um arquivo",
+        "content": ""
+    },
+    "writing_error": {
+        "title": "Erro ao escrever",
+        "content": ""
+    },
+    "serial_port_not_open_error": {
+        "title": "Porta Serial não está aberta",
+        "content": "Não pode enviar a sequência, por favor conecte-se com uma porta serial"
+    },
+    "no_com_ports_error": {
+        "title": "Nenhuma porta COM detectada",
+        "content": ""
+    },
+    "undefined_value_error": {
+        "title": "Erro: valor undefined",
+        "content": "Reinicie o aplicativo, caso o problema não se resolva, registre um issue no github"
+    },
+    "serialport_error": "Erro com a porta serial:",
+    "serialport_open_error": "Erro ao abrir a porta serial:",
+    "log_folder_does_not_exist": {
+        "title": "Pasta do arquivo de registros não existe",
+        "content": ""
+    },
+    "port_disconnected": "Porta COM desconectada"
 }

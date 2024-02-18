@@ -17,7 +17,7 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
     if (elf_path_input.value == "") {
         if (!elf_error_warning) {
             elf_error_warning = true;
-            ipcRenderer.send("openAlert", { title: "Parse Error", content: "Backtrace could not be parsed, choose .elf file please" });
+            ipcRenderer.send("openAlert", current_language["backtrace_error"]["title"]);
         }
         return "No ELF file given";
     }
@@ -118,7 +118,7 @@ function getSketchBuild() {
                     general_core = fqbn[0];
                 }
                 else
-                    ipcRenderer.send("openAlert", { title: "Support Error", content: "Core not supported by the exception decoder" });
+                    ipcRenderer.send("openAlert", current_language["esp_support_error"]["content"]);
             }
             catch (err) {
                 console.log(err);
@@ -132,7 +132,7 @@ function getSketchBuild() {
         }
     });
     if (elf_file_auto_path == "")
-        ipcRenderer.send("openAlert", { title: "Could not find .elf file", content: "" });
+        ipcRenderer.send("openAlert", current_language["elf_not_found_error"]);
     elf_path_input.value = elf_file_auto_path;
 }
 

@@ -71,7 +71,7 @@ function saveSequence() {
     updateSequence();
     fs.writeFile(sequence_file_path, JSON.stringify(sequence), (err) => {
         if (err)
-            ipcRenderer.send("openAlert", { title: "Error on writing sequence file:", content: err.message });
+            ipcRenderer.send("openAlert", current_language["writing_error"]);
     });
 }
 

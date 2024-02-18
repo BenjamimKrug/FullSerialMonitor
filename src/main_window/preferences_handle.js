@@ -153,7 +153,7 @@ function readDirPaths(log, decoder) {
             log_folder_input.value = log_folder_path.substring(0, log_folder_path.lastIndexOf('\\') + 1);
         }
         else
-            ipcRenderer.send("openAlert", { title: "Folder completly empty, must have at least one file", content: "" });
+            ipcRenderer.send("openAlert", current_language["folder_empty_error"]);
     }
 }
 
@@ -226,7 +226,7 @@ function updatePreferences() {
     }
     fs.writeFile(preferences_file_path, JSON.stringify(preferences), (err) => {
         if (err)
-            ipcRenderer.send("openAlert", { title: "Error on writing preferences file:", content: err.message });
+            ipcRenderer.send("openAlert", current_language["writing_error"]);
     });
     prev_preferences = preferences;
 }

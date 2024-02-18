@@ -78,5 +78,44 @@
     "tools": "Tools",
     "payload_sequencer": "Payload Sequencer",
     "grapher": "Grapher",
-    "toggle_dev_tools": "Toggle Dev Tools"
+    "toggle_dev_tools": "Toggle Dev Tools",
+    "backtrace_error": {
+        "title": "Parse Error",
+        "content": "Backtrace could not be parsed, choose .elf file please"
+    },
+    "esp_support_error": {
+        "title": "Support Error",
+        "content": "Core not supported by the exception decoder"
+    },
+    "elf_not_found_error": {
+        "title": "Could not find .elf file",
+        "content": ""
+    },
+    "folder_empty_error": {
+        "title": "Folder completly empty, must have at least one file",
+        "content": ""
+    },
+    "writing_error": {
+        "title": "Error on writing",
+        "content": ""
+    },
+    "serial_port_not_open_error": {
+        "title": "Serial Port not Open ",
+        "content": "Cannot send Sequence, please connect to a serial port"
+    },
+    "no_com_ports_error": {
+        "title": "No COM ports detected",
+        "content": ""
+    },
+    "undefined_value_error": {
+        "title": "Error: undefined value",
+        "content": "Restart the application, if the issue persists, please file an issue on github"
+    },
+    "serialport_error": "Error with the serial Port:",
+    "serialport_open_error": "Error on opening port:",
+    "log_folder_does_not_exist": {
+        "title": "Folder for the Log file does not exist",
+        "content": ""
+    },
+    "port_disconnected": "Port disconnected"
 }
