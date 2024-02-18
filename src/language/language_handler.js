@@ -6,7 +6,11 @@ function updateContentLang() {
         const key = element.getAttribute('data-i18n');
         element.textContent = current_language[key];
     });
-    ipcRenderer.send('setLang', current_language);
+    if (window.location.href.includes("main_window")) {
+        ipcRenderer.send('setLang', current_language);
+        ipcRenderer.send('recvMain', { id: 1, cmd: 'setLang', lang: current_language });
+        ipcRenderer.send('recvMain', { id: 2, cmd: 'setLang', lang: current_language });
+    }
 }
 
 function readLanguage() {
