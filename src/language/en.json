@@ -54,7 +54,7 @@
     "disconnect": "DISCONNECT",
     "clean": "CLEAN",
     "exception_decoder_label": "ESP EXCEPTION DECODER",
-    "auto_detect": "AUTO DETECT",
+    "auto_detect": "Auto Detect",
     "arch": "Arch",
     "elf_file": "ELF File",
     "output_history": "OUTPUT HISTORY",
@@ -122,5 +122,8 @@
     "graphs": "Graphs",
     "graph_name_placeholder": "graph name",
     "graph_color_placeholder": "graph color",
-    "graph_trigger_placeholder": "graph trigger"
+    "graph_trigger_placeholder": "graph trigger",
+    "data_per_screen": "Data points on screen(set to 0 if no limit is wanted)",
+    "min_range": "Range Minimum Value",
+    "max_range": "Range Maximum Value"
 }

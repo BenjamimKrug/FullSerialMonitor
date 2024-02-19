@@ -6,15 +6,35 @@ const theme_style = document.getElementById("theme_style");
 const graph_container = document.getElementById("graph_container");
 const config_menu = document.getElementById("config_menu");
 const graphs_list_div = document.getElementById("graphs_list_div");
+const data_per_screen_input = document.getElementById("data_per_screen");
+const range_inputs = [
+    {
+        value: document.getElementById("min_value"),
+        auto: document.getElementById("min_auto")
+    },
+    {
+        value: document.getElementById("max_value"),
+        auto: document.getElementById("max_auto")
+    }
+];
+for (var i = 0; i < 2; i++) {
+    range_inputs[i].auto.addEventListener("change", (e) => {
+        var value_input = document.getElementById(e.target.id.replace("_auto", "_value"));
+        if (e.target.checked)
+            value_input.disabled = true;
+        else
+            value_input.disabled = false;
+    });
+}
+
 var dataArraySize = 0;
 var data = [];
 var dataLength = -1;
 var lastKnownValues = [];
 var chart;
-var LIMIT = 100;
 
-var prev_graphsArray = null;
-var graphsArray = [];
+var graph_config = { range: [null, null], data_per_screen: 0, array: [] };
+var prev_graph_config = graph_config;
 var deleted_graphs = [];
 var graph_count = 0;
 
@@ -42,16 +62,16 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
     }
 });
 
-const graph_tracker_file_path = "graph_tracker.json"
+const graph_config_file_path = "graph_config.json"
 
-fs.readFile(graph_tracker_file_path, 'utf8', (err, data) => {
+fs.readFile(graph_config_file_path, 'utf8', (err, data) => {
     if (err) {
         console.log(err);
         return;
     }
-    graphsArray = JSON.parse(data);
-    prev_graphsArray = graphsArray;
-    updateGraphsArray();
+    graph_config = JSON.parse(data);
+    prev_graph_config = graph_config;
+    updateGraphConfig();
 });
 
 ipcRenderer.send('recvMain', { id: 0, cmd: "getTheme", requester: 2 });
@@ -64,46 +84,39 @@ window.addEventListener('load', () => {
         drawPoints: true,
         showRoller: true,
     });
-    /*// create a data set
-    // create a line chart
-    chart = anychart.line();
-    // add a legend
-    chart.legend().enabled(true);
-
-    // specify where to display the chart
-    chart.container("container");
-    chart.background().fill("rgb(25, 25, 25)");
-    chart.draw();*/
 });
 
-function updateGraphsArray() {
+function updateGraphConfig() {
+    data_per_screen_input.value = graph_config.data_per_screen;
+    for (var i = 0; i < 2; i++) {
+        if (graph_config.range[i] != null) {
+            range_inputs[i].value.disabled = false;
+            range_inputs[i].value.value = graph_config.range[i];
+            range_inputs[i].auto.checked = false;
+        }
+        else {
+            range_inputs[i].value.disabled = true;
+            range_inputs[i].value.value = 0;
+            range_inputs[i].auto.checked = true;
+        }
+    }
     deleted_graphs = [];
     graphs_list_div.innerHTML = "";
     graph_count = 0;
-    ipcRenderer.send('recvMain', { id: 0, cmd: "setGraphsArray", requester: 2, graphsArray: graphsArray });
-    var graphTriggerSize = graphsArray.length;
+    ipcRenderer.send('recvMain', { id: 0, cmd: "setGraphsArray", requester: 2, graphsArray: graph_config.array });
+    var graphTriggerSize = graph_config.array.length;
     var labels_array = ['Time'];
+    var colors = [];
     for (var i = 0; i < graphTriggerSize; i++) {
-        createGraphField(graphsArray[i].name, graphsArray[i].color, graphsArray[i].trigger);
-        createGraph(graphsArray[i].name, i, graphsArray[i].color);
-        labels_array.push(graphsArray[i].name);
+        createGraphField(graph_config.array[i].name, graph_config.array[i].color, graph_config.array[i].trigger);
+        lastKnownValues[i] = [0, 0];
+        if (dataArraySize < i)
+            dataArraySize = i;
+
+        labels_array.push(graph_config.array[i].name);
+        colors.push(graph_config.array[i].color);
     }
-    chart.updateOptions({ labels: labels_array});
-}
-
-function createGraph(line_name, position, color) {
-    /*// map the data for all series
-    var newSeriesData = dataSet.mapAs({ x: 0, value: position });
-
-    // create the series and name them
-    var newSeries = chart.line(newSeriesData);
-    newSeries.name(line_name);
-    newSeries.normal().stroke(color);
-    newSeries.hovered().stroke(color);
-    newSeries.selected().stroke(color);*/
-    lastKnownValues[position] = [0, 0];
-    if (dataArraySize < position)
-        dataArraySize = position;
+    chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range });
 }
 
 function fillEmptyValues(position) {
@@ -130,11 +143,10 @@ function fillEmptyValues(position) {
 }
 
 function newData(time, value, position) {
-    console.log(time);
     time = time.split(':');
+    time.push(time[2].split('.')[1]);
     let now = new Date();
     time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...time);
-    console.log(time);
     value = parseFloat(value);
     var createNewLine = false;
     try {
@@ -154,37 +166,51 @@ function newData(time, value, position) {
         newDataArray[position] = value;
         data.push(newDataArray);
         dataLength++;
+        if (graph_config.data_per_screen > 0) {
+            while (dataLength > graph_config.data_per_screen) {
+                data.shift();
+                dataLength--;
+            }
+        }
         fillEmptyValues(position);
     }
     chart.updateOptions({ 'file': data });
 }
 
-function saveGraphsArray() {
-    graphsArray = [];
+function saveGraphsConfig() {
+    for (var i = 0; i < 2; i++) {
+        if (range_inputs[i].auto.checked)
+            graph_config.range[i] = null;
+        else
+            graph_config.range[i] = parseFloat(range_inputs[i].value.value.trim());
+    }
+    graph_config.data_per_screen = parseFloat(data_per_screen_input.value.trim());
+    graph_config.array = [];
     for (var i = 0; i < graph_count; i++) {
         if (!deleted_graphs.includes(i)) {
             var newGraphName = document.getElementById("cgName" + i);
             var newGraphColor = document.getElementById("cgColor" + i);
             var newGraphTrigger = document.getElementById("cgTrigger" + i);
-            graphsArray.push({
+            graph_config.array.push({
                 name: newGraphName.value.trim(),
                 color: newGraphColor.value.trim(),
                 trigger: newGraphTrigger.value.trim()
             });
         }
     }
-    updateGraphsArray();
-    fs.writeFile(graph_tracker_file_path, JSON.stringify(graphsArray), (err) => {
+    updateGraphConfig();
+    fs.unlink(graph_config_file_path, (e) => { if (e) console.log(e) });
+    fs.writeFile(graph_config_file_path, JSON.stringify(graph_config), (err) => {
         if (err)
             ipcRenderer.send("openAlert", current_language["writing_error"]);
     });
 
 }
 
-function setGraphsArray(newGraphsArray) {
-    if (typeof newGraphsArray != "undefined")
-        graphsArray = newGraphsArray;
-    updateGraphsArray();
+function setGraphsConfig(newGraphsConfig) {
+    if (typeof newGraphsConfig != "undefined")
+        graph_config = newGraphsConfig;
+    updateGraphConfig();
 }
 
 function deleteGraphField(id) {

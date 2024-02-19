@@ -69,6 +69,7 @@ function saveSequence() {
     }
     sequence.continuous = continuous_sequence.checked;
     updateSequence();
+    fs.unlink(sequence_file_path, (e) => { if (e) console.log(e) });
     fs.writeFile(sequence_file_path, JSON.stringify(sequence), (err) => {
         if (err)
             ipcRenderer.send("openAlert", current_language["writing_error"]);

@@ -223,7 +223,8 @@ function updatePreferences() {
     if (preferences.autoScroll == true) {
         terminal.scrollTop = terminal.scrollHeight;
         output_history.scrollTop = output_history.scrollHeight;
-    }
+    }    
+    fs.unlink(preferences_file_path, (e) => { if (e) console.log(e) });
     fs.writeFile(preferences_file_path, JSON.stringify(preferences), (err) => {
         if (err)
             ipcRenderer.send("openAlert", current_language["writing_error"]);

@@ -54,7 +54,7 @@
     "disconnect": "DISCONECTAR",
     "clean": "LIMPAR",
     "exception_decoder_label": "DECODIFICADOR DE EXCEÇÕES DO ESP",
-    "auto_detect": "AUTO DETECTAR",
+    "auto_detect": "Auto Detectar",
     "arch": "Arquitetura",
     "elf_file": "Arquivo ELF",
     "output_history": "Histórico de saídas",
@@ -119,5 +119,11 @@
         "content": ""
     },
     "port_disconnected": "Porta COM desconectada",
-    "graphs": "Gráficos"
+    "graphs": "Gráficos",
+    "graph_name_placeholder": "nome do gráfico",
+    "graph_color_placeholder": "cor do gráfico",
+    "graph_trigger_placeholder": "trigger do gráfico",
+    "data_per_screen": "Pontos de dados na tela",
+    "min_range": "Valor mínimo do gráfico",
+    "max_range": "Valor máximo do gráfico"
 }

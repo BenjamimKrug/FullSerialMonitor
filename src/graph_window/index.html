@@ -8,23 +8,41 @@
 <body>
 
   <div id="config_menu" class="config_menu" style="display:none">
+    <label for="data_per_screen" data-i18n="data_per_screen"></label>
+    <br>
+    <input type="text" id="data_per_screen" />
+    <br>
+    <label for="min_value" data-i18n="min_range"></label>
+    <input type="text" id="min_value" />
+    &nbsp
+    <label for="min_auto" data-i18n="auto_detect"></label>
+    <input type="checkbox" id="min_auto" />
+    <br>
+
+    <label for="max_value" data-i18n="max_range"></label>
+    <input type="text" id="max_value" />
+    &nbsp
+    <label for="max_auto" data-i18n="auto_detect"></label>
+    <input type="checkbox" id="max_auto" />
+    <br>
+
     <label data-i18n="graphs"></label>
     <button id="add_graphs" onclick="createGraphField()">+</button>
     <br>
     <div id="graphs_list_div" class="box graphsListDiv">
     </div>
-    <button onclick="setGraphsArray(prev_graphsArray);config_menu.style.display = 'none'"
-        class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
+    <button onclick="setGraphsConfig(prev_graph_config);config_menu.style.display = 'none'"
+      class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
     </button>
-    <button onclick="saveGraphsArray();config_menu.style.display = 'none'" class="general_btn close_btn"
-        style="right: 10px;position: fixed;" data-i18n="save_and_close">
+    <button onclick="saveGraphsConfig();config_menu.style.display = 'none'" class="general_btn close_btn"
+      style="right: 10px;position: fixed;" data-i18n="save_and_close">
     </button>
   </div>
 
 
   <button id="open_config_menu" class="general_btn" style="right:5px">
-      <img src="../images/settings gear.png" width="12" height="12">
-      <label data-i18n="config"></label>
+    <img src="../images/settings gear.png" width="12" height="12">
+    <label data-i18n="config"></label>
   </button>
   <br>
   <br>
