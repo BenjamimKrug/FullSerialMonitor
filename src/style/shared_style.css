@@ -38,6 +38,16 @@
     height: 70%;
 }
 
+#graph_legend {
+    position: absolute;
+    width: auto;
+    height: auto;
+    box-sizing: border-box;
+    padding: 1%;
+    background-color: black;
+    z-index: 999;
+}
+
 .packetsDiv {
     overflow: hidden;
     overflow-x: scroll;

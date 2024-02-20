@@ -32,6 +32,7 @@ var data = [];
 var dataLength = -1;
 var lastKnownValues = [];
 var chart;
+var graph_legend = document.getElementById("graph_legend");
 
 var graph_config = { range: [null, null], data_per_screen: 0, array: [] };
 var prev_graph_config = graph_config;
@@ -81,8 +82,13 @@ ipcRenderer.send('recvMain', { id: 0, cmd: "getLang", requester: 2 });
 
 window.addEventListener('load', () => {
     chart = new Dygraph(graph_container, data, {
-        drawPoints: true,
-        showRoller: true,
+        showLabelsOnHighlight: true,
+        connectSeparatedPoints: true,
+        legendFormatter: legendFormatter,
+        labelsDiv: graph_legend,
+        legend: "follow",
+        legendFollowOffsetX: 0,
+        legendFollowOffsetY: 0
     });
 });
 
@@ -119,29 +125,6 @@ function updateGraphConfig() {
     chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range });
 }
 
-function fillEmptyValues(position) {
-    if (dataLength < 2)
-        return;
-
-    var lastKnownValue;
-    var lkv_pos = dataLength - 1;
-    for (; lkv_pos > 0; lkv_pos--) {
-        lastKnownValue = data[lkv_pos][position];
-        if (typeof (lastKnownValue) == "undefined")
-            lastKnownValue = 0;
-        if (!isNaN(lastKnownValue))
-            break;
-    }
-
-    var difference = dataLength - lkv_pos;
-    var step = (data[dataLength][position] - lastKnownValue) / difference;
-    for (var i = lkv_pos; i < dataLength; i++) {
-        if (isNaN(data[i][position]))
-            data[i][position] = lastKnownValue + step;
-        lastKnownValue = data[i][position];
-    }
-}
-
 function newData(time, value, position) {
     time = time.split(':');
     time.push(time[2].split('.')[1]);
@@ -161,8 +144,8 @@ function newData(time, value, position) {
     }
     if (createNewLine) {
         var newDataArray = [time];
-        for (var i = 0; i < dataArraySize; i++)
-            newDataArray.push(NaN);
+        for (var i = 0; i <= dataArraySize; i++)
+            newDataArray.push(null);
         newDataArray[position] = value;
         data.push(newDataArray);
         dataLength++;
@@ -172,7 +155,6 @@ function newData(time, value, position) {
                 dataLength--;
             }
         }
-        fillEmptyValues(position);
     }
     chart.updateOptions({ 'file': data });
 }
@@ -270,6 +252,26 @@ function createGraphField(name, color, trigger) {
     newGraphField.appendChild(newGraphExclude);
     graphs_list_div.appendChild(newGraphField);
     graph_count++;
+}
+
+function legendFormatter(data) {
+    if (data.x == null) {
+        // This happens when there's no selection and {legend: 'always'} is set.
+        return '<br>' + data.series.map(function (series) { return series.dashHTML + ' ' + series.labelHTML }).join('<br>');
+    }
+
+    var html = this.getLabels()[0] + ': ' + data.xHTML;
+    data.series.forEach(function (series) {
+        if (typeof series.yHTML == "undefined")
+            return;
+        if (!series.isVisible) return;
+        var labeledData = `<label style='color:${series.color}'>${series.labelHTML}</label> : ${series.yHTML}`;
+        if (series.isHighlighted) {
+            labeledData = '<b>' + labeledData + '</b>';
+        }
+        html += '<br>' + series.dashHTML + ' ' + labeledData;
+    });
+    return html;
 }
 
 document.getElementById("open_config_menu").onclick = function () {
