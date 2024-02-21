@@ -81,7 +81,7 @@
         <br>
         <div id="custom_parsers_div" class="box customParsersDiv">
         </div>
-        <button onclick="setPreferences(prev_preferences);config_menu.style.display = 'none'"
+        <button onclick="setPreferences({...prev_preferences});config_menu.style.display = 'none'"
             class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
         </button>
         <button onclick="updatePreferences();config_menu.style.display = 'none'" class="general_btn close_btn"

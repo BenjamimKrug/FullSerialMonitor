@@ -35,7 +35,7 @@ var chart;
 var graph_legend = document.getElementById("graph_legend");
 
 var graph_config = { range: [null, null], data_per_screen: 0, array: [] };
-var prev_graph_config = graph_config;
+var prev_graph_config = { ...graph_config };
 var deleted_graphs = [];
 var graph_count = 0;
 
@@ -71,7 +71,8 @@ fs.readFile(graph_config_file_path, 'utf8', (err, data) => {
         return;
     }
     graph_config = JSON.parse(data);
-    prev_graph_config = graph_config;
+    prev_graph_config = { ...graph_config };
+    data = [[Date.now()]];
     updateGraphConfig();
 });
 
@@ -113,19 +114,20 @@ function updateGraphConfig() {
     var graphTriggerSize = graph_config.array.length;
     var labels_array = ['Time'];
     var colors = [];
+    dataArraySize = graphTriggerSize;
     for (var i = 0; i < graphTriggerSize; i++) {
         createGraphField(graph_config.array[i].name, graph_config.array[i].color, graph_config.array[i].trigger);
         lastKnownValues[i] = [0, 0];
-        if (dataArraySize < i)
-            dataArraySize = i;
 
         labels_array.push(graph_config.array[i].name);
         colors.push(graph_config.array[i].color);
     }
-    chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range });
+    chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range, file: data });
 }
 
 function newData(time, value, position) {
+    if (position == 0)
+        return;
     time = time.split(':');
     time.push(time[2].split('.')[1]);
     let now = new Date();
@@ -144,7 +146,7 @@ function newData(time, value, position) {
     }
     if (createNewLine) {
         var newDataArray = [time];
-        for (var i = 0; i <= dataArraySize; i++)
+        for (var i = 0; i < dataArraySize; i++)
             newDataArray.push(null);
         newDataArray[position] = value;
         data.push(newDataArray);
@@ -178,15 +180,31 @@ function saveGraphsConfig() {
                 color: newGraphColor.value.trim(),
                 trigger: newGraphTrigger.value.trim()
             });
+            if (prev_graph_config.array[i].trigger != graph_config.array[i].trigger) {
+                // if the trigger changed we discard the last data, as we cannot keep it
+                for (var l = 0; l <= dataLength; l++) {
+                    data[l][i + 1] = null;
+                }
+            }
+            if (dataArraySize <= i) {
+                for (var l = 0; l < dataLength; l++) {
+                    data[l].push(null);
+                }
+            }
+        }
+        else {
+            for (var l = 0; l < dataLength; l++) {
+                data[l].splice(i + 1, 1);
+            }
         }
     }
-    updateGraphConfig();
+    updateGraphConfig(true);
     fs.unlink(graph_config_file_path, (e) => { if (e) console.log(e) });
     fs.writeFile(graph_config_file_path, JSON.stringify(graph_config), (err) => {
         if (err)
             ipcRenderer.send("openAlert", current_language["writing_error"]);
     });
-
+    prev_graph_config = { ...graph_config };
 }
 
 function setGraphsConfig(newGraphsConfig) {

@@ -63,7 +63,7 @@ fs.readFile(preferences_file_path, 'utf8', (err, data) => {
     if (preferences != null) {
         setPreferences(preferences);
     }
-    prev_preferences = preferences;
+    prev_preferences = {...preferences};
 });
 
 
@@ -229,7 +229,7 @@ function updatePreferences() {
         if (err)
             ipcRenderer.send("openAlert", current_language["writing_error"]);
     });
-    prev_preferences = preferences;
+    prev_preferences = {...preferences};
 }
 
 function updateTheme(){
@@ -240,7 +240,7 @@ function updateTheme(){
 
 document.getElementById("open_config_menu").onclick = function () {
     updateLanguageList();
-    prev_preferences = preferences;
+    prev_preferences = {...preferences};
     if (config_menu.style.display != "none")
         config_menu.style.display = "none";
     else
