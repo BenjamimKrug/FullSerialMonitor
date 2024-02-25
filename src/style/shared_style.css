@@ -43,6 +43,7 @@
     width: auto;
     height: auto;
     box-sizing: border-box;
+    display: none;
     padding: 1%;
     background-color: black;
     z-index: 999;

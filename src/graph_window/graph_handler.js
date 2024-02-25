@@ -85,11 +85,11 @@ window.addEventListener('load', () => {
     chart = new Dygraph(graph_container, data, {
         showLabelsOnHighlight: true,
         connectSeparatedPoints: true,
-        legendFormatter: legendFormatter,
-        labelsDiv: graph_legend,
-        legend: "follow",
-        legendFollowOffsetX: 0,
-        legendFollowOffsetY: 0
+        legend: "never",
+        highlightCallback: legendFormatter,
+        unhighlightCallback: hideLegend,
+        highlightSeriesBackgroundAlpha: 1,
+        highlightSeriesOpts: true
     });
 });
 
@@ -180,10 +180,12 @@ function saveGraphsConfig() {
                 color: newGraphColor.value.trim(),
                 trigger: newGraphTrigger.value.trim()
             });
-            if (prev_graph_config.array[i].trigger != graph_config.array[i].trigger) {
-                // if the trigger changed we discard the last data, as we cannot keep it
-                for (var l = 0; l <= dataLength; l++) {
-                    data[l][i + 1] = null;
+            if (prev_graph_config.array[i] != undefined) {
+                if (prev_graph_config.array[i].trigger != graph_config.array[i].trigger) {
+                    // if the trigger changed we discard the last data, as we cannot keep it
+                    for (var l = 0; l <= dataLength; l++) {
+                        data[l][i + 1] = null;
+                    }
                 }
             }
             if (dataArraySize <= i) {
@@ -272,24 +274,38 @@ function createGraphField(name, color, trigger) {
     graph_count++;
 }
 
-function legendFormatter(data) {
-    if (data.x == null) {
-        // This happens when there's no selection and {legend: 'always'} is set.
-        return '<br>' + data.series.map(function (series) { return series.dashHTML + ' ' + series.labelHTML }).join('<br>');
+function legendFormatter(event, x, points, row, seriesName) {
+    if (event.constructor.name != "MouseEvent") {
+        graph_legend.style.display = "none";
+        return;
     }
+    graph_legend.style.display = "block";
+    graph_legend.innerHTML = "";
+    var time_label = document.createElement("label");
+    var date_x = new Date(x);
+    time_label.innerText = date_x.toISOString().replace("T", " ").replace("Z", " ");
+    graph_legend.appendChild(time_label);
+    for (var i = 0; i < points.length; i++) {
+        var cur = points[i];
+        var value = document.createElement("label");
+        value.innerText = cur.name + ": " + cur.yval;
+        graph_legend.appendChild(document.createElement("br"));
+        graph_legend.appendChild(value);
+    }
+    var style = getComputedStyle(graph_legend);
+    var horizontal_compensantion = window.innerWidth - (event.screenX + parseFloat(style.width) + 15);
+    if (horizontal_compensantion > 0)
+        horizontal_compensantion = 0;
 
-    var html = this.getLabels()[0] + ': ' + data.xHTML;
-    data.series.forEach(function (series) {
-        if (typeof series.yHTML == "undefined")
-            return;
-        if (!series.isVisible) return;
-        var labeledData = `<label style='color:${series.color}'>${series.labelHTML}</label> : ${series.yHTML}`;
-        if (series.isHighlighted) {
-            labeledData = '<b>' + labeledData + '</b>';
-        }
-        html += '<br>' + series.dashHTML + ' ' + labeledData;
-    });
-    return html;
+    var vertical_compensantion = window.innerHeight - (event.screenY + parseFloat(style.height) + 15);
+    if (vertical_compensantion > 0)
+        vertical_compensantion = 0;
+    graph_legend.style.left = event.screenX + horizontal_compensantion;
+    graph_legend.style.top = event.screenY + vertical_compensantion;
+}
+
+function hideLegend(event) {
+    graph_legend.style.display = "none";
 }
 
 document.getElementById("open_config_menu").onclick = function () {
