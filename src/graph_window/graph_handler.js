@@ -32,6 +32,7 @@ var data = [];
 var dataLength = -1;
 var lastKnownValues = [];
 var chart;
+var graph_inspector = document.getElementById("graph_inspector");
 var graph_legend = document.getElementById("graph_legend");
 
 var graph_config = { range: [null, null], data_per_screen: 0, array: [] };
@@ -86,8 +87,8 @@ window.addEventListener('load', () => {
         showLabelsOnHighlight: true,
         connectSeparatedPoints: true,
         legend: "never",
-        highlightCallback: legendFormatter,
-        unhighlightCallback: hideLegend,
+        highlightCallback: inspectorFormatter,
+        unhighlightCallback: hideInspector,
         highlightSeriesBackgroundAlpha: 1,
         highlightSeriesOpts: true
     });
@@ -114,13 +115,23 @@ function updateGraphConfig() {
     var graphTriggerSize = graph_config.array.length;
     var labels_array = ['Time'];
     var colors = [];
+    graph_legend.innerHTML = "";
     dataArraySize = graphTriggerSize;
     for (var i = 0; i < graphTriggerSize; i++) {
-        createGraphField(graph_config.array[i].name, graph_config.array[i].color, graph_config.array[i].trigger);
+        var cur = graph_config.array[i];
+        createGraphField(cur.name, cur.color, cur.trigger);
         lastKnownValues[i] = [0, 0];
 
-        labels_array.push(graph_config.array[i].name);
-        colors.push(graph_config.array[i].color);
+        var color_label = document.createElement("div");
+        color_label.setAttribute("class", "color_label");
+        color_label.style["background-color"] = cur.color;
+        var text_label = document.createElement("label");
+        text_label.innerText = cur.name;
+        graph_legend.appendChild(color_label);
+        graph_legend.appendChild(text_label);
+
+        labels_array.push(cur.name);
+        colors.push(cur.color);
     }
     chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range, file: data });
 }
@@ -274,25 +285,25 @@ function createGraphField(name, color, trigger) {
     graph_count++;
 }
 
-function legendFormatter(event, x, points, row, seriesName) {
+function inspectorFormatter(event, x, points, row, seriesName) {
     if (event.constructor.name != "MouseEvent") {
-        graph_legend.style.display = "none";
+        graph_inspector.style.display = "none";
         return;
     }
-    graph_legend.style.display = "block";
-    graph_legend.innerHTML = "";
+    graph_inspector.style.display = "block";
+    graph_inspector.innerHTML = "";
     var time_label = document.createElement("label");
     var date_x = new Date(x);
     time_label.innerText = date_x.toISOString().replace("T", " ").replace("Z", " ");
-    graph_legend.appendChild(time_label);
+    graph_inspector.appendChild(time_label);
     for (var i = 0; i < points.length; i++) {
         var cur = points[i];
         var value = document.createElement("label");
         value.innerText = cur.name + ": " + cur.yval;
-        graph_legend.appendChild(document.createElement("br"));
-        graph_legend.appendChild(value);
+        graph_inspector.appendChild(document.createElement("br"));
+        graph_inspector.appendChild(value);
     }
-    var style = getComputedStyle(graph_legend);
+    var style = getComputedStyle(graph_inspector);
     var horizontal_compensantion = window.innerWidth - (event.screenX + parseFloat(style.width) + 15);
     if (horizontal_compensantion > 0)
         horizontal_compensantion = 0;
@@ -300,12 +311,12 @@ function legendFormatter(event, x, points, row, seriesName) {
     var vertical_compensantion = window.innerHeight - (event.screenY + parseFloat(style.height) + 15);
     if (vertical_compensantion > 0)
         vertical_compensantion = 0;
-    graph_legend.style.left = event.screenX + horizontal_compensantion;
-    graph_legend.style.top = event.screenY + vertical_compensantion;
+    graph_inspector.style.left = event.screenX + horizontal_compensantion;
+    graph_inspector.style.top = event.screenY + vertical_compensantion;
 }
 
-function hideLegend(event) {
-    graph_legend.style.display = "none";
+function hideInspector(event) {
+    graph_inspector.style.display = "none";
 }
 
 document.getElementById("open_config_menu").onclick = function () {

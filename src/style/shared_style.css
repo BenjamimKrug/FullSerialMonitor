@@ -38,7 +38,7 @@
     height: 70%;
 }
 
-#graph_legend {
+#graph_inspector {
     position: absolute;
     width: auto;
     height: auto;
@@ -265,4 +265,20 @@ img {
     height: 95%;
     margin: auto;
     padding: 0;
+}
+
+#graph_legend {
+    z-index: 9999;
+    position: absolute;
+    display: flex;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.color_label {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    margin-left: 15px;
 }
