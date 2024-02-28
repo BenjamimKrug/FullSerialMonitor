@@ -73,7 +73,6 @@ fs.readFile(graph_config_file_path, 'utf8', (err, data) => {
     }
     graph_config = JSON.parse(data);
     prev_graph_config = { ...graph_config };
-    data = [[Date.now()]];
     updateGraphConfig();
 });
 
@@ -132,6 +131,13 @@ function updateGraphConfig() {
 
         labels_array.push(cur.name);
         colors.push(cur.color);
+    }
+    
+    for (var l = 0; l < dataLength; l++) {
+      var cur = data[l];
+      while (cur.length <= dataArraySize) {
+        cur.push(null);
+      }
     }
     chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range, file: data });
 }
