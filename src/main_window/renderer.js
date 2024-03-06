@@ -399,8 +399,7 @@ function recvData(payload) {
             current_line_index++;
         }
     }
-    if (new_line)
-        runParsers();
+    runParsers();
 
     if (log_file_writer != null)
         log_file_writer.write(payload);

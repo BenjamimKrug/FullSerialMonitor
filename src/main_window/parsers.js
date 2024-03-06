@@ -186,6 +186,7 @@ function addParserResult(newResult, newResultSource, color, parserName, timestam
 
     if (auto_scroll.checked == true) {
         output_history.scrollTop = output_history.scrollHeight;
+        if (target_filter == undefined) return;
         if (target_filter.checked)
             showOutputResult(current_parser_index);
     }
