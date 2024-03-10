@@ -1,5 +1,8 @@
 //log file config elements and variables
 var config_menu = document.getElementById("config_menu");
+config_menu.addEventListener("click", (e) => {
+    e.stopPropagation();
+});
 var log_addTimestamp = document.getElementById("log_add_timestamp");
 var log_type = document.getElementById("log_type");
 var log_folder = document.getElementById("log_folder");
@@ -63,11 +66,11 @@ fs.readFile(preferences_file_path, 'utf8', (err, data) => {
     if (preferences != null) {
         setPreferences(preferences);
     }
-    prev_preferences = {...preferences};
+    prev_preferences = { ...preferences };
 });
 
 
-function setPreferences(target_preferences) {    
+function setPreferences(target_preferences) {
     updateLanguageList();
     if (typeof (target_preferences.lang) !== 'undefined')
         language_config.value = target_preferences.lang;
@@ -169,12 +172,10 @@ elf_path_input.addEventListener('blur', () => {
 
 function changeAdvConfigDiv() {
     if (advanced_config.checked) {
-        advanced_config_div.style.display = "block";
-        output_history.style.height = "23%";
+        showItem(advanced_config_div);
     }
     else {
-        advanced_config_div.style.display = "none";
-        output_history.style.height = "46%";
+        hideItem(advanced_config_div);
         stopBits_select.value = "1";
         dataBits_select.value = "8";
         parity_select.value = "none";
@@ -223,26 +224,31 @@ function updatePreferences() {
     if (preferences.autoScroll == true) {
         terminal.scrollTop = terminal.scrollHeight;
         output_history.scrollTop = output_history.scrollHeight;
-    }    
+    }
     fs.unlink(preferences_file_path, (e) => { if (e) console.log(e) });
     fs.writeFile(preferences_file_path, JSON.stringify(preferences), (err) => {
         if (err)
             ipcRenderer.send("openAlert", current_language["writing_error"]);
     });
-    prev_preferences = {...preferences};
+    prev_preferences = { ...preferences };
 }
 
-function updateTheme(){
+function updateTheme() {
     theme_style.href = '../style/' + theme_select.value + '_theme_style.css';
     ipcRenderer.send('recvMain', { id: 1, cmd: "setTheme", theme: theme_style.href });
     ipcRenderer.send('recvMain', { id: 2, cmd: "setTheme", theme: theme_style.href });
 }
 
-document.getElementById("open_config_menu").onclick = function () {
+function cancelConfig() {
+    if (config_menu.classList.contains("hidden"))
+        return;
+    setPreferences({ ...prev_preferences });
+    hideItem(config_menu);
+}
+
+document.getElementById("open_config_menu").onclick = function (e) {
+    e.stopPropagation();
     updateLanguageList();
-    prev_preferences = {...preferences};
-    if (config_menu.style.display != "none")
-        config_menu.style.display = "none";
-    else
-        config_menu.style.display = "block";
+    prev_preferences = { ...preferences };
+    toggleHide(config_menu);
 };

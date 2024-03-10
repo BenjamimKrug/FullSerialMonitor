@@ -1,25 +1,30 @@
+body {
+    background: rgb(70, 70, 70);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+.boolean {
+    color: blue;
+}
+
 .box {
     background: rgb(25, 25, 25);
     color: white;
-    padding: 10px;
-    resize: none;
-    white-space: nowrap;
 }
 
-.output_entry {
+.config_menu {
+    border-color: black;
+    background-color: #373737;
+}
+
+.custom_parser_entry {
     background-color: grey;
     color: white;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 100%;
-    height: 45px;
-    text-align: left;
-    border: none;
-    border-left: solid;
-    border-width: 5px;
-    border-radius: 2px;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    border-color: black;
 }
 
 .dropdown-content a {
@@ -29,75 +34,41 @@
     display: block;
 }
 
-.custom_parser_entry {
-    background-color: grey;
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    border: 3px solid black;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.string {
-    color: rgb(182, 182, 2);
-}
-
-.number {
-    color: rgb(255,0,255);
-}
-
-.boolean {
-    color: blue;
+.key {
+    color: rgb(105, 190, 45);
 }
 
 .null {
     color: magenta;
 }
 
-.key {
-    color: rgb(105, 190, 45);
+.number {
+    color: rgb(255,0,255);
 }
 
-/* Track */
+.options_menu {
+    background-color: #373737;
+}
+
+.options_menu select {
+    background-color: #555555;
+    color: white;
+}
+
+.output_entry {
+    background-color: grey;
+    color: white;
+}
+
+.string {
+    color: rgb(182, 182, 2);
+}
+
 ::-webkit-scrollbar-track {
     background: #888;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: #f1f1f1;
     border-radius: 7px;
-}
-
-body {
-    background: rgb(70, 70, 70);
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.options_menu {
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    right: 0;
-    background-color: #373737;
-    width: 210px;
-    height: 100%;
-}
-
-.config_menu {
-    overflow: hidden;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 50%;
-    height: 70%;
-    border: 3px solid black;
-    background-color: #555;
-    padding: 10px;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    z-index: 999;
 }

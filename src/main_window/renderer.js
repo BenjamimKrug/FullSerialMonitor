@@ -4,6 +4,8 @@ const { SerialPort } = require("serialport");
 const remote = require('@electron/remote');
 const { FindInPage } = require('electron-find');
 
+document.body.addEventListener("click", () => { cancelConfig() });
+
 const content = document.getElementById("content");
 const terminal = document.getElementById("terminal");
 const output = document.getElementById("output");
@@ -133,9 +135,8 @@ function createWindow(window_url, i) {
     ipcRenderer.send("createWindow", { url: window_url, index: i });
 }
 
-function makeResizableDiv(div, vertical, horizontal) {
+function makeResizableDiv(div, vertical, horizontal, resizers) {
     const element = document.querySelector(div);
-    const resizers = element.querySelectorAll('.resizer');
     const minimum_size = 20;
     let original_width = 0;
     let original_height = 0;
@@ -203,7 +204,6 @@ function makeResizableDiv(div, vertical, horizontal) {
                     const width = original_width - (e.pageX - original_mouse_x);
                     if (width > minimum_size) {
                         element.style.width = width + 'px';
-                        element.style.left = original_x + (e.pageX - original_mouse_x) + 'px';
                     }
                 }
                 if (vertical) {
@@ -214,13 +214,29 @@ function makeResizableDiv(div, vertical, horizontal) {
                     }
                 }
             }
-            content.style.width = window.innerWidth - parseInt(element.style.width, 10) - 30 + 'px';
+            content.style.width = window.innerWidth - parseInt(element.style.width, 10) + 'px';
         }
 
         function stopResize() {
             window.removeEventListener('mousemove', resize)
         }
     }
+}
+
+function showItem(item) {
+    if (item.classList.contains("hidden")) item.classList.remove("hidden");
+    console.log("show", item.classList);
+}
+
+function hideItem(item) {
+    if (!item.classList.contains("hidden")) item.classList.add("hidden");
+    console.log("hide", item.classList);
+}
+
+function toggleHide(item) {
+    if (item.classList.contains("hidden")) item.classList.remove("hidden");
+    else item.classList.add("hidden");
+    console.log("toggle", item.classList);
 }
 
 //options menu handlers start
@@ -458,7 +474,7 @@ function sendData() {
 function init() {
     //Data send handles end
     getPorts();
-    makeResizableDiv('.options_menu', false, true);
+    makeResizableDiv('.options_menu', false, true, [document.getElementById("sidebar_resizer")]);
 }
 
 init();

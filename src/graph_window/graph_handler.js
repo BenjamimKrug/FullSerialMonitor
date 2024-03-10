@@ -251,7 +251,7 @@ function deleteGraphField(id) {
 function createGraphField(name, color, trigger) {
     var newGraphField = document.createElement("div");
     newGraphField.setAttribute("id", "cgDiv" + graph_count);
-    newGraphField.setAttribute("class", "custom_parser_entry");
+    newGraphField.setAttribute("class", "custom_parser_entry custom_parser_entry_color");
 
     var newGraphName = document.createElement("input");
     newGraphName.setAttribute("type", "text");
@@ -303,7 +303,7 @@ function createGraphField(name, color, trigger) {
 
 function inspectorFormatter(event, x, points, row, seriesName) {
     if (event.constructor.name != "MouseEvent") {
-        graph_inspector.style.display = "none";
+        hideItem(graph_inspector);
         return;
     }
     graph_inspector.style.display = "block";
@@ -332,12 +332,9 @@ function inspectorFormatter(event, x, points, row, seriesName) {
 }
 
 function hideInspector(event) {
-    graph_inspector.style.display = "none";
+    hideItem(graph_inspector);
 }
 
 document.getElementById("open_config_menu").onclick = function () {
-    if (config_menu.style.display != "none")
-        config_menu.style.display = "none";
-    else
-        config_menu.style.display = "block";
+    toggleHide(config_menu);
 };

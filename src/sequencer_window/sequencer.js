@@ -85,7 +85,7 @@ function deletePacketField(id) {
 function createPacketField(data_packet, delay) {
     var newPacketField = document.createElement("div");
     newPacketField.setAttribute("id", "cpDiv" + sequence.count);
-    newPacketField.setAttribute("class", "custom_parser_entry");
+    newPacketField.setAttribute("class", "custom_parser_entry custom_parser_entry_color");
 
     var newPacketData = document.createElement("input");
     newPacketData.setAttribute("type", "text");

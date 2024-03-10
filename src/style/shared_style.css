@@ -1,25 +1,108 @@
-.terminal {
-    max-height: 73%;
-    min-height: 73%;
-    overflow: hidden;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: calc(100% - 25px);
+.advanced_config_div {
+    display: flex;
+    flex-direction: column;
 }
 
-.output {
+.box {
+    padding: 10px;
+    resize: none;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: rgb(50, 93, 130);
+}
+
+.checkbox_options {
+    display: inline-block;
+}
+
+.checkbox_options input {
+    display: none;
+}
+
+.checkbox_options input:checked+.slider {
+    background: rgb(100, 143, 200);
+}
+
+.checkbox_options input:checked+.slider:before {
+    transform: translateX(17px);
+}
+
+.checkbox_options .slider {
+    width: 36px !important;
+    height: 18px;
+    padding: 2px;
+    box-sizing: border-box;
+    background-color: #555555;
+    border-radius: 15px;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.checkbox_options .slider:before {
+    display: flex;
+    background-color: #fff;
+    content: "";
+    width: 14px;
+    height: 14px;
+    transition: .3s;
+}
+
+.checkbox_options .slider.round:before {
+    border-radius: 50%;
+}
+
+.close_btn {
+    margin-left: auto;
+    margin-right: 4px;
+}
+
+.config_menu {
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    max-height: 12%;
-    min-height: 12%;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: calc(100% - 25px);
-    font-weight: bold;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 70%;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 10px;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 999;
+}
+
+.config_menu .checkbox_options {
+    margin-right: 5px;
+}
+
+.config_menu select {
+    margin-left: auto;
+    border-radius: 5px;
+    width: 50%;
+}
+
+.config_menu_line {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 #content {
     overflow: hidden;
     width: calc(100% - 225px);
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    min-width: 408px;
 }
 
 .customParsersDiv {
@@ -30,44 +113,19 @@
     height: 23%;
 }
 
-.graphsListDiv {
-    overflow: hidden;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: 95%;
-    height: 70%;
-}
-
-#graph_inspector {
-    position: absolute;
-    width: auto;
-    height: auto;
-    box-sizing: border-box;
-    display: none;
-    padding: 1%;
-    background-color: black;
-    z-index: 999;
-}
-
-.packetsDiv {
-    overflow: hidden;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    width: 95%;
-    height: 80%;
-}
-
-.output_history {
-    height: 47%;
-    width: calc(100%-5px);
-    overflow-x: scroll;
-    overflow-y: scroll;
-}
-
-.parser_timestamp {
-    display: block;
-    font-size: small;
+.custom_parser_entry {
     font-weight: bold;
+    padding: 10px;
+    border-width: 3px;
+    border-style: solid;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.custom_parser_input {
+    position: sticky;
+    left: 60px;
 }
 
 .dropbtn {
@@ -82,18 +140,6 @@
     float: right;
     right: 0;
     position: relative;
-}
-
-.filters {
-    float: right;
-    right: 0;
-    margin: 0;
-}
-
-.filters_label {
-    display: inline-block;
-    width: 90%;
-    text-align: right;
 }
 
 .dropdown-content {
@@ -118,43 +164,20 @@
     background: rgb(60, 96, 128);
 }
 
-.custom_parser_entry {
-    background-color: grey;
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    border: 3px solid black;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
+.filters {
+    float: right;
+    right: 0;
+    margin: 0;
 }
 
-.custom_parser_input {
-    position: sticky;
-    left: 60px;
+.filters_label {
+    display: inline-block;
+    width: 90%;
+    text-align: right;
 }
 
-.terminal span {
-    display: table-cell;
-    width: 1px;
-}
-
-.terminal input {
-    display: table-cell;
-    border: none;
-    background: black;
-    color: white;
-    outline: none;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+.file_path {
+    width: 82%;
 }
 
 .general_btn {
@@ -163,117 +186,10 @@
     border-radius: 4px;
     border-style: solid;
     border-color: rgb(70, 113, 150);
-    position: absolute;
 }
 
 .general_btn:hover {
     background: rgb(50, 93, 130);
-}
-
-.options_button {
-    background: rgb(70, 113, 150);
-    color: white;
-    border-radius: 4px;
-    border-style: solid;
-    border-color: rgb(70, 113, 150);
-    left: 50%;
-    width: 90%;
-    position: absolute;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-.sequencer_button {
-    background: rgb(70, 113, 150);
-    color: white;
-    border-radius: 4px;
-    border-style: solid;
-    border-color: rgb(70, 113, 150);
-    width: 10%;
-    margin: 0.3%;
-}
-
-button:hover {
-    background: rgb(50, 93, 130);
-}
-
-.line {
-    display: table;
-    width: 100%;
-}
-
-.checkbox_options {
-    position: fixed;
-    right: 5px;
-}
-
-.label_right {
-    display: inline-block;
-    width: 150px;
-}
-
-.label_left {
-    position: fixed;
-    display: inline-block;
-    width: 150px;
-    text-align: right;
-    right: 25px;
-}
-
-.resizer {
-    cursor: ew-resize;
-}
-
-#sidebar_resizer {
-    height: 100%;
-    width: 20px;
-    background-color: grey;
-    position: fixed;
-    z-index: 999;
-    -ms-transform: translate(-100%, 0);
-    transform: translate(-100%, 0);
-}
-
-input::-webkit-calendar-picker-indicator {
-    opacity: 100;
-}
-
-.select_input {
-    position: absolute;
-    right: 60px;
-    text-align: right;
-    width: 100px;
-    height: 20px;
-}
-
-
-.close_btn {
-    position: absolute;
-    bottom: 10px;
-}
-
-.file_path {
-    width: 82%;
-}
-
-img {
-    transform: translate(0, 20%);
-}
-
-#graph_container {
-    width: 100%;
-    height: 95%;
-    margin: auto;
-    padding: 0;
-}
-
-#graph_legend {
-    z-index: 9999;
-    position: absolute;
-    display: flex;
-    top: 10px;
-    left: 50%;
-    transform: translate(-50%, 0);
 }
 
 .graph_color_label {
@@ -286,4 +202,239 @@ img {
 .graph_color_label:hover {
     cursor: pointer;
     scale: 1.1;
+}
+
+#graph_container {
+    width: 100%;
+    height: 95%;
+    margin: auto;
+    padding: 0;
+}
+
+#graph_inspector {
+    position: absolute;
+    width: auto;
+    height: auto;
+    box-sizing: border-box;
+    display: none;
+    padding: 1%;
+    z-index: 999;
+}
+
+#graph_legend {
+    z-index: 9999;
+    position: absolute;
+    display: flex;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.graphsListDiv {
+    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: 95%;
+    height: 70%;
+}
+
+#header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 30px;
+}
+
+#header input {
+    height: 28px;
+    width: 100%;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#header button {
+    height: 28px;
+    width: auto;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-left: auto
+}
+
+#header select {
+    height: 28px;
+    width: 180px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.hidden {
+    display: none;
+}
+
+img {
+    transform: translate(0, 20%);
+}
+
+input::-webkit-calendar-picker-indicator {
+    opacity: 100;
+}
+
+.label_right {
+    width: 150px;
+}
+
+.label_left {
+    width: 150px;
+    text-align: right;
+    right: 25px;
+}
+
+.options_button {
+    background: rgb(70, 113, 150);
+    color: white;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: rgb(70, 113, 150);
+    left: 50%;
+    width: auto;
+    margin: 5px;
+}
+
+.options_menu {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    min-width: 220px;
+    width: 220px;
+    margin-left: auto;
+}
+
+.options_menu_line {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.options_menu .checkbox_options {
+    margin-left: auto;
+}
+
+.options_menu_line label {
+    width: auto;
+    margin-right: 5px;
+}
+
+.options_menu select {
+    margin-left: auto;
+    border-radius: 5px;
+    width: 50%;
+}
+
+.output {
+    overflow: hidden;
+    max-height: 12%;
+    min-height: 12%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: calc(100% - 25px);
+    font-weight: bold;
+}
+
+.output_entry {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    height: 45px;
+    text-align: left;
+    border: none;
+    border-left: solid;
+    border-width: 5px;
+    border-radius: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.output_history {
+    height: 47%;
+    width: calc(100%-5px);
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+.packetsDiv {
+    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: 95%;
+    height: 80%;
+}
+
+.parser_timestamp {
+    display: block;
+    font-size: small;
+    font-weight: bold;
+}
+
+.select_input {
+    right: 60px;
+    text-align: right;
+    width: 100px;
+    height: 20px;
+}
+
+.sequencer_button {
+    background: rgb(70, 113, 150);
+    color: white;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: rgb(70, 113, 150);
+    width: 10%;
+    margin: 0.3%;
+}
+
+#sidebar_resizer {
+    height: 100%;
+    width: 20px;
+    background-color: grey;
+    z-index: 999;
+    cursor: ew-resize;
+}
+
+.terminal {
+    max-height: 73%;
+    min-height: 73%;
+    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: calc(100% - 25px);
+}
+
+.terminal input {
+    display: table-cell;
+    border: none;
+    background: black;
+    color: white;
+    outline: none;
+}
+
+.terminal span {
+    display: table-cell;
+    width: 1px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

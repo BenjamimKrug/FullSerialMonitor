@@ -8,7 +8,7 @@
 <body>
   <div id="graph_legend"></div>
 
-  <div id="config_menu" class="config_menu" style="display:none">
+  <div id="config_menu" class="config_menu config_menu_color" style="display:none">
     <label for="data_per_screen" data-i18n="data_per_screen"></label>
     <br>
     <input type="text" id="data_per_screen" />
@@ -32,10 +32,10 @@
     <br>
     <div id="graphs_list_div" class="box graphsListDiv">
     </div>
-    <button onclick="setGraphsConfig(prev_graph_config);config_menu.style.display = 'none'"
+    <button onclick="setGraphsConfig(prev_graph_config);hideItem(config_menu);"
       class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
     </button>
-    <button onclick="saveGraphsConfig();config_menu.style.display = 'none'" class="general_btn close_btn"
+    <button onclick="saveGraphsConfig();hideItem(config_menu)" class="general_btn close_btn"
       style="right: 10px;position: fixed;" data-i18n="save_and_close">
     </button>
   </div>

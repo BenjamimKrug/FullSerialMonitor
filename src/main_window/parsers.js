@@ -164,7 +164,7 @@ function addParserResult(newResult, newResultSource, color, parserName, timestam
     newOutputEntry.setAttribute("id", "b" + newResult.id);
     newOutputEntry.setAttribute("value", current_parser_index);
     newOutputEntry.setAttribute("data-parser", parserName);
-    newOutputEntry.setAttribute("class", "output_entry");
+    newOutputEntry.setAttribute("class", "output_entry output_entry_color");
 
     var target_filter = document.querySelector(`[data-filter="${parserName}"]`);
     var display_type = 'block';
@@ -207,7 +207,7 @@ function deleteCustomParserField(id) {
 function createCustomParserField(name, script, func, trigger, color) {
     var newParserField = document.createElement("div");
     newParserField.setAttribute("id", "cpDiv" + custom_parsers_count);
-    newParserField.setAttribute("class", "custom_parser_entry");
+    newParserField.setAttribute("class", "custom_parser_entry custom_parser_entry_color");
     var newParserName = document.createElement("input");
     newParserName.setAttribute("type", "text");
     newParserName.setAttribute("placeholder", current_language["parser_name_placeholder"]);

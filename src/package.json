@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/BenjamimKrug/FullSerialMonitor#readme",
   "devDependencies": {
-    "@electron-forge/publisher-github": "^6.0.5",
     "electron": "^20.1.4",
     "electron-packager": "^17.1.1"
   },
@@ -27,7 +26,6 @@
     "chart.js": "^4.3.0",
     "dygraphs": "^2.2.1",
     "electron-find": "^1.0.7",
-    "electron-forge": "^5.2.4",
     "remote": "^0.2.6",
     "serialport": "^10.4.0"
   }
