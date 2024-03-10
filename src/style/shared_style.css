@@ -276,9 +276,14 @@ img {
     transform: translate(-50%, 0);
 }
 
-.color_label {
+.graph_color_label {
     width: 15px;
     height: 15px;
     margin-right: 5px;
     margin-left: 15px;
+}
+
+.graph_color_label:hover {
+    cursor: pointer;
+    scale: 1.1;
 }

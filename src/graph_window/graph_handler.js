@@ -34,6 +34,7 @@ var lastKnownValues = [];
 var chart;
 var graph_inspector = document.getElementById("graph_inspector");
 var graph_legend = document.getElementById("graph_legend");
+var visibility = [];
 
 var graph_config = { range: [null, null], data_per_screen: 0, array: [] };
 var prev_graph_config = { ...graph_config };
@@ -114,32 +115,41 @@ function updateGraphConfig() {
     var graphTriggerSize = graph_config.array.length;
     var labels_array = ['Time'];
     var colors = [];
+    visibility = [];
     graph_legend.innerHTML = "";
     dataArraySize = graphTriggerSize;
     for (var i = 0; i < graphTriggerSize; i++) {
         var cur = graph_config.array[i];
         createGraphField(cur.name, cur.color, cur.trigger);
         lastKnownValues[i] = [0, 0];
-
-        var color_label = document.createElement("div");
-        color_label.setAttribute("class", "color_label");
-        color_label.style["background-color"] = cur.color;
-        var text_label = document.createElement("label");
-        text_label.innerText = cur.name;
-        graph_legend.appendChild(color_label);
-        graph_legend.appendChild(text_label);
-
+        create_color_label(cur, i);
         labels_array.push(cur.name);
         colors.push(cur.color);
+        visibility.push(true);
     }
-    
+
     for (var l = 0; l < dataLength; l++) {
-      var cur = data[l];
-      while (cur.length <= dataArraySize) {
-        cur.push(null);
-      }
+        var cur = data[l];
+        while (cur.length <= dataArraySize) {
+            cur.push(null);
+        }
     }
     chart.updateOptions({ labels: labels_array, colors: colors, valueRange: graph_config.range, file: data });
+}
+
+function create_color_label(cur, i) {
+    var color_label = document.createElement("div");
+    color_label.setAttribute("class", "graph_color_label");
+    color_label.style["background-color"] = cur.color;
+    color_label.addEventListener("click", () => {
+        visibility[i] = !visibility[i];
+        chart.updateOptions({ visibility: visibility });
+    });
+
+    var text_label = document.createElement("label");
+    text_label.innerText = cur.name;
+    graph_legend.appendChild(color_label);
+    graph_legend.appendChild(text_label);
 }
 
 function newData(time, value, position) {
