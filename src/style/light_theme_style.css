@@ -14,6 +14,7 @@ body {
 .box {
     background: lightgrey;
     color: black;
+    border-color: black;
 }
 
 .config_menu {
@@ -34,6 +35,11 @@ body {
     display: block;
 }
 
+input[type=text] {
+    background-color: white;
+    color: black;
+}
+
 .key {
     color: blue;
 }
@@ -50,12 +56,12 @@ body {
     background-color: #999;
 }
 
-.options_menu select {
+.output_entry {
     background-color: white;
     color: black;
 }
 
-.output_entry {
+select {
     background-color: white;
     color: black;
 }

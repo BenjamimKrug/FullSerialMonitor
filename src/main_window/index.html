@@ -9,7 +9,7 @@
     <div id="content">
         <div id="header">
             <input type="text" id="send_input" disabled />
-            <button id="send_button" onclick="sendData()" data-i18n="send" disabled></button>
+            <button id="send_button" class="general_btn" onclick="sendData()" data-i18n="send" disabled></button>
             <select id="line_ending" onchange="updatePreferences()" disabled>
                 <option value="" data-i18n="no_line_ending"></option>
                 <option value='\n' data-i18n="line_feed"></option>
@@ -104,9 +104,7 @@
                 <label data-i18n="exception_decoder"></label>
                 &nbsp
                 <input type="color" id="decoder_color" value="#0000ff" />
-            </div>
-
-            <div class="config_menu_line">
+                &nbsp
                 <label data-i18n="json_parser"></label>
                 &nbsp
                 <input type="color" id="json_color" value="#00ff00" />
@@ -114,8 +112,8 @@
 
             <br>
             <div class="config_menu_line">
-                <label data-i18n="custom_parsers"></label>
-                <button id="add_custom_parser" onclick="createCustomParserField()">+</button>
+                <label style="margin-right:5px" data-i18n="custom_parsers"></label>
+                <button id="add_custom_parser" class="general_btn" onclick="createCustomParserField()">+</button>
             </div>
             <div id="custom_parsers_div" class="box customParsersDiv">
             </div>

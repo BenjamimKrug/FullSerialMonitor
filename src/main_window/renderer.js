@@ -225,18 +225,15 @@ function makeResizableDiv(div, vertical, horizontal, resizers) {
 
 function showItem(item) {
     if (item.classList.contains("hidden")) item.classList.remove("hidden");
-    console.log("show", item.classList);
 }
 
 function hideItem(item) {
     if (!item.classList.contains("hidden")) item.classList.add("hidden");
-    console.log("hide", item.classList);
 }
 
 function toggleHide(item) {
     if (item.classList.contains("hidden")) item.classList.remove("hidden");
     else item.classList.add("hidden");
-    console.log("toggle", item.classList);
 }
 
 //options menu handlers start
