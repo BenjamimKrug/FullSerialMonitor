@@ -209,6 +209,11 @@ function createCustomParserField(name, script, func, trigger, color) {
     newParserField.setAttribute("id", "cpDiv" + custom_parsers_count);
     newParserField.setAttribute("class", "custom_parser_entry");
 
+    var first_half = document.createElement("div");
+    first_half.setAttribute("class", "half");
+    var second_half = document.createElement("div");
+    second_half.setAttribute("class", "half");
+
     var newParserName = document.createElement("input");
     newParserName.setAttribute("type", "text");
     newParserName.setAttribute("placeholder", current_language["parser_name_placeholder"]);
@@ -250,7 +255,7 @@ function createCustomParserField(name, script, func, trigger, color) {
     var newParserScriptBrowse = document.createElement("button");
     newParserScriptBrowse.setAttribute("onclick", `clickBrowse(${custom_parsers_count})`);
     newParserScriptBrowse.setAttribute("class", "general_btn");
-    newParserScriptBrowse.innerHTML = current_language["browse"];
+    newParserScriptBrowse.innerText = current_language["browse"];
 
     var newParserTrigger = document.createElement("input");
     newParserTrigger.setAttribute("type", "text");
@@ -259,23 +264,49 @@ function createCustomParserField(name, script, func, trigger, color) {
     if (typeof (trigger) !== 'undefined')
         newParserTrigger.setAttribute("value", trigger);
 
-    var newParserExclude = document.createElement("button");
-    newParserExclude.setAttribute("style", "position: absolute;right:5px");
-    newParserExclude.innerHTML = current_language["delete"];
+    var newParserExclude = document.createElement("img");
+    newParserExclude.setAttribute("width", "16");
+    newParserExclude.setAttribute("height", "16");
+    newParserExclude.setAttribute("src", "../images/trash-2-16.png");
     newParserExclude.setAttribute("onclick", `deleteCustomParserField(${custom_parsers_count})`);
 
+    var line = document.createElement("div");
+    line.setAttribute("class", "line");
+    var label = document.createElement("label");
+    label.innerText = current_language["name"];
+    line.appendChild(label);
+    line.appendChild(newParserName);
+    first_half.appendChild(line);
+
+    line = document.createElement("div");
+    line.setAttribute("class", "line");
+    label = document.createElement("label");
+    label.innerText = current_language["script"];
+    line.appendChild(label);
+    line.appendChild(newParserScriptInput);
+    line.appendChild(newParserScript);
+    line.appendChild(newParserScriptBrowse);
+    first_half.appendChild(line);
+
+    line = document.createElement("div");
+    line.setAttribute("class", "line");
+    label = document.createElement("label");
+    label.innerText = current_language["function"];
+    line.appendChild(label);
+    line.appendChild(newParserFunc);
+    second_half.appendChild(line);
+
+    line = document.createElement("div");
+    line.setAttribute("class", "line");
+    label = document.createElement("label");
+    label.innerText = current_language["trigger"];
+    line.appendChild(label);
+    line.appendChild(newParserTrigger);
+    second_half.appendChild(line);
+
     newParserField.appendChild(color_div);
-    newParserField.innerHTML += current_language["name"] + "&nbsp";
-    newParserField.appendChild(newParserName);
-    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbsp" + current_language["function"];
-    newParserField.appendChild(newParserFunc);
-    newParserField.appendChild(document.createElement("br"));
-    newParserField.innerHTML += current_language["script"] + "&nbsp";
-    newParserField.appendChild(newParserScriptInput);
-    newParserField.appendChild(newParserScript);
-    newParserField.appendChild(newParserScriptBrowse);
-    newParserField.innerHTML += "&nbsp&nbsp&nbsp&nbsp" + current_language["trigger"];
-    newParserField.appendChild(newParserTrigger);
+    newParserField.appendChild(first_half);
+    newParserField.appendChild(second_half);
     newParserField.appendChild(newParserExclude);
     custom_parsers_div.appendChild(newParserField);
     custom_parsers_count++;
