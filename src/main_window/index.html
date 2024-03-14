@@ -55,7 +55,7 @@
             </div>
 
             <div class="config_menu_line">
-                <input type="text" id="log_folder_input" class="file_path" />
+                <input type="text" id="log_folder_input" class="file_path" style="width: 100%;"/>
                 <input type="file" id="log_folder" style="display:none" onchange="readDirPaths(true, false)"
                     webkitdirectory />
                 <button class="general_btn" onclick="log_folder.click();" data-i18n="browse"></button>
@@ -102,12 +102,9 @@
 
             <div class="config_menu_line">
                 <label data-i18n="exception_decoder"></label>
-                &nbsp
-                <input type="color" id="decoder_color" value="#0000ff" />
-                &nbsp
+                <input type="color" class="color_input" id="decoder_color" value="#0000ff" />
                 <label data-i18n="json_parser"></label>
-                &nbsp
-                <input type="color" id="json_color" value="#00ff00" />
+                <input type="color" class="color_input" id="json_color" value="#00ff00" />
             </div>
 
             <br>

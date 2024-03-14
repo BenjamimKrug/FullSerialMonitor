@@ -8,45 +8,58 @@
 <body>
   <div id="graph_legend"></div>
 
-  <div id="config_menu" class="config_menu config_menu_color" style="display:none">
-    <label for="data_per_screen" data-i18n="data_per_screen"></label>
-    <br>
-    <input type="text" id="data_per_screen" />
-    <br>
-    <label for="min_value" data-i18n="min_range"></label>
-    <input type="text" id="min_value" />
-    &nbsp
-    <label for="min_auto" data-i18n="auto_detect"></label>
-    <input type="checkbox" id="min_auto" />
-    <br>
+  <div id="config_menu" class="config_menu hidden">
+    <div style="display:flex;flex-direction: column;overflow-y:auto;height: 100%">
+      <div class="config_menu_line">
+        <label for="data_per_screen" data-i18n="data_per_screen"></label>
+        <input type="text" id="data_per_screen" style="margin-left: auto;width: 50%;" />
+      </div>
 
-    <label for="max_value" data-i18n="max_range"></label>
-    <input type="text" id="max_value" />
-    &nbsp
-    <label for="max_auto" data-i18n="auto_detect"></label>
-    <input type="checkbox" id="max_auto" />
-    <br>
+      <div class="config_menu_line">
+        <label for="min_value" data-i18n="min_range"></label>
+        <input type="text" id="min_value" style="margin-left: auto;margin-right:15px;width: 50%;" />
+        <label for="min_auto" data-i18n="auto_detect"></label>
+        <label class="checkbox_options">
+          <input type="checkbox" id="min_auto" />
+          <div class="slider round"></div>
+        </label>
+      </div>
 
-    <label data-i18n="graphs"></label>
-    <button id="add_graphs" onclick="createGraphField()">+</button>
-    <br>
-    <div id="graphs_list_div" class="box graphsListDiv">
+      <div class="config_menu_line">
+        <label for="max_value" data-i18n="max_range"></label>
+        <input type="text" id="max_value" style="margin-left: auto;margin-right:15px;width: 50%;" />
+        <label for="max_auto" data-i18n="auto_detect"></label>
+        <label class="checkbox_options">
+          <input type="checkbox" id="max_auto" />
+          <div class="slider round"></div>
+        </label>
+      </div>
+
+      <br>
+      <div class="config_menu_line">
+        <label data-i18n="graphs"></label>
+        <button id="add_graphs" class="general_btn" onclick="createGraphField()">+</button>
+      </div>
+      <div id="graphs_list_div" class="box graphsListDiv">
+      </div>
+
     </div>
-    <button onclick="setGraphsConfig(prev_graph_config);hideItem(config_menu);"
-      class="general_btn close_btn" style="right: 150px;position: fixed;" data-i18n="cancel">
-    </button>
-    <button onclick="saveGraphsConfig();hideItem(config_menu)" class="general_btn close_btn"
-      style="right: 10px;position: fixed;" data-i18n="save_and_close">
-    </button>
+    <div style="display: flex;flex-direction: row;margin-top:15px;margin-bottom:5px">
+      <button onclick="cancelConfig()" class="general_btn close_btn"
+        data-i18n="cancel">
+      </button>
+      <button onclick="saveGraphsConfig();hideItem(config_menu)" class="general_btn" data-i18n="save_and_close">
+      </button>
+    </div>
   </div>
 
 
+  <div style="position:absolute; right:0px">
   <button id="open_config_menu" class="general_btn" style="right:5px">
     <img src="../images/settings gear.png" width="12" height="12">
     <label data-i18n="config"></label>
   </button>
-  <br>
-  <br>
+  </div>
   <div id="graph_inspector"></div>
   <div id="graph_container"></div>
   <script src="../language/language_handler.js"></script>

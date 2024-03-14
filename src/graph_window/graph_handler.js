@@ -5,6 +5,10 @@ const Dygraph = require('dygraphs');
 const theme_style = document.getElementById("theme_style");
 const graph_container = document.getElementById("graph_container");
 const config_menu = document.getElementById("config_menu");
+config_menu.addEventListener("click", (e) => {
+    e.stopPropagation();
+});
+document.body.addEventListener("click", () => { cancelConfig() });
 const graphs_list_div = document.getElementById("graphs_list_div");
 const data_per_screen_input = document.getElementById("data_per_screen");
 const range_inputs = [
@@ -251,7 +255,18 @@ function deleteGraphField(id) {
 function createGraphField(name, color, trigger) {
     var newGraphField = document.createElement("div");
     newGraphField.setAttribute("id", "cgDiv" + graph_count);
-    newGraphField.setAttribute("class", "custom_parser_entry custom_parser_entry_color");
+    newGraphField.setAttribute("class", "custom_parser_entry");
+
+    var color_div = document.createElement("div");
+    color_div.setAttribute("class", "color_div");
+    var newGraphColor = document.createElement("input");
+    newGraphColor.setAttribute("type", "color");
+    newGraphColor.setAttribute("placeholder", current_language["graph_color_placeholder"]);
+    newGraphColor.setAttribute("id", "cgColor" + graph_count);
+    newGraphColor.setAttribute("class", "custom_parser_input");
+    if (typeof (color) !== 'undefined')
+        newGraphColor.setAttribute("value", color);
+    color_div.appendChild(newGraphColor);
 
     var newGraphName = document.createElement("input");
     newGraphName.setAttribute("type", "text");
@@ -261,13 +276,6 @@ function createGraphField(name, color, trigger) {
     if (typeof (name) !== 'undefined')
         newGraphName.setAttribute("value", name);
 
-    var newGraphColor = document.createElement("input");
-    newGraphColor.setAttribute("type", "color");
-    newGraphColor.setAttribute("placeholder", current_language["graph_color_placeholder"]);
-    newGraphColor.setAttribute("id", "cgColor" + graph_count);
-    newGraphColor.setAttribute("class", "custom_parser_input");
-    if (typeof (color) !== 'undefined')
-        newGraphColor.setAttribute("value", color);
 
     var newGraphTrigger = document.createElement("input");
     newGraphTrigger.setAttribute("type", "text");
@@ -277,25 +285,30 @@ function createGraphField(name, color, trigger) {
     if (typeof (trigger) !== 'undefined')
         newGraphTrigger.setAttribute("value", trigger);
 
-    var newGraphExclude = document.createElement("button");
-    newGraphExclude.setAttribute("class", "sequencer_button");
-    newGraphExclude.setAttribute("style", "position: absolute;right:5px;");
-
-    var newGraphExclude_icon = document.createElement("img");
-    newGraphExclude_icon.setAttribute("width", "16");
-    newGraphExclude_icon.setAttribute("height", "16");
-    newGraphExclude_icon.setAttribute("src", "../images/trash-2-16.png");
-    newGraphExclude.appendChild(newGraphExclude_icon);
-    newGraphExclude.innerHTML += current_language["delete"];
+    var newGraphExclude = document.createElement("img");
+    newGraphExclude.setAttribute("width", "16");
+    newGraphExclude.setAttribute("height", "16");
+    newGraphExclude.setAttribute("src", "../images/trash-2-16.png");
     newGraphExclude.setAttribute("onclick", `deleteGraphField(${graph_count})`);
 
-    newGraphField.innerHTML = current_language["name"] + "&nbsp";
-    newGraphField.appendChild(newGraphName);
-    newGraphField.innerHTML += "&nbsp&nbsp&nbsp";
-    newGraphField.appendChild(newGraphColor);
-    newGraphField.appendChild(document.createElement("br"));
-    newGraphField.innerHTML += current_language["trigger"];
-    newGraphField.appendChild(newGraphTrigger);
+    newGraphField.appendChild(color_div);
+
+    var line = document.createElement("div");
+    line.setAttribute("class", "line");
+    var label = document.createElement("label");
+    label.innerText = current_language["name"];
+    line.appendChild(label);
+    line.appendChild(newGraphName);
+    newGraphField.appendChild(line);
+
+    line = document.createElement("div");
+    line.setAttribute("class", "line");
+    label = document.createElement("label");
+    label.innerText = current_language["trigger"];
+    line.appendChild(label);
+    line.appendChild(newGraphTrigger);
+    newGraphField.appendChild(line);
+
     newGraphField.appendChild(newGraphExclude);
     graphs_list_div.appendChild(newGraphField);
     graph_count++;
@@ -335,6 +348,27 @@ function hideInspector(event) {
     hideItem(graph_inspector);
 }
 
-document.getElementById("open_config_menu").onclick = function () {
+function cancelConfig() {
+    if (config_menu.classList.contains("hidden"))
+        return;
+    setGraphsConfig(prev_graph_config);
+    hideItem(config_menu);
+}
+
+function showItem(item) {
+    if (item.classList.contains("hidden")) item.classList.remove("hidden");
+}
+
+function hideItem(item) {
+    if (!item.classList.contains("hidden")) item.classList.add("hidden");
+}
+
+function toggleHide(item) {
+    if (item.classList.contains("hidden")) item.classList.remove("hidden");
+    else item.classList.add("hidden");
+}
+
+document.getElementById("open_config_menu").onclick = function (e) {
+    e.stopPropagation();
     toggleHide(config_menu);
 };
