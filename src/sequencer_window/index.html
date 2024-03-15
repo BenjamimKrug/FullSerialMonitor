@@ -5,22 +5,32 @@
     <link id="shared_style" rel="stylesheet" href="../style/shared_style.css">
 </head>
 
-<body>
-    <div>
+<body style="display:flex;flex-direction: column; padding:10px; box-sizing: border-box;">
+    <div style="display:flex;flex-direction: row;align-items: center;">
         <label data-i18n="sequence"></label>
-        <button id="add_packet"  class="sequencer_button" style="width:auto" onclick="createPacketField()">
+        <button id="add_packet" class="sequencer_button" style="width:auto" onclick="createPacketField()">
             + &nbsp
             <label data-i18n="add_packet"></label>
         </button>
-        <br>
-        <div id="packets_div" class="box box_color packetsDiv">
-        </div>
-        <button id="save_sequence" class="sequencer_button" onclick="saveSequence()" data-i18n="save_sequence"></button>
-        <button id="send_sequence" class="sequencer_button" onclick="sendSequence()" data-i18n="send_sequence"></button>
-        <button id="stop_sequence" class="sequencer_button" onclick="stopSequence()" data-i18n="stop_sequence"></button>
-        &nbsp;&nbsp;&nbsp;
-        <input type="checkbox" id="continuous_sequence">    
-        <label for="continuous_sequence" data-i18n="continuous_sequence"></label>    
+    </div>
+    <div id="packets_div" class="box packetsDiv">
+    </div>
+    <div style="display:flex;flex-direction: row;align-items: center;">
+        <button id="save_sequence" class="sequencer_button" onclick="saveSequence()" data-i18n="save_sequence">
+        </button>
+        <button id="send_sequence" class="sequencer_button" onclick="sendSequence()">
+            &#9658;
+            <label data-i18n="send_sequence"></label>
+        </button>
+        <button id="stop_sequence" class="sequencer_button" onclick="stopSequence()">
+            &#9724;
+            <label data-i18n="stop_sequence"></label>
+        </button>
+        <label class="checkbox_options" style="margin-left:20px;margin-right:5px">
+            <input type="checkbox" id="continuous_sequence">
+            <div class="slider round"></div>
+        </label>
+        <label for="continuous_sequence" data-i18n="continuous_sequence"></label>
     </div>
     <script src="../language/language_handler.js"></script>
     <script src="./sequencer.js"></script>

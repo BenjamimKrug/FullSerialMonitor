@@ -478,7 +478,6 @@ input::-webkit-calendar-picker-indicator {
     overflow: hidden;
     overflow-x: auto;
     overflow-y: auto;
-    width: 95%;
     height: 80%;
 }
 
@@ -501,7 +500,8 @@ input::-webkit-calendar-picker-indicator {
     border-radius: 4px;
     border-style: solid;
     border-color: rgb(70, 113, 150);
-    width: 10%;
+    width: auto;
+    margin-right: auto;
     margin: 0.3%;
 }
 

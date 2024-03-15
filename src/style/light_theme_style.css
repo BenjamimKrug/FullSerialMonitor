@@ -19,7 +19,7 @@ body {
 
 .config_menu {
     border-color: black;
-    background-color: #999;
+    background: white;
 }
 
 .custom_parser_entry {

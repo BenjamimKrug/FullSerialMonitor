@@ -85,7 +85,7 @@ function deletePacketField(id) {
 function createPacketField(data_packet, delay) {
     var newPacketField = document.createElement("div");
     newPacketField.setAttribute("id", "cpDiv" + sequence.count);
-    newPacketField.setAttribute("class", "custom_parser_entry custom_parser_entry_color");
+    newPacketField.setAttribute("class", "custom_parser_entry");
 
     var newPacketData = document.createElement("input");
     newPacketData.setAttribute("type", "text");
@@ -106,20 +106,29 @@ function createPacketField(data_packet, delay) {
     var newPacketExclude = document.createElement("button");
     newPacketExclude.setAttribute("class", "sequencer_button");
     newPacketExclude.setAttribute("style", "position: absolute;right:5px;");
-    
-    var newPacketExclude_icon = document.createElement("img");
-    newPacketExclude_icon.setAttribute("width", "16");
-    newPacketExclude_icon.setAttribute("height", "16");
-    newPacketExclude_icon.setAttribute("src", "../images/trash-2-16.png");
-    newPacketExclude.appendChild(newPacketExclude_icon);
-    newPacketExclude.innerHTML += current_language["delete"];
+
+    var newPacketExclude = document.createElement("img");
+    newPacketExclude.setAttribute("width", "16");
+    newPacketExclude.setAttribute("height", "16");
+    newPacketExclude.setAttribute("src", "../images/trash-2-16.png");
     newPacketExclude.setAttribute("onclick", `deletePacketField(${sequence.count})`);
 
-    newPacketField.innerHTML = "Packet "+"&nbsp";
-    newPacketField.appendChild(newPacketData);
-    newPacketField.appendChild(document.createElement("br"));
-    newPacketField.innerHTML += "Delay";
-    newPacketField.appendChild(newPacketDelay);
+    var line = document.createElement("div");
+    line.setAttribute("class", "line");
+    var label = document.createElement("label");
+    label.innerText = current_language["packet"];
+    line.appendChild(label);
+    line.appendChild(newPacketData);
+    newPacketField.appendChild(line);
+
+    line = document.createElement("div");
+    line.setAttribute("class", "line");
+    label = document.createElement("label");
+    label.innerText = current_language["delay"];
+    line.appendChild(label);
+    line.appendChild(newPacketDelay);
+    newPacketField.appendChild(line);
+
     newPacketField.appendChild(newPacketExclude);
     packets_div.appendChild(newPacketField);
     sequence.count++;
