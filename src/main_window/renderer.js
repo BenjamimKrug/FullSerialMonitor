@@ -19,6 +19,7 @@ const output = document.getElementById("output");
 //options menu elements
 const auto_scroll = document.getElementById("auto_scroll");
 const com_ports = document.getElementById("com_ports");
+var current_port = "";
 const com_ports_input = document.getElementById("com_ports_input");
 const baudrate_input = document.getElementById("baudrate_input");
 const add_timestamp = document.getElementById("add_timestamp");
@@ -252,7 +253,6 @@ function changeTimestamp() {
 
 function getPorts() {
     SerialPort.list().then(function (ports) {
-        var current_port = com_ports.value;
         var returnList = "";
         ports.forEach(function (port) {
             returnList += "<option>" + port.path + "</option>";
@@ -473,6 +473,11 @@ function sendData() {
     pos = input_history.length;
     send_input.value = "";
 }
+
+com_ports.addEventListener("change", () => {
+    if (com_ports.value !== "")
+        current_port = com_ports.value;
+});
 
 function init() {
     //Data send handles end
