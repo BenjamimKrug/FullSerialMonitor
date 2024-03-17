@@ -4,7 +4,13 @@ const { SerialPort } = require("serialport");
 const remote = require('@electron/remote');
 const { FindInPage } = require('electron-find');
 
-document.body.addEventListener("click", () => { cancelConfig() });
+document.body.addEventListener("click", (e) => {
+    e.stopPropagation();
+    cancelConfig();
+    if (filters_box.contains(e.target))
+        return;
+    hideItem(filters_box);
+});
 
 const content = document.getElementById("content");
 const terminal = document.getElementById("terminal");

@@ -35,6 +35,11 @@ body {
     display: block;
 }
 
+.filters {
+    border-color: black;
+    background: white;
+}
+
 input[type=text] {
     background-color: white;
     color: black;

@@ -55,7 +55,7 @@
             </div>
 
             <div class="config_menu_line">
-                <input type="text" id="log_folder_input" class="file_path" style="width: 100%;"/>
+                <input type="text" id="log_folder_input" class="file_path" style="width: 100%;" />
                 <input type="file" id="log_folder" style="display:none" onchange="readDirPaths(true, false)"
                     webkitdirectory />
                 <button class="general_btn" onclick="log_folder.click();" data-i18n="browse"></button>
@@ -290,16 +290,25 @@
         <div class="options_menu_line">
             <label data-i18n="output_history"></label>
             <div class="dropdown">
-                <button class="dropbtn" data-i18n="filters"></button>
-                <div class="dropdown-content">
+                <button class="dropbtn" id="filters_show" data-i18n="filters"></button>
+                <div class="filters hidden" id="filters_box">
                     <div>
-                        <label for="json_filter" class="filters_label" data-i18n="json_parser"></label>
-                        <input type="checkbox" id="json_filter" onchange="updateParserHistory(this)" data-filter="json"
-                            class="filters" checked />
-                        <br>
-                        <label for="decoder_filter" class="filters_label" data-i18n="exception_decoder"></label>
-                        <input type="checkbox" id="decoder_filter" onchange="updateParserHistory(this)"
-                            data-filter="expDecoder" class="filters" checked />
+                        <div class="line">
+                            <label class="checkbox_options">
+                                <input type="checkbox" id="json_filter" onchange="updateParserHistory(this)"
+                                    data-filter="json" checked />
+                                <div class="slider round"></div>
+                            </label>
+                            <label for="json_filter" data-i18n="json_parser"></label>
+                        </div>
+                        <div class="line">
+                            <label class="checkbox_options">
+                                <input type="checkbox" id="decoder_filter" onchange="updateParserHistory(this)"
+                                    data-filter="expDecoder" checked />
+                                <div class="slider round"></div>
+                            </label>
+                            <label for="decoder_filter" data-i18n="exception_decoder"></label>
+                        </div>
                     </div>
                     <div id="filter_dropdown">
                     </div>

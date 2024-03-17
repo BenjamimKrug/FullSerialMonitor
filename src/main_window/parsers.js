@@ -11,7 +11,8 @@ var json_color = document.getElementById("json_color");
 
 var json_filter = document.getElementById("json_filter");
 var decoder_filter = document.getElementById("decoder_filter");
-
+var filters_box = document.getElementById("filters_box");
+var filters_show = document.getElementById("filters_show");
 
 function runParsers() {
     for (; line_parsed < current_line_index;) {
@@ -319,3 +320,9 @@ function updateParserHistory(target_filter) {
             current_parser_line.style.display = target_filter.checked ? 'block' : 'none';
     });
 }
+
+
+filters_show.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleHide(filters_box);
+});

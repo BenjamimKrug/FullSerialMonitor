@@ -35,6 +35,11 @@ body {
     display: block;
 }
 
+.filters {
+    border-color: black;
+    background-color: #373737;
+}
+
 input[type=text] {
     background-color: #555555;
     color: white;
@@ -49,7 +54,7 @@ input[type=text] {
 }
 
 .number {
-    color: rgb(255,0,255);
+    color: rgb(255, 0, 255);
 }
 
 .options_menu {
