@@ -40,6 +40,16 @@ body {
     background-color: #373737;
 }
 
+.find-box {
+    background-color: #555555 !important;
+    color: inherit !important;
+}
+
+.find-input {
+    background-color: #555555 !important;
+    color: inherit !important;
+}
+
 input[type=text] {
     background-color: #555555;
     color: white;

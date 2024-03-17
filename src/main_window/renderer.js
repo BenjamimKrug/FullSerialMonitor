@@ -46,27 +46,31 @@ var start_line_index = 0;
 var sequence;
 var sequenceTimeout;
 var sequence_pos = 0;
+const find_container = document.getElementById("find_container");
+var find_box = null;
 
 // config UI of find interface
 let findInPage = new FindInPage(remote.getCurrentWebContents(), {
-    boxBgColor: '#333',
-    boxShadowColor: '#467196',
-    inputColor: '#aaa',
-    inputBgColor: '#222',
-    inputFocusColor: '#555',
-    textColor: '#aaa',
-    textHoverBgColor: '#555',
-    caseSelectedColor: '#555',
-    offsetRight: 202,
-    offsetTop: 32,
-    borderColor: '#467196',
-    parent: terminal
+    parentElement: find_container
 });
 
-setInterval(() => { getPorts() }, 1000);
+setInterval(() => {
+    getPorts();
+    if (find_box === null)
+        return;
+    if (findInPage[find_box].style.visibility == "hidden") 
+        findInPage[find_box].style.display = "none";
+}, 500);
 
 ipcRenderer.on('find_request', () => {
+    if (find_box !== null) {
+        findInPage[find_box].style.display = "flex";
+        find_box = null;
+    }
     findInPage.openFindWindow();
+    find_box = Object.getOwnPropertySymbols(findInPage).find(
+        (s) => s.description === "findBox"
+    );
 });
 
 ipcRenderer.on('recvChannel', (_event, arg) => {

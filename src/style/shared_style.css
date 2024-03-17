@@ -272,6 +272,46 @@ button:hover:not([disabled]) {
     width: 82%;
 }
 
+#find_container {
+    top: 0px;
+    right: 0;
+    display: flex;
+    width: auto;
+    position: relative;
+    width: 0;
+}
+
+.find-box {
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+    margin-left: auto !important;
+    transform: translate(-100%, 31px);
+    align-items: center;
+}
+
+.find-back,
+.find-case,
+.find-close,
+.find-forward {
+    color: white !important;
+    background: rgb(70, 113, 150) !important;
+    opacity: 1 !important;
+    margin-left: 1px !important;
+    margin-right: 1px !important;
+}
+
+.find-back:hover,
+.find-case:hover,
+.find-close:hover,
+.find-forward:hover {
+    background: rgb(50, 93, 130) !important;
+}
+
+.find-matches {
+    color: inherit !important;
+}
+
 .general_btn {
     background: rgb(70, 113, 150);
     color: white;
