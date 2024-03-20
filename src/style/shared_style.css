@@ -3,6 +3,11 @@
     flex-direction: column;
 }
 
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
 .box {
     padding: 10px;
     resize: none;
@@ -301,11 +306,29 @@ button:hover:not([disabled]) {
     margin-right: 1px !important;
 }
 
+.find-back-cover,
+.find-forward-cover {
+    opacity: 0 !important;
+}
+
 .find-back:hover,
 .find-case:hover,
 .find-close:hover,
 .find-forward:hover {
     background: rgb(50, 93, 130) !important;
+}
+
+.find-close-inner1,
+.find-close-inner2 {
+    background: rgb(255, 255, 255) !important;
+}
+
+.find-back-line {
+    border-color: transparent rgb(255 255 255) transparent  transparent  !important;
+}
+
+.find-forward-line {
+    border-color: transparent transparent transparent rgb(255 255 255) !important;
 }
 
 .find-matches {
@@ -524,7 +547,7 @@ input::-webkit-calendar-picker-indicator {
     overflow: hidden;
     overflow-x: auto;
     overflow-y: auto;
-    height: 80%;
+    height: 100%;
 }
 
 .parser_timestamp {

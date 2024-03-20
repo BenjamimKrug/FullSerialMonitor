@@ -117,8 +117,10 @@ function createPacketField(data_packet, delay) {
     line.setAttribute("class", "line");
     var label = document.createElement("label");
     label.innerText = current_language["packet"];
+    label.setAttribute("style", "min-width: 5%;");
     line.appendChild(label);
     line.appendChild(newPacketData);
+    line.setAttribute("style", "width:100%");
     newPacketField.appendChild(line);
 
     line = document.createElement("div");
