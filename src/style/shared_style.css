@@ -256,12 +256,13 @@ button:hover:not([disabled]) {
 
 .filters {
     display: flex;
+    flex-direction: column;
     position: absolute;
     min-width: 200px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 900;
     right: 0px;
-    padding: 3px;
+    padding: 10px;
     margin-left: 3px;
     box-sizing: border-box;
     border-width: 1px;
@@ -289,6 +290,7 @@ button:hover:not([disabled]) {
     flex-direction: row;
     width: 100%;
     margin-bottom: 2px;
+    align-items: center;
 }
 
 .file_path {

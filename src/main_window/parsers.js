@@ -108,31 +108,35 @@ function updateParsers() {
         createCustomParserField(custom_parsers[i].name, custom_parsers[i].script,
             custom_parsers[i].func, custom_parsers[i].trigger, custom_parsers[i].color);
         if (fs.existsSync(custom_parsers[i].script)) {
-            var current_script = document.getElementById(custom_parsers[i].name);
-            if (typeof (current_script) === 'undefined' || current_script == null) {
-                var customScript = document.createElement("script");
-                customScript.setAttribute("src", custom_parsers[i].script);
-                customScript.setAttribute("id", custom_parsers[i].name);
-                var body = document.getElementsByTagName('body').item(0);
-                body.appendChild(customScript);
+            var customScript = document.createElement("script");
+            customScript.setAttribute("src", custom_parsers[i].script);
+            customScript.setAttribute("id", custom_parsers[i].name);
+            document.body.appendChild(customScript);
 
-                var customFilterLabel = document.createElement("label");
-                customFilterLabel.setAttribute("for", custom_parsers[i].name + "_filter");
-                customFilterLabel.setAttribute("class", "filters_label");
-                customFilterLabel.innerHTML = custom_parsers[i].name;
+            var line = document.createElement("div");
+            line.setAttribute("class", "line");
 
-                var customFilter = document.createElement("input");
-                customFilter.setAttribute("type", "checkbox");
-                customFilter.setAttribute("onchange", "updateParserHistory(this)");
-                customFilter.setAttribute("class", "filters");
-                customFilter.setAttribute("id", custom_parsers[i].name + "_filter");
-                customFilter.setAttribute("data-filter", custom_parsers[i].name);
-                customFilter.checked = true;
+            var customFilterCheck = document.createElement("label");
+            customFilterCheck.setAttribute("class", "checkbox_options");
+            var customFilter = document.createElement("input");
+            customFilter.setAttribute("type", "checkbox");
+            customFilter.setAttribute("onchange", "updateParserHistory(this)");
+            customFilter.setAttribute("class", "filters");
+            customFilter.setAttribute("id", custom_parsers[i].name + "_filter");
+            customFilter.setAttribute("data-filter", custom_parsers[i].name);
+            customFilter.checked = true;
+            var eye = document.createElement("div");
+            eye.setAttribute("class", "eye");
+            customFilterCheck.appendChild(customFilter);
+            customFilterCheck.appendChild(eye);
 
-                filterDropdown.appendChild(customFilterLabel);
-                filterDropdown.appendChild(customFilter);
-                filterDropdown.appendChild(document.createElement("br"));
-            }
+            var customFilterLabel = document.createElement("label");
+            customFilterLabel.setAttribute("for", custom_parsers[i].name + "_filter");
+            customFilterLabel.innerHTML = custom_parsers[i].name;
+
+            line.appendChild(customFilterCheck);
+            line.appendChild(customFilterLabel);
+            filterDropdown.appendChild(line);
         }
     }
     getESPaddr2line();
