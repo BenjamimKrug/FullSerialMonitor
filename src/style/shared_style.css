@@ -41,6 +41,24 @@ button:hover:not([disabled]) {
     transform: translateX(17px);
 }
 
+.checkbox_options input:checked+.eye {
+    -webkit-mask: url('../images/visible-eye.svg') no-repeat 50% 50%;
+    -webkit-mask-size: contain;
+    mask: url('../images/visible-eye.svg') no-repeat 50% 50%;
+    mask-size: contain;
+}
+
+.checkbox_options .eye {
+    -webkit-mask: url('../images/not-visible-eye.svg') no-repeat 50% 50%;
+    -webkit-mask-size: contain;
+    mask: url('../images/not-visible-eye.svg') no-repeat 50% 50%;
+    mask-size: contain;
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+    cursor: pointer;
+}
+
 .checkbox_options .slider {
     width: 36px !important;
     height: 18px;
@@ -241,7 +259,7 @@ button:hover:not([disabled]) {
     position: absolute;
     min-width: 200px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 10000;
+    z-index: 900;
     right: 0px;
     padding: 3px;
     margin-left: 3px;
@@ -324,7 +342,7 @@ button:hover:not([disabled]) {
 }
 
 .find-back-line {
-    border-color: transparent rgb(255 255 255) transparent  transparent  !important;
+    border-color: transparent rgb(255 255 255) transparent transparent !important;
 }
 
 .find-forward-line {
