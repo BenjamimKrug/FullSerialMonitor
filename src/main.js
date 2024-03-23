@@ -144,6 +144,12 @@ function makeMenuTemplate() {
                     click: function () {
                         createWindow('graph_window/index.html', 2);
                     }
+                },
+                {
+                    label: current_language["exception_decoder"],
+                    click: function () {
+                        createWindow('exception_decoder_window/index.html', 3);
+                    }
                 }
             ]
         },
