@@ -31,7 +31,7 @@ body {
 }
 
 .custom_parser_entry {
-    background-color: grey;
+    background-color: white;
     color: black;
     border-color: black;
 }
@@ -46,6 +46,27 @@ body {
 .filters {
     border-color: black;
     background: white;
+}
+
+.find-box {
+    background-color: white !important;
+    color: inherit !important;
+}
+
+.find-input {
+    background-color: white !important;
+    color: inherit !important;
+    border-color: black !important;
+}
+
+.graph_label_disabled {
+    color: rgb(218, 215, 215);
+}
+
+#graph_legend,
+#graph_inspector {
+    background-color: #eee8e8;
+    border-color: black;
 }
 
 input[type=text] {
@@ -88,6 +109,6 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #999;
+    background: #fffefe;
     border-radius: 7px;
 }

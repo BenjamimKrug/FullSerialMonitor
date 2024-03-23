@@ -347,6 +347,10 @@ button:hover:not([disabled]) {
     border-color: transparent rgb(255 255 255) transparent transparent !important;
 }
 
+.find-input {
+    border-width: 1px !important;
+}
+
 .find-forward-line {
     border-color: transparent transparent transparent rgb(255 255 255) !important;
 }
@@ -394,13 +398,23 @@ button:hover:not([disabled]) {
     display: none;
     padding: 1%;
     z-index: 999;
+    border-radius: 5px;
+    border-width: 3px;
+}
+
+.graph_label_disabled {
+    filter: brightness(70%);
 }
 
 #graph_legend {
     z-index: 9999;
     position: absolute;
     display: flex;
-    top: 10px;
+    padding-top: 10px;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     left: 50%;
     transform: translate(-50%, 0);
 }

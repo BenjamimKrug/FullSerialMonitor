@@ -11,7 +11,7 @@ function checkGraphTriggers(timestamp, target_line) {
         return;
     var graphTriggerSize = graphsArray.length;
     for (var i = 0; i < graphTriggerSize; i++) {
-        if (target_line.indexOf(graphsArray[i].trigger) == -1)
+        if (target_line.startsWith(graphsArray[i].trigger) == false)
             continue;
         try {
             ipcRenderer.send('recvMain', { id: 2, cmd: "newGraphData", time: timestamp.toString().slice(0,-1), value: target_line.replace(graphsArray[i].trigger, ""), position: i });

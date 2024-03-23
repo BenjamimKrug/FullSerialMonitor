@@ -142,16 +142,25 @@ function updateGraphConfig() {
 }
 
 function create_color_label(cur, i) {
+    var text_label = document.createElement("label");
+    text_label.innerText = cur.name;
+
     var color_label = document.createElement("div");
     color_label.setAttribute("class", "graph_color_label");
     color_label.style["background-color"] = cur.color;
     color_label.addEventListener("click", () => {
         visibility[i] = !visibility[i];
+        if (visibility[i] == true){
+            color_label.classList.remove("graph_label_disabled");
+            text_label.classList.remove("graph_label_disabled");
+        }
+        else{
+            color_label.classList.add("graph_label_disabled");
+            text_label.classList.add("graph_label_disabled");
+        }
         chart.updateOptions({ visibility: visibility });
     });
 
-    var text_label = document.createElement("label");
-    text_label.innerText = cur.name;
     graph_legend.appendChild(color_label);
     graph_legend.appendChild(text_label);
 }
@@ -337,20 +346,21 @@ function inspectorFormatter(event, x, points, row, seriesName) {
     for (var i = 0; i < points.length; i++) {
         var cur = points[i];
         var value = document.createElement("label");
+        console.log(cur);
         value.innerText = cur.name + ": " + cur.yval;
         graph_inspector.appendChild(document.createElement("br"));
         graph_inspector.appendChild(value);
     }
     var style = getComputedStyle(graph_inspector);
-    var horizontal_compensantion = window.innerWidth - (event.screenX + parseFloat(style.width) + 15);
+    var horizontal_compensantion = window.innerWidth - (event.pageX + parseFloat(style.width) + 15);
     if (horizontal_compensantion > 0)
         horizontal_compensantion = 0;
 
-    var vertical_compensantion = window.innerHeight - (event.screenY + parseFloat(style.height) + 15);
+    var vertical_compensantion = window.innerHeight - (event.pageY + parseFloat(style.height) + 15);
     if (vertical_compensantion > 0)
         vertical_compensantion = 0;
-    graph_inspector.style.left = event.screenX + horizontal_compensantion;
-    graph_inspector.style.top = event.screenY + vertical_compensantion;
+    graph_inspector.style.left = event.pageX + horizontal_compensantion;
+    graph_inspector.style.top = event.pageY + vertical_compensantion;
 }
 
 function hideInspector(event) {
