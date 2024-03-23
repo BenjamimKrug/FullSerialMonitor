@@ -150,11 +150,11 @@ function create_color_label(cur, i) {
     color_label.style["background-color"] = cur.color;
     color_label.addEventListener("click", () => {
         visibility[i] = !visibility[i];
-        if (visibility[i] == true){
+        if (visibility[i] == true) {
             color_label.classList.remove("graph_label_disabled");
             text_label.classList.remove("graph_label_disabled");
         }
-        else{
+        else {
             color_label.classList.add("graph_label_disabled");
             text_label.classList.add("graph_label_disabled");
         }
@@ -265,7 +265,7 @@ function setGraphsConfig(newGraphsConfig) {
 }
 
 function deleteGraphField(id) {
-    targetGraphField = document.getElementById(`cgDiv${id}`);
+    var targetGraphField = document.getElementById(`cgDiv${id}`);
     graphs_list_div.removeChild(targetGraphField);
     deleted_graphs.push(id);
 }
@@ -390,4 +390,10 @@ function toggleHide(item) {
 document.getElementById("open_config_menu").onclick = function (e) {
     e.stopPropagation();
     toggleHide(config_menu);
+};
+
+document.getElementById("delete_graph_data").onclick = function (e) {
+    e.stopPropagation();
+    data = [];
+    dataLength = 0;
 };

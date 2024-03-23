@@ -98,3 +98,35 @@ Where 15 is the value that get added to the graph values and value is discarted.
 
 When data starts to come in the graph will be filled:
 <img src="/documentation/graph window with values.png" alt="graph window with values">
+
+Note that on the top of the screen there is a label for the graphs currently being tracked, in this case there are two series, by clicking on the label you can hide any series you want and then click again to show them once more:
+<img src="/documentation/graph window with test invisible.png" alt="graph window with test invisible">
+
+You can set the axis ranges on the config menu:
+<img src="/documentation/graph config ranges.png" alt="graph config ranges">
+If you do not want to manually set the values you can simply check the auto detect slider, that way the graph will set the ranges based on the minimum and maximum values present in the series.
+
+Finally you can configure how many data points you wish to have in the graph. For example, In case you only want 100 points to be shown, you can configure it in the menu:
+<img src="/documentation/graph max points.png" alt="graph max points">
+
+Once that happens, only the most recent 100 points will be shown in the graph, all points beyond that will be discarded.
+If you do not want any data to be discarded, simply set the value to 0, then all data will be kept in the graph until you manually delete them with the delete button in the corner of the screen.
+
+
+# How to use the Payload sequencer feature
+The program includes a feature to program a sequence of packets to be sent via the serial port, to use it you can open it via the tools menu:
+<img src="/documentation/payload sequencer button.png" alt="payload sequencer button">
+
+Upon opening the window for the first time, it will look like this:
+<img src="/documentation/empty payload sequencer.png" alt="empty payload sequencer">
+
+To add a packet to the sequence simply click the "Add Packet" button, with that an empty field will be created at the end of the sequence:
+<img src="/documentation/empty payload sequencer item.png" alt="empty payload sequencer item">
+
+- *Packet* is the field where you will type in the actual data you want to send
+- *Delay* is the field where you will put the delay until that packet is sent, so for the first packet it is the time until it is sent from the moment you click send sequence.
+
+<img src="/documentation/payload sequencer window.png" alt="payload sequencer window">
+
+After you've saved the sequence, you can start sending the sequence, if the continuous sequence is checked the sequence will repeat continously, if not it will run the whole sequence and then stop.
+

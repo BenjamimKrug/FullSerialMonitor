@@ -45,8 +45,7 @@
 
     </div>
     <div style="display: flex;flex-direction: row;margin-top:15px;margin-bottom:5px">
-      <button onclick="cancelConfig()" class="general_btn close_btn"
-        data-i18n="cancel">
+      <button onclick="cancelConfig()" class="general_btn close_btn" data-i18n="cancel">
       </button>
       <button onclick="saveGraphsConfig();hideItem(config_menu)" class="general_btn" data-i18n="save_and_close">
       </button>
@@ -55,10 +54,14 @@
 
 
   <div style="position:absolute; right:0px">
-  <button id="open_config_menu" class="general_btn" style="right:5px">
-    <img src="../images/settings gear.png" width="12" height="12">
-    <label data-i18n="config"></label>
-  </button>
+    <button id="delete_graph_data" class="general_btn" style="right:5px">
+      <img src="../images/trash-2-16.png" width="12" height="12">
+      <label data-i18n="delete"></label>
+    </button>
+    <button id="open_config_menu" class="general_btn" style="right:5px">
+      <img src="../images/settings gear.png" width="12" height="12">
+      <label data-i18n="config"></label>
+    </button>
   </div>
   <div id="graph_inspector"></div>
   <div id="graph_container"></div>
