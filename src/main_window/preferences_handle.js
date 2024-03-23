@@ -78,7 +78,7 @@ function setPreferences(target_preferences) {
     updateContentLang();
 
     if (typeof (target_preferences.comPort) !== 'undefined')
-        com_ports.value = target_preferences.comPort;
+        current_port = target_preferences.comPort;
 
     if (typeof (target_preferences.baudrate) !== 'undefined')
         baudrate_input.value = target_preferences.baudrate;
@@ -212,7 +212,7 @@ function updatePreferences() {
         autoScroll: auto_scroll.checked,
         lineEnding: line_ending.value,
         addTimestamp: add_timestamp.checked,
-        comPort: com_ports.value,
+        comPort: current_port,
         baudrate: baudrate_input.value,
         ctrlEnter: ctrl_enter.checked,
         advancedConfig: advancedConfig_json,
@@ -225,11 +225,20 @@ function updatePreferences() {
         terminal.scrollTop = terminal.scrollHeight;
         output_history.scrollTop = output_history.scrollHeight;
     }
-    fs.unlink(preferences_file_path, (e) => { if (e) console.log(e) });
-    fs.writeFile(preferences_file_path, JSON.stringify(preferences), (err) => {
-        if (err)
-            ipcRenderer.send("openAlert", current_language["writing_error"]);
-    });
+    try {
+        fs.unlinkSync(preferences_file_path);
+    }
+    catch (err) {
+        // needs to be a separate try catch because it will fail on the first time configuring
+        console.log(err);
+    }
+    try {
+        fs.writeFileSync(preferences_file_path, JSON.stringify(preferences));
+    }
+    catch (err) {
+        console.log(err);
+        ipcRenderer.send("openAlert", current_language["writing_error"]);
+    }
     prev_preferences = { ...preferences };
 }
 

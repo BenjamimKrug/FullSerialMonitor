@@ -24,7 +24,7 @@ ipcRenderer.send('recvMain', { id: 0, cmd: "getLang", requester: 1 });
 /*Start of specific implementation */
 
 
-const sequence_file_path = "../sequence.json";
+const sequence_file_path = "./sequence.json";
 
 var deleted_packets = [];
 var sequence = { count: 0, continuous: false, packets: [] };
@@ -69,11 +69,20 @@ function saveSequence() {
     }
     sequence.continuous = continuous_sequence.checked;
     updateSequence();
-    fs.unlink(sequence_file_path, (e) => { if (e) console.log(e) });
-    fs.writeFile(sequence_file_path, JSON.stringify(sequence), (err) => {
-        if (err)
-            ipcRenderer.send("openAlert", current_language["writing_error"]);
-    });
+    try {
+        fs.unlinkSync(sequence_file_path);
+    }
+    catch (err) {
+        // needs to be a separate try catch because it will fail on the first time configuring
+        console.log(err);
+    }
+    try {
+        fs.writeFileSync(sequence_file_path, JSON.stringify(sequence));
+    }
+    catch (err) {
+        console.log(err);
+        ipcRenderer.send("openAlert", current_language["writing_error"]);
+    }
 }
 
 function deletePacketField(id) {

@@ -315,6 +315,7 @@ function disconnect() {
 function cleanTerminal() {
     terminal.innerHTML = "";
     output_history.innerHTML = "";
+    parsed_ids = [];
     new_line = true;
     start_line_index = current_line_index--;
 }

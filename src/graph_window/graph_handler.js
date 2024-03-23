@@ -69,7 +69,7 @@ ipcRenderer.on('recvChannel', (_event, arg) => {
     }
 });
 
-const graph_config_file_path = "graph_config.json"
+const graph_config_file_path = "./graph_config.json"
 
 fs.readFile(graph_config_file_path, 'utf8', (err, data) => {
     if (err) {
@@ -232,11 +232,20 @@ function saveGraphsConfig() {
         }
     }
     updateGraphConfig(true);
-    fs.unlink(graph_config_file_path, (e) => { if (e) console.log(e) });
-    fs.writeFile(graph_config_file_path, JSON.stringify(graph_config), (err) => {
-        if (err)
-            ipcRenderer.send("openAlert", current_language["writing_error"]);
-    });
+    try {
+        fs.unlinkSync(graph_config_file_path);
+    }
+    catch (err) {
+        // needs to be a separate try catch because it will fail on the first time configuring
+        console.log(err);
+    }
+    try {
+        fs.writeFileSync(graph_config_file_path, JSON.stringify(graph_config));
+    }
+    catch (err) {
+        console.log(err);
+        ipcRenderer.send("openAlert", current_language["writing_error"]);
+    }
     prev_graph_config = { ...graph_config };
 }
 
