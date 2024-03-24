@@ -317,6 +317,7 @@ function cleanTerminal() {
     output_history.innerHTML = "";
     parsed_ids = [];
     new_line = true;
+    line_parsed--;
     start_line_index = current_line_index--;
 }
 

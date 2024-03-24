@@ -125,6 +125,7 @@ function createPacketField(data_packet, delay) {
     var line = document.createElement("div");
     line.setAttribute("class", "line");
     var label = document.createElement("label");
+    label.setAttribute("data-i18n", "packet");
     label.innerText = current_language["packet"];
     label.setAttribute("style", "min-width: 5%;");
     line.appendChild(label);
@@ -135,6 +136,7 @@ function createPacketField(data_packet, delay) {
     line = document.createElement("div");
     line.setAttribute("class", "line");
     label = document.createElement("label");
+    label.setAttribute("data-i18n", "delay");
     label.innerText = current_language["delay"];
     line.appendChild(label);
     line.appendChild(newPacketDelay);

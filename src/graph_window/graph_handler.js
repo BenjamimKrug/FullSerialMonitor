@@ -314,6 +314,7 @@ function createGraphField(name, color, trigger) {
     var line = document.createElement("div");
     line.setAttribute("class", "line");
     var label = document.createElement("label");
+    label.setAttribute("data-i18n", "name");
     label.innerText = current_language["name"];
     line.appendChild(label);
     line.appendChild(newGraphName);
@@ -322,6 +323,7 @@ function createGraphField(name, color, trigger) {
     line = document.createElement("div");
     line.setAttribute("class", "line");
     label = document.createElement("label");
+    label.setAttribute("data-i18n", "trigger");
     label.innerText = current_language["trigger"];
     line.appendChild(label);
     line.appendChild(newGraphTrigger);

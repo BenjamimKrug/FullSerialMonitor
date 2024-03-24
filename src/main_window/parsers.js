@@ -278,6 +278,7 @@ function createCustomParserField(name, script, func, trigger, color) {
     var line = document.createElement("div");
     line.setAttribute("class", "line");
     var label = document.createElement("label");
+    label.setAttribute("data-i18n", "name");
     label.innerText = current_language["name"];
     line.appendChild(label);
     line.appendChild(newParserName);
@@ -286,6 +287,7 @@ function createCustomParserField(name, script, func, trigger, color) {
     line = document.createElement("div");
     line.setAttribute("class", "line");
     label = document.createElement("label");
+    label.setAttribute("data-i18n", "script");
     label.innerText = current_language["script"];
     line.appendChild(label);
     line.appendChild(newParserScriptInput);
@@ -296,6 +298,7 @@ function createCustomParserField(name, script, func, trigger, color) {
     line = document.createElement("div");
     line.setAttribute("class", "line");
     label = document.createElement("label");
+    label.setAttribute("data-i18n", "function");
     label.innerText = current_language["function"];
     line.appendChild(label);
     line.appendChild(newParserFunc);
@@ -304,6 +307,7 @@ function createCustomParserField(name, script, func, trigger, color) {
     line = document.createElement("div");
     line.setAttribute("class", "line");
     label = document.createElement("label");
+    label.setAttribute("data-i18n", "trigger");
     label.innerText = current_language["trigger"];
     line.appendChild(label);
     line.appendChild(newParserTrigger);
