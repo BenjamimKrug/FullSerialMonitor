@@ -28,7 +28,6 @@ var backtrace_data_input = document.getElementById("backtrace_data_input");
 var output = document.getElementById("output");
 
 function runManualDecode() {
-    getESPaddr2line();
     var backtrace_data = backtrace_data_input.value.trim();
     decodeBacktrace(backtrace_data, 0, Date.now());
 }

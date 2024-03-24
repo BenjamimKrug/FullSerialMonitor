@@ -178,6 +178,10 @@ app.on('ready', function () {
     });
 
     ipcMain.on('openAlert', (event, incomingMessage) => {
+        if (incomingMessage.title == undefined)
+            return;
+        if (incomingMessage.content == undefined)
+            return;
         dialog.showErrorBox(incomingMessage.title, incomingMessage.content);
     });
 

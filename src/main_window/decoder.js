@@ -27,10 +27,11 @@ function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, ti
     if (elf_path_input.value == "") {
         if (!elf_error_warning) {
             elf_error_warning = true;
-            ipcRenderer.send("openAlert", current_language["backtrace_error"]["title"]);
+            ipcRenderer.send("openAlert", current_language["backtrace_error"]);
         }
         return "No ELF file given";
     }
+    getESPaddr2line();
     var backtraceResult = document.createElement("a");
     backtraceResult.setAttribute("id", "p" + backtraceDecoder_input_line);
     var index = backtraceDecoder_input.indexOf(" ");
@@ -128,7 +129,7 @@ function getSketchBuild() {
                     general_core = fqbn[0];
                 }
                 else
-                    ipcRenderer.send("openAlert", current_language["esp_support_error"]["content"]);
+                    ipcRenderer.send("openAlert", current_language["esp_support_error"]);
             }
             catch (err) {
                 console.log(err);
