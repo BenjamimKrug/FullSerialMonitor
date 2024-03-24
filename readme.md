@@ -30,6 +30,7 @@ This is a Serial monitor I developed with every feature I ever saw on other moni
 <img src="/documentation/text finder.png" alt="text finder">
 - Optional connection status change display
 - Optional disconnection on Boot message from ESP series microcontrollers
+- Standalone ESP Exception Decoder
 
 ### Planned features to be added on future versions:
 - Other useful built in parsers, like ModBus - RTU
@@ -42,6 +43,21 @@ This is a Serial monitor I developed with every feature I ever saw on other moni
 If you want to use the built in ESP Exception Decoder for the serial port terminal you can just select the .elf file for the current code you're running on your ESP through the browse button:
 <img src="/documentation/esp exception decoder section.png" alt="esp exception decoder section">
 Which will then open a file explorer for you to select the file. Alternatively you can simply click the "Auto detect" button if you're using the Arduino IDE, which normally puts all it's compilation files in the Temp folder, so the program can find them by getting the most recently compiled.
+
+### How to use the standalone ESP Exception Decoder
+Beyond the built into the terminal Decoder, the program also includes a standalone ESP Exception decoder, you can open it via the tools menu:
+<img src="/documentation/standalone exception decoder button.png" alt="standalone exception decoder button">
+
+Upon opening the window it will look like this:
+<img src="/documentation/empty standalone exception decoder.png" alt="empty standalone exception decoder">
+
+So just fill in your backtrace and the path to your .elf file:
+<img src="/documentation/standalone exception decoder filled in.png" alt="standalone exception decoder filled in">
+
+If you use the Arduino IDE, you can simply click the "Auto Detect" button for it to find the most recently compiled sketch
+
+Once it is all filled in, just click the "Decode" button and the decoded backtrace will appear in the Output div:
+<img src="/documentation/standalone exception decoder decoded.png" alt="standalone exception decoder decoded">
 
 ### How to use the Custom Parsers feature
 To use the custom parsers feature, you must first create a .js file with a parser function following the pattern specified in the example [file](/documentation/customParserExample.js). With the created file, go to the config menu on the custom parsers section:

@@ -10,6 +10,7 @@ function updateContentLang() {
         ipcRenderer.send('setLang', current_language);
         ipcRenderer.send('recvMain', { id: 1, cmd: 'setLang', lang: current_language });
         ipcRenderer.send('recvMain', { id: 2, cmd: 'setLang', lang: current_language });
+        ipcRenderer.send('recvMain', { id: 3, cmd: 'setLang', lang: current_language });
     }
 }
 

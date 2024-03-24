@@ -249,6 +249,7 @@ button:hover:not([disabled]) {
     height: 100%;
     resize: none;
     border-radius: 3px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .decoder_window .output {
@@ -548,6 +549,7 @@ input::-webkit-calendar-picker-indicator {
     margin-bottom: 1px;
     margin-left: 5px;
     margin-right: 5px;
+    align-items: center;
 }
 
 .options_menu .checkbox_options {
