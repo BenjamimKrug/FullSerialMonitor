@@ -346,7 +346,6 @@ function inspectorFormatter(event, x, points, row, seriesName) {
     for (var i = 0; i < points.length; i++) {
         var cur = points[i];
         var value = document.createElement("label");
-        console.log(cur);
         value.innerText = cur.name + ": " + cur.yval;
         graph_inspector.appendChild(document.createElement("br"));
         graph_inspector.appendChild(value);

@@ -160,16 +160,6 @@ function readDirPaths(log, decoder) {
     }
 }
 
-function getELF() {
-    if (typeof (elf_path.files[0]) !== 'undefined')
-        elf_path_input.value = elf_path.files[0].path.trim();
-    elf_path_input.scrollLeft = elf_path_input.scrollWidth;
-}
-
-elf_path_input.addEventListener('blur', () => {
-    elf_path_input.scrollLeft = elf_path_input.scrollWidth;
-});
-
 function changeAdvConfigDiv() {
     if (advanced_config.checked) {
         showItem(advanced_config_div);
@@ -246,6 +236,7 @@ function updateTheme() {
     theme_style.href = '../style/' + theme_select.value + '_theme_style.css';
     ipcRenderer.send('recvMain', { id: 1, cmd: "setTheme", theme: theme_style.href });
     ipcRenderer.send('recvMain', { id: 2, cmd: "setTheme", theme: theme_style.href });
+    ipcRenderer.send('recvMain', { id: 3, cmd: "setTheme", theme: theme_style.href });
 }
 
 function cancelConfig() {

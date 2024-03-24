@@ -237,6 +237,25 @@ button:hover:not([disabled]) {
     width: 100%;
 }
 
+.decoder_window {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.decoder_window #backtrace_data_input {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border-radius: 3px;
+}
+
+.decoder_window .output {
+    height: 100%;
+    max-height: 100%;
+}
+
 .dropbtn {
     background: rgb(70, 113, 150);
     color: white;

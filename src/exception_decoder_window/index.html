@@ -5,10 +5,39 @@
   <link id="shared_style" rel="stylesheet" href="../style/shared_style.css">
 </head>
 
-<body>
-  <textarea id="backtrace_data"></textarea>
+<body class="decoder_window">
+  <label data-i18n="exception_decoder_label"></label>
+  <textarea id="backtrace_data_input"></textarea>
+  <button id="auto_detect_sketch" class="options_button" onclick="getSketchBuild()" data-i18n="auto_detect">
+  </button>
+  <div class="options_menu_line">
+    <label for="decoder_arch" data-i18n="arch"></label>
+    <select id="decoder_arch" class="select_input" onchange="getESPaddr2line()">
+      <option value="esp32">ESP32</option>
+      <option value="esp32s2">ESP32S2</option>
+      <option value="esp32s3">ESP32S3</option>
+      <option value="esp32c3">ESP32C3</option>
+      <option value="esp8266">ESP8266</option>
+    </select>
+  </div>
+
+  <label data-i18n="elf_file"></label>
+  <div class="options_menu_line">
+    <input type="text" id="elf_path_input" class="file_path" />
+    <input type="file" id="elf_path" style="display:none" onchange="getELF();" />
+    <button class="general_btn" onclick="elf_path.click();" data-i18n="browse"></button>
+  </div>
+  
+  <button id="decode_backtrace" class="options_button" onclick="runManualDecode()" data-i18n="decode">
+  </button>
+
+  <br>
+  <div data-i18n="output"></div>
+  <div class="box output" id="output"></div>
+  
   <script src="../language/language_handler.js"></script>
   <script src="../main_window/decoder.js"></script>
+  <script src="decoder_screen.js"></script>
 </body>
 
 </html>

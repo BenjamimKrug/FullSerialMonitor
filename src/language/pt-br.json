@@ -53,6 +53,7 @@
     "connect": "CONECTAR",
     "disconnect": "DISCONECTAR",
     "clean": "LIMPAR",
+    "decode": "Decodificar",
     "exception_decoder_label": "DECODIFICADOR DE EXCEÇÕES DO ESP",
     "auto_detect": "Auto Detectar",
     "arch": "Arquitetura",

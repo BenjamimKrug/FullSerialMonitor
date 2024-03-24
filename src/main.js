@@ -10,7 +10,7 @@ require('@electron/remote/main').initialize();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-const windows = [null, null, null, null];
+const windows = [null, null, null, null, null];
 var options = {
     forward: true,
     findNext: false,
@@ -23,7 +23,7 @@ var options = {
 var current_language = {};
 
 function createWindow(file_name, index) {
-    if (windows[index] != null){
+    if (windows[index] != null) {
         windows[index].focus();
         return;
     }

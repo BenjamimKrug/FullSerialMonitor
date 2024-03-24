@@ -13,6 +13,16 @@ var addr2line_path = "";
 var memory_address = null;
 //xtensa-esp32-elf-addr2line -pfiaC -e build/PROJECT.elf ADDRESS
 
+function getELF() {
+    if (typeof (elf_path.files[0]) !== 'undefined')
+        elf_path_input.value = elf_path.files[0].path.trim();
+    elf_path_input.scrollLeft = elf_path_input.scrollWidth;
+}
+
+elf_path_input.addEventListener('blur', () => {
+    elf_path_input.scrollLeft = elf_path_input.scrollWidth;
+});
+
 function decodeBacktrace(backtraceDecoder_input, backtraceDecoder_input_line, timestamp) {
     if (elf_path_input.value == "") {
         if (!elf_error_warning) {

@@ -53,6 +53,7 @@
     "connect": "CONNECT",
     "disconnect": "DISCONNECT",
     "clean": "CLEAN",
+    "decode": "Decode",
     "exception_decoder_label": "ESP EXCEPTION DECODER",
     "auto_detect": "Auto Detect",
     "arch": "Arch",

@@ -18,11 +18,11 @@ body {
 }
 
 .checkbox_options input:checked+.eye {
-    background-color:white;
+    background-color: white;
 }
 
 .checkbox_options .eye {
-    background-color:rgb(151, 150, 150);
+    background-color: rgb(151, 150, 150);
 }
 
 .config_menu {
@@ -32,6 +32,12 @@ body {
 
 .custom_parser_entry {
     background-color: #373737;
+    color: white;
+    border-color: black;
+}
+
+.decoder_window #backtrace_data_input {
+    background: rgb(25, 25, 25);
     color: white;
     border-color: black;
 }

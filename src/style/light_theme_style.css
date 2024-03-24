@@ -36,6 +36,12 @@ body {
     border-color: black;
 }
 
+.decoder_window #backtrace_data_input {
+    background: lightgrey;
+    color: black;
+    border-color: black;
+}
+
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
